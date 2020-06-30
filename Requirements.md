@@ -19,3 +19,43 @@
   - include information about rate changes
   
 ## Make booking
+
+### Refine booking
+- summary of the room booking
+  - Room Selection
+  - Summary of Charges
+    - Dates and rates
+    - Total
+- additional requests (on top of previous requests) can be specified **free of cost (for now)**
+    - e.g. accessibility, early check-in, extra towels...
+- Confirmation details
+
+### Payment
+- Guest Info needs to be stored for later verifyication
+- Payment Mehtods 
+  - Limited Methods due to complexity
+
+### Booking validation and confirmation
+- Payment method verification 
+- receive the amount of money needed to cancel the booking
+- verification of room availability
+  - if no room available release authorization
+  - tell user "no room available"
+  - there are limited amount of rooms, this capacity must be respected
+  - capacity is the amount of roomtypes available on a given period
+- Booking Confirmation
+  - email
+  - confirmation page
+
+### Assign Room
+- After booking validation and confirmation rooms must be reserved but NOT ASSIGNED (a room number) 
+
+## Check-in
+- Search confirmed Bookings by lastname
+- Verify Info
+- Receive Payment for the full stay (minus already payed fee for possible cancellation)
+- Allocation of a room (room number)
+
+## Check-out
+- 
+
