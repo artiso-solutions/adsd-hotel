@@ -13,10 +13,9 @@
 ## Search for room availability
 - search for room types and not actual rooms
 - search for date period
-- search for special rate
-  - rate is a price per night in a given date period (like high/low season)
 - list all available room types with price per night (with picture and room description)
   - include information about rate changes
+  - rate is a price per night in a given date period (like high/low season)
   
 ## Make booking
 
@@ -57,5 +56,7 @@
 - Allocation of a room (room number)
 
 ## Check-out
-- 
+- bill has to be printed (day before checkout)
+- free room type capacity
+- charge credit card etc. with actual amount
 
