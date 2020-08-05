@@ -36,7 +36,7 @@
 
 ### Booking validation and confirmation
 - Payment method verification 
-- receive the amount of money needed to cancel the booking
+- authorize the amount of money needed to cancel the booking
 - verification of room availability
   - if no room available release authorization
   - tell user "no room available"
@@ -52,7 +52,7 @@
 ## Check-in
 - Search confirmed Bookings by lastname
 - Verify Info
-- Receive Payment for the full stay (minus already payed fee for possible cancellation)
+- authorize Payment for the full stay
 - Allocation of a room (room number)
 
 ## Check-out
