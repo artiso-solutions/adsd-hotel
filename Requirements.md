@@ -48,6 +48,7 @@
 
 ### Reserve Room
 - After booking validation and confirmation rooms must be reserved but NOT ASSIGNED (a room number) 
+- charge cancellation fee
 
 ## Check-in
 - Search confirmed Bookings by lastname
@@ -59,8 +60,3 @@
 - bill has to be printed (day before checkout)
 - free room type capacity
 - charge credit card etc. with actual amount
-
-## Cancellation
-- customer activly cancels the booking
-- customer doesn't show up at checking
--> charge cancellation fee
