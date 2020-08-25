@@ -60,3 +60,7 @@
 - free room type capacity
 - charge credit card etc. with actual amount
 
+## Cancellation
+- customer activly cancels the booking
+- customer doesn't show up at checking
+-> charge cancellation fee
