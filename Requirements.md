@@ -46,7 +46,7 @@
   - email
   - confirmation page
 
-### Assign Room
+### Reserve Room
 - After booking validation and confirmation rooms must be reserved but NOT ASSIGNED (a room number) 
 
 ## Check-in
