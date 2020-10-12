@@ -1,6 +1,8 @@
-# adsd-hotel
+# Advanced Distributed Systems Design - Hotel Booking
 
-Demo app designed with the SOA definition described in the Advanced Distributed Systems Design course of Udi Dahan.
+[![License MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+Demo app designed with the SOA definition described in the Advanced Distributed Systems Design course by Udi Dahan.
 
 ### [Requirements](Requirements.md)
 ### [Discussion](https://github.com/orgs/artiso-solutions/teams/systems-design)
@@ -29,6 +31,6 @@ Branding is responsible for localization, wording and UI assets.
 The UI will communicate with a backing [gateway](https://docs.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation) in order to interact with the services.
 
 The gateway will use a series of [ambassadors](https://docs.microsoft.com/en-us/azure/architecture/patterns/ambassador) provided by each service in order to reduce the platform and schema coupling.<br/>
-The results will be aggregated into a generic structure [(scatter-gather)](https://www.enterpriseintegrationpatterns.com/patterns/conversation/Aggregator.html), sent back as a response and then interpreted by specific UI components, also owned by the services.
+The results will be aggregated into a generic structure, sent back as a response and then interpreted by specific UI components, also owned by the services.
 
 ![UI composition diagram](assets/images/ui-diagram.png)
