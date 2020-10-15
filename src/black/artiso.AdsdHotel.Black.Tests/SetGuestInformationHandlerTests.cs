@@ -16,7 +16,13 @@ namespace artiso.AdsdHotel.Black.Tests
             var handler = new SetGuestInformationHandler();
             var context = new TestableMessageHandlerContext();
 
-            SetGuestInformation message = new SetGuestInformation { OrderId = Guid.NewGuid(), GuestInformation = new Contracts.GuestInformation()};
+            var guestInformation = new Contracts.GuestInformation
+            {
+                FirstName = "first",
+                LastName = "last",
+                EMail = "mail"
+            };
+            SetGuestInformation message = new SetGuestInformation { OrderId = Guid.NewGuid(), GuestInformation = guestInformation };
             await handler.Handle(message, context)
                 .ConfigureAwait(false);
 
@@ -26,7 +32,7 @@ namespace artiso.AdsdHotel.Black.Tests
             var gis = publishedEvent as GuestInformationSet;
             Assert.Equal(message.OrderId, gis.OrderId);
             Assert.NotNull(gis.GuestInformation);
-            // ToDo check all properties
+            Assert.Equal(message.GuestInformation, gis.GuestInformation);
         }
     }
 }
