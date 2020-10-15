@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15	
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E187A3F7-69EA-421E-9ACF-5FED1C031401}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Messages", "src\black\messages\artiso.AdsdHotel.Black.Messages.csproj", "{72C151DA-D535-492E-8167-CDF0AE7D7F15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Api", "src\black\api\artiso.AdsdHotel.Black.Api.csproj", "{9BA1C812-0C14-4649-BA15-BAE6C668619A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Tests", "src\black\artiso.AdsdHotel.Black.Tests\artiso.AdsdHotel.Black.Tests.csproj", "{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,18 @@ Global
 		{9BA1C812-0C14-4649-BA15-BAE6C668619A}.Release|x64.Build.0 = Release|Any CPU
 		{9BA1C812-0C14-4649-BA15-BAE6C668619A}.Release|x86.ActiveCfg = Release|Any CPU
 		{9BA1C812-0C14-4649-BA15-BAE6C668619A}.Release|x86.Build.0 = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|x64.Build.0 = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +112,7 @@ Global
 		{DEBC4A5E-550C-4751-8BF8-43409F76644A} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
 		{72C151DA-D535-492E-8167-CDF0AE7D7F15} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
 		{9BA1C812-0C14-4649-BA15-BAE6C668619A} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
+		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DC73723-4FEF-4F59-8880-D6E53DBF16B0}
