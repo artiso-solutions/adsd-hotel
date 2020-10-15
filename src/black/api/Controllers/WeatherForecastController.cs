@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace artiso.AdsdHotel.Black.GuestInformation.Api.Controllers
+namespace artiso.AdsdHotel.Black.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
