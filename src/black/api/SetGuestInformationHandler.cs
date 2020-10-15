@@ -11,7 +11,6 @@ namespace artiso.AdsdHotel.Black.Api
         {
             // ToDo save somewhere
 
-            // ToDo send event
             await context.Publish(new GuestInformationSet { OrderId = message.OrderId, GuestInformation = message.GuestInformation }).ConfigureAwait(false);
         }
     }

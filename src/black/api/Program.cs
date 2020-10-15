@@ -27,6 +27,9 @@ namespace artiso.AdsdHotel.Black.Api
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
                 endpointConfiguration.UseTransport<LearningTransport>();
+                // ToDo use durable persistence in production
+                // InMemoryPersistence may loose messages if the transport does not support it natively
+                endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
                 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
