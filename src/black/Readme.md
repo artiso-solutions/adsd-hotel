@@ -1,6 +1,6 @@
 # Black Service
 
-## Responsability
+## Responsibility
 
 ## Data
 
