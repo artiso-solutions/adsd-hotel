@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E187A3F7-69EA-421E-9ACF-5FED1C031401}"
+	ProjectSection(SolutionItems) = preProject
+		src\tye.yaml = src\tye.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "black", "black", "{C6C92CC9-89CA-4CDB-889E-05A9907F4501}"
 EndProject
@@ -17,7 +20,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Mess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Api", "src\black\api\artiso.AdsdHotel.Black.Api.csproj", "{9BA1C812-0C14-4649-BA15-BAE6C668619A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Tests", "src\black\artiso.AdsdHotel.Black.Tests\artiso.AdsdHotel.Black.Tests.csproj", "{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Tests", "src\black\tests\artiso.AdsdHotel.Black.Tests.csproj", "{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{1DF1E7DF-A4CD-4036-A51E-53A2063B04CA}"
+	ProjectSection(SolutionItems) = preProject
+		src\infrastructure\adsd-rabbit-dockerfile = src\infrastructure\adsd-rabbit-dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +121,7 @@ Global
 		{72C151DA-D535-492E-8167-CDF0AE7D7F15} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
 		{9BA1C812-0C14-4649-BA15-BAE6C668619A} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
 		{FC793EB5-58E4-44E4-ACA5-07369C4B35D0} = {C6C92CC9-89CA-4CDB-889E-05A9907F4501}
+		{1DF1E7DF-A4CD-4036-A51E-53A2063B04CA} = {E187A3F7-69EA-421E-9ACF-5FED1C031401}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DC73723-4FEF-4F59-8880-D6E53DBF16B0}

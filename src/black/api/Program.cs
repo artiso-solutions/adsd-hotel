@@ -26,7 +26,9 @@ namespace artiso.AdsdHotel.Black.Api
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                endpointConfiguration.UseTransport<LearningTransport>();
+                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+                transport.ConnectionString("host=localhost");
+                transport.UseConventionalRoutingTopology();
                 // ToDo use durable persistence in production
                 // InMemoryPersistence may loose messages if the transport does not support it natively
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();

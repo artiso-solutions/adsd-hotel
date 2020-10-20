@@ -1,0 +1,28 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+# define global settings here
+name: adsdHotel # application name
+# registry: exampleuser # dockerhub username or container registry hostname
+
+# define multiple services here
+services:
+- name: blackservice
+  project: black/api/artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
+- name: rabbit
+  #image: rabbitmq:alpine
+  dockerfile: infrastructure/adsd-rabbit.dockerfile
+  bindings:
+    - port: 5672
+      protocal: rabbitmq
+  # executable: app.exe # path to an executable (relative to this file)
+  # args: --arg1=3 # arguments to pass to the process
+  # replicas: 5 # number of times to launch the application
+  # env: # array of environment variables
+  #  - name: key
+  #    value: value
+  # bindings: # optional array of bindings (ports, connection strings)
+    # - port: 8080 # number port of the binding
