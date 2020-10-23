@@ -25,6 +25,7 @@ namespace artiso.AdsdHotel.Black.Api
             builder.ConfigureServices((ctx, services) =>
             {
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit","rabbit");
+                // this blocks further initialization until the rabbitmq instance is running
                 services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
             });
 

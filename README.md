@@ -7,6 +7,8 @@ Demo app designed with the SOA definition described in the Advanced Distributed 
 ### [Requirements](Requirements.md)
 ### [Discussion](https://github.com/orgs/artiso-solutions/teams/systems-design)
 
+### See [How to run](docs/how-to-run.md) for running the system
+
 ## Design
 
 ![System diagram](assets/images/system-diagram.png)
