@@ -21,6 +21,23 @@ namespace artiso.AdsdHotel.Black.Ambassador
             senderConfiguration.EnableInstallers();
             senderConfiguration.MakeInstanceUniquelyAddressable($"Black.Ambassador.{Guid.NewGuid()}");
             senderConfiguration.UseSerialization<NewtonsoftSerializer>();
+
+            var conventions = senderConfiguration.Conventions();
+
+            conventions.DefiningCommandsAs(t =>
+                t.Namespace != null &&
+                t.Namespace.EndsWith(".Commands") &&
+                !t.Name.EndsWith("Response"));
+
+            conventions.DefiningMessagesAs(t =>
+                t.Namespace != null &&
+                t.Namespace.EndsWith(".Commands") &&
+                t.Name.EndsWith("Response"));
+
+            conventions.DefiningEventsAs(t =>
+                t.Namespace != null &&
+                t.Namespace.EndsWith(".Events"));
+
             // ToDo Use mongo persistence etc.
             senderConfiguration.UsePersistence<InMemoryPersistence>();
             var senderTransport = senderConfiguration.UseTransport<RabbitMQTransport>();
@@ -42,10 +59,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
             await senderEndpoint.Stop().ConfigureAwait(false);
         }
 
-        public async Task<GuestInformation> GetGuestInformationAsync(Guid orderId)
+        public async Task<GuestInformationResponse> GetGuestInformationAsync(Guid orderId)
         {
             var senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
-            var response = await senderEndpoint.Request<GuestInformation> ( new RequestGuestInformation()).ConfigureAwait(false);
+            var response = await senderEndpoint.Request<GuestInformationResponse>(new RequestGuestInformation()).ConfigureAwait(false);
             await senderEndpoint.Stop().ConfigureAwait(false);
             return response;
         }
