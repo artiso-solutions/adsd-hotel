@@ -1,7 +1,0 @@
-FROM rabbitmq:alpine
-
-#TODO
-#COPY rabbitmq.conf /etc/rabbitmq
-#COPY definitions.json /etc/rabbitmq
-
-CMD ["rabbitmq-server"]

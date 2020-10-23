@@ -20,11 +20,11 @@
     "artiso.AdsdHotel.Black.GuestInformation.Api": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "SERVICE__rabbit__rabbit__protocol": "amqp",
+        "SERVICE__rabbit__rabbit__host": "localhost",
+        "SERVICE__rabbit__rabbit__port": "5672"
       }
     }
   }

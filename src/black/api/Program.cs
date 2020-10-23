@@ -13,32 +13,47 @@ namespace artiso.AdsdHotel.Black.Api
 {
     public class Program
     {
-        public static async Task  Main(string[] args)
+        public static async Task Main(string[] args)
         {
             await CreateHostBuilder(args).Build().RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var builder= Host.CreateDefaultBuilder(args);
+            var builder = Host.CreateDefaultBuilder(args);
             builder.UseConsoleLifetime();
-
+            builder.ConfigureServices((ctx, services) =>
+            {
+                var rabbitUri = ctx.Configuration.GetServiceUri("rabbit","rabbit");
+                services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
+            });
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-                transport.ConnectionString("host=localhost");
-                transport.UseConventionalRoutingTopology();
+                endpointConfiguration.EnableCallbacks(makesRequests: false);
+                endpointConfiguration.EnableInstallers();
+
+                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
                 // ToDo use durable persistence in production
                 // InMemoryPersistence may loose messages if the transport does not support it natively
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
-
                 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+                
+                var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
+                var connectionString = CreateRabbitMqConnectionString(rabbitUri);
+                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+                transport.ConnectionString(connectionString);
+                transport.UseConventionalRoutingTopology();
 
                 return endpointConfiguration;
             });
 
             return builder;
+        }
+
+        private static string CreateRabbitMqConnectionString(Uri uri)
+        {
+            return $"host={uri.Host}";
         }
 
         private static async Task OnCriticalError(ICriticalErrorContext context)

@@ -13,11 +13,18 @@ services:
 - name: blackservice
   project: black/api/artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
 - name: rabbit
-  #image: rabbitmq:alpine
-  dockerfile: infrastructure/adsd-rabbit.dockerfile
+  image: rabbitmq:management-alpine
+  #dockerfile: infrastructure/adsd-rabbit.dockerfile
   bindings:
-    - port: 5672
-      protocal: rabbitmq
+    - name: rabbit
+      port: 5672
+      protocol: amqp
+      #connectionString: host=${host}
+    - name: ui
+      port: 15672  
+      containerPort: 15672
+      protocol: http
+
   # executable: app.exe # path to an executable (relative to this file)
   # args: --arg1=3 # arguments to pass to the process
   # replicas: 5 # number of times to launch the application

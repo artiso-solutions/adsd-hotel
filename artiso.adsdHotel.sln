@@ -23,9 +23,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Tests", "src\black\tests\artiso.AdsdHotel.Black.Tests.csproj", "{FC793EB5-58E4-44E4-ACA5-07369C4B35D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{1DF1E7DF-A4CD-4036-A51E-53A2063B04CA}"
-	ProjectSection(SolutionItems) = preProject
-		src\infrastructure\adsd-rabbit-dockerfile = src\infrastructure\adsd-rabbit-dockerfile
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
