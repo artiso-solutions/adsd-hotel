@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Black.Messages;
+using artiso.AdsdHotel.Black.Events;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Api
@@ -10,7 +10,7 @@ namespace artiso.AdsdHotel.Black.Api
         public async Task Handle(SetGuestInformation message, IMessageHandlerContext context)
         {
             // ToDo save somewhere
-            await context.Publish(new GuestInformationSet { OrderId = message.OrderId, GuestInformation = message.GuestInformation }).ConfigureAwait(false);
+            await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }
     }
 }

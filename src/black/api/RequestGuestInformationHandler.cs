@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Contracts;
-using artiso.AdsdHotel.Black.Messages;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Api

@@ -2,16 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="NServiceBus" Version="7.4.3" />
-		<PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.2.0" />
-		<PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
-		<PackageReference Include="NServiceBus.Callbacks" Version="3.*" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="NServiceBus" Version="7.4.3" />
+        <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.2.0" />
+        <PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
+        <PackageReference Include="NServiceBus.Callbacks" Version="3.*" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
+    </ItemGroup>
+
 </Project>

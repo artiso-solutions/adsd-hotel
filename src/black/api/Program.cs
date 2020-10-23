@@ -27,6 +27,7 @@ namespace artiso.AdsdHotel.Black.Api
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit","rabbit");
                 services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
             });
+
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
@@ -44,6 +45,22 @@ namespace artiso.AdsdHotel.Black.Api
                 var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
                 transport.ConnectionString(connectionString);
                 transport.UseConventionalRoutingTopology();
+
+                var conventions = endpointConfiguration.Conventions();
+                
+                conventions.DefiningCommandsAs(t =>
+                    t.Namespace != null &&
+                    t.Namespace.EndsWith(".Commands") &&
+                    !t.Name.EndsWith("Response"));
+
+                conventions.DefiningMessagesAs(t =>
+                    t.Namespace != null &&
+                    t.Namespace.EndsWith(".Commands") &&
+                    t.Name.EndsWith("Response"));
+
+                conventions.DefiningEventsAs(t =>
+                    t.Namespace != null &&
+                    t.Namespace.EndsWith(".Events"));
 
                 return endpointConfiguration;
             });

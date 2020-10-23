@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-     <OutputType>Exe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
-    <ProjectReference Include="..\messages\artiso.AdsdHotel.Black.Messages.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
   </ItemGroup>
 
  </Project>

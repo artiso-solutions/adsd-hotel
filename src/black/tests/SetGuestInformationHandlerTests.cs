@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Black.Messages;
+using artiso.AdsdHotel.Black.Events;
 using NServiceBus.Testing;
 using Xunit;
 
@@ -22,6 +22,7 @@ namespace artiso.AdsdHotel.Black.Tests
                 LastName = "last",
                 EMail = "mail"
             };
+
             SetGuestInformation message = new SetGuestInformation { OrderId = Guid.NewGuid(), GuestInformation = guestInformation };
             await handler.Handle(message, context)
                 .ConfigureAwait(false);
