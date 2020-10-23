@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
-    <ProjectReference Include="..\messages\artiso.AdsdHotel.Black.Messages.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
   </ItemGroup>
 
  </Project>

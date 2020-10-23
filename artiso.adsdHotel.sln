@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Contracts", "src\black\contracts\artiso.AdsdHotel.Black.Contracts.csproj", "{DEBC4A5E-550C-4751-8BF8-43409F76644A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Messages", "src\black\messages\artiso.AdsdHotel.Black.Messages.csproj", "{72C151DA-D535-492E-8167-CDF0AE7D7F15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Events", "src\black\events\artiso.AdsdHotel.Black.Events.csproj", "{72C151DA-D535-492E-8167-CDF0AE7D7F15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Api", "src\black\api\artiso.AdsdHotel.Black.Api.csproj", "{9BA1C812-0C14-4649-BA15-BAE6C668619A}"
 EndProject
