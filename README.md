@@ -4,8 +4,10 @@
 
 Demo app designed with the SOA definition described in the Advanced Distributed Systems Design course by Udi Dahan.
 
-### [Requirements](Requirements.md)
+### [Requirements](docs/Requirements.md)
 ### [Discussion](https://github.com/orgs/artiso-solutions/teams/systems-design)
+
+### See [How to run](docs/how-to-run.md) for running the system
 
 ## Design
 
