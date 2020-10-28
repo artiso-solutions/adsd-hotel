@@ -5,13 +5,13 @@
 #    https://aka.ms/AA7q20u
 #
 # define global settings here
-name: adsdhotel # application name
+name: adsd-black # application name
 # registry: exampleuser # dockerhub username or container registry hostname
 
 # define multiple services here
 services:
 - name: blackservice
-  project: black\src\api\artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
+  project: src\api\artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
 - name: rabbit
   image: rabbitmq:management-alpine
   bindings:
