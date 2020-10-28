@@ -11,7 +11,7 @@ name: adsdHotel # application name
 # define multiple services here
 services:
 - name: blackservice
-  project: black/api/artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
+  project: black\src\api\artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
 - name: rabbit
   image: rabbitmq:management-alpine
   #dockerfile: infrastructure/adsd-rabbit.dockerfile

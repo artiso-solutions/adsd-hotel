@@ -9,9 +9,7 @@ namespace artiso.AdsdHotel.Black.Events
 
         public GuestInformation GuestInformation { get; }
 
-        public GuestInformationSet(
-            Guid guid,
-            GuestInformation guestInformation)
+        public GuestInformationSet(Guid guid, GuestInformation guestInformation)
         {
             OrderId = guid;
             GuestInformation = guestInformation;

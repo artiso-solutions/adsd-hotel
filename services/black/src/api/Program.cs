@@ -24,9 +24,12 @@ namespace artiso.AdsdHotel.Black.Api
             builder.UseConsoleLifetime();
             builder.ConfigureServices((ctx, services) =>
             {
-                var rabbitUri = ctx.Configuration.GetServiceUri("rabbit","rabbit");
-                // this blocks further initialization until the rabbitmq instance is running
-                services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
+                var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
+                if (rabbitUri != null)
+                {
+                    // this blocks further initialization until the rabbitmq instance is running
+                    services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
+                }
             });
 
             builder.UseNServiceBus(ctx =>
@@ -40,15 +43,22 @@ namespace artiso.AdsdHotel.Black.Api
                 // InMemoryPersistence may loose messages if the transport does not support it natively
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
                 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-                
+
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-                var connectionString = CreateRabbitMqConnectionString(rabbitUri);
-                var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-                transport.ConnectionString(connectionString);
-                transport.UseConventionalRoutingTopology();
+                if (rabbitUri != null)
+                {
+                    var connectionString = CreateRabbitMqConnectionString(rabbitUri);
+                    var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+                    transport.ConnectionString(connectionString);
+                    transport.UseConventionalRoutingTopology();
+                }
+                else
+                {
+                    endpointConfiguration.UseTransport<LearningTransport>();
+                }
 
                 var conventions = endpointConfiguration.Conventions();
-                
+
                 conventions.DefiningCommandsAs(t =>
                     t.Namespace != null &&
                     t.Namespace.EndsWith(".Commands") &&
