@@ -3,8 +3,12 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Events;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NServiceBus.Testing;
 using Xunit;
+using Xunit.Sdk;
 
 namespace artiso.AdsdHotel.Black.Tests
 {
@@ -13,7 +17,8 @@ namespace artiso.AdsdHotel.Black.Tests
         [Fact]
         public async Task ShouldReplyWithResponseMessage()
         {
-            var handler = new SetGuestInformationHandler();
+            var loggerMock = new Mock<ILogger<SetGuestInformationHandler>>();
+            var handler = new SetGuestInformationHandler(loggerMock.Object);
             var context = new TestableMessageHandlerContext();
 
             var guestInformation = new Contracts.GuestInformation
@@ -30,10 +35,16 @@ namespace artiso.AdsdHotel.Black.Tests
             Assert.Single(context.PublishedMessages);
             var publishedEvent = context.PublishedMessages[0].Message;
             Assert.IsType<GuestInformationSet>(publishedEvent);
-            var gis = publishedEvent as GuestInformationSet;
-            Assert.Equal(message.OrderId, gis.OrderId);
-            Assert.NotNull(gis.GuestInformation);
-            Assert.Equal(message.GuestInformation, gis.GuestInformation);
+            if (publishedEvent is GuestInformationSet gis)
+            {
+                Assert.Equal(message.OrderId, gis.OrderId);
+                Assert.NotNull(gis.GuestInformation);
+                Assert.Equal(message.GuestInformation, gis.GuestInformation);
+            }
+            else
+            {
+                throw new XunitException($"Event is not of the correct type '{typeof(GuestInformationSet).FullName}'");
+            }
         }
     }
 }
