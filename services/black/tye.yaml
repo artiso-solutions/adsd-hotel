@@ -23,6 +23,12 @@ services:
       port: 15672  
       containerPort: 15672
       protocol: http
+- name: mongodb
+  image: mongo
+  bindings:
+    - name: mongodb
+      port: 27017
+      protocol: mongodb
 
   # executable: app.exe # path to an executable (relative to this file)
   # args: --arg1=3 # arguments to pass to the process

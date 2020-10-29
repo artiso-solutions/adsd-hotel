@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Diagnostics;
+using MongoDB.Driver;
 
 namespace artiso.AdsdHotel.Black.Api
 {
@@ -30,6 +31,9 @@ namespace artiso.AdsdHotel.Black.Api
                     // this blocks further initialization until the rabbitmq instance is running
                     services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
                 }
+                var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
+                string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
+                services.AddTransient(sp => new MongoClient(mongoConnectionString));
             });
 
             builder.UseNServiceBus(ctx =>
