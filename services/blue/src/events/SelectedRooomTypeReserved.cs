@@ -2,7 +2,7 @@
 
 namespace artiso.AdsdHotel.Blue.Events
 {
-    public class Class1
+    public class SelectedRooomTypeReserved
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace artiso.AdsdHotel.Blue.Commands
 {
-    public class Class1
+    public class ConfirmSelectedRoomType
     {
     }
 }
