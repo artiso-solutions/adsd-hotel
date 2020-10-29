@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Diagnostics;
 using MongoDB.Driver;
+//using artiso.AdsdHotel.Infrastructure.DataStorage;
+//using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 
 namespace artiso.AdsdHotel.Black.Api
 {
@@ -31,21 +33,24 @@ namespace artiso.AdsdHotel.Black.Api
                     // this blocks further initialization until the rabbitmq instance is running
                     services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
                 }
-                var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
-                string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
-                services.AddTransient(sp => new MongoClient(mongoConnectionString));
+
+
+                //var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
+                //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
+                //var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
+                //var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
             });
 
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                endpointConfiguration.EnableCallbacks(makesRequests: false);
+                // endpointConfiguration.EnableCallbacks(makesRequests: false);
                 endpointConfiguration.EnableInstallers();
 
-                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
                 // ToDo use durable persistence in production
                 // InMemoryPersistence may loose messages if the transport does not support it natively
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
+                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
                 endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");

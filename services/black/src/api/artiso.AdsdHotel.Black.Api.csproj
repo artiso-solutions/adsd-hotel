@@ -14,12 +14,13 @@
     <PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
     <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.*" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.*" />
-    <PackageReference Include="NServiceBus.MicrosoftLogging.Hosting" Version="1.*" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
+    <ProjectReference Include="..\..\..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj" />
   </ItemGroup>
 
  </Project>
