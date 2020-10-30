@@ -351,3 +351,6 @@ MigrationBackup/
 
 #Rider
 .idea/
+
+#Tye
+/src/.tye/
