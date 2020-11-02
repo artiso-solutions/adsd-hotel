@@ -21,6 +21,7 @@ namespace artiso.AdsdHotel.Black.Api
         public async Task Handle(RequestGuestInformation message, IMessageHandlerContext context)
         {
             var result = await dataStoreClient.Get<GuestInformationRecord?>(r => r.OrderId == message.OrderId).ConfigureAwait(false);
+            // ToDo what should we return when nothing is found?
             await context.Reply(new GuestInformationResponse { GuestInformation = result.GuestInformation });
         }
     }
