@@ -17,29 +17,18 @@ namespace artiso.AdsdHotel.Black.Api
     {
         private readonly ILogger<SetGuestInformationHandler> logger;
 
-        //private readonly IDataStoreClient dataStoreClient;
+        private readonly IDataStoreClient dataStoreClient;
 
-        //public SetGuestInformationHandler(IDataStoreClient dataStoreClient)
-        //{
-        //    this.dataStoreClient = dataStoreClient;
-        //}
-
-        public SetGuestInformationHandler(ILogger<SetGuestInformationHandler> logger)
+        public SetGuestInformationHandler(IDataStoreClient dataStoreClient, ILogger<SetGuestInformationHandler> logger)
         {
+            this.dataStoreClient = dataStoreClient;
             this.logger = logger;
         }
 
         public async Task Handle(SetGuestInformation message, IMessageHandlerContext context)
         {
-            //var db = mongoClient.GetDatabase("blackDatabase");
-            //var collection = db.GetCollection<GuestInformationRecord>("GuestInformation");
-            //var record = new GuestInformationRecord { OrderId = message.OrderId, GuestInformation = message.GuestInformation };
-            //await collection.InsertOneAsync(record).ConfigureAwait(false);
-            //var filter = Builders<GuestInformationRecord>.Filter.Eq(x => x.OrderId, message.OrderId);
-            //var update = Builders<GuestInformationRecord>.Update.Set(x => x.GuestInformation, message.GuestInformation);
-            //var options = new FindOneAndUpdateOptions<GuestInformationRecord>();
-            //options.IsUpsert = true;
-            //var proj = await collection.FindOneAndUpdateAsync(filter, update, options).ConfigureAwait(false);
+            var record = new GuestInformationRecord { OrderId = message.OrderId, GuestInformation = message.GuestInformation };
+            await dataStoreClient.AddOrUpdate(record).ConfigureAwait(false);
             this.logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }

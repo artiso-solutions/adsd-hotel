@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Diagnostics;
 using MongoDB.Driver;
+using artiso.AdsdHotel.Infrastructure.DataStorage;
+using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 //using artiso.AdsdHotel.Infrastructure.DataStorage;
 //using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 
@@ -34,11 +36,14 @@ namespace artiso.AdsdHotel.Black.Api
                     services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
                 }
 
-
-                //var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
-                //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
-                //var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
-                //var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
+                var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
+                if (mongoUri != null)
+                {
+                    //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
+                    var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
+                    var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
+                    services.AddScoped<IDataStoreClient, MongoDataStoreClient>( sp => new MongoDataStoreClient(mongoUri, dbName, collectionName));
+                }
             });
 
             builder.UseNServiceBus(ctx =>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Events;
+using artiso.AdsdHotel.Infrastructure.DataStorage;
 using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,7 +19,8 @@ namespace artiso.AdsdHotel.Black.Tests
         public async Task ShouldReplyWithResponseMessage()
         {
             var loggerMock = new Mock<ILogger<SetGuestInformationHandler>>();
-            var handler = new SetGuestInformationHandler(loggerMock.Object);
+            var dataStoreMock = new Mock<IDataStoreClient>();
+            var handler = new SetGuestInformationHandler(dataStoreMock.Object, loggerMock.Object);
             var context = new TestableMessageHandlerContext();
 
             var guestInformation = new Contracts.GuestInformation
