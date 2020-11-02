@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Events", "src\events\artiso.AdsdHotel.Blue.Events.csproj", "{8931F5D0-49D8-411D-BD19-FEB16A820C32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Requests", "src\requests\artiso.AdsdHotel.Blue.Requests.csproj", "{EAE1203F-2849-4C20-9D91-426AF385F998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Requests", "src\requests\artiso.AdsdHotel.Blue.Requests.csproj", "{EAE1203F-2849-4C20-9D91-426AF385F998}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{589BF7D5-0261-4036-826B-F4BA64A0E13A}"
+	ProjectSection(SolutionItems) = preProject
+		tye.yaml = tye.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

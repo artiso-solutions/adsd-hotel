@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\commands\artiso.AdsdHotel.Blue.Commands.csproj" />
     <ProjectReference Include="..\requests\artiso.AdsdHotel.Blue.Requests.csproj" />
   </ItemGroup>
 

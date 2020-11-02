@@ -4,7 +4,13 @@ namespace artiso.AdsdHotel.Blue.Contracts
 {
     public class PendingReservation
     {
-        internal PendingReservation(string id, string orderId, string roomTypeId, DateTime start, DateTime end, DateTime createdAt)
+        public PendingReservation(
+            string id,
+            string orderId,
+            string roomTypeId,
+            DateTime start,
+            DateTime end,
+            DateTime createdAt)
         {
             Id = id;
             OrderId = orderId;
