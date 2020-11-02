@@ -36,7 +36,6 @@ namespace artiso.AdsdHotel.Black.Tests
 
             Assert.Single(context.PublishedMessages);
             var publishedEvent = context.PublishedMessages[0].Message;
-            Assert.IsType<GuestInformationSet>(publishedEvent);
             if (publishedEvent is GuestInformationSet gis)
             {
                 Assert.Equal(message.OrderId, gis.OrderId);
@@ -45,7 +44,7 @@ namespace artiso.AdsdHotel.Black.Tests
             }
             else
             {
-                throw new XunitException($"Event is not of the correct type '{typeof(GuestInformationSet).FullName}'");
+                throw new XunitException($"Event is not of type '{typeof(GuestInformationSet).FullName}'");
             }
         }
     }

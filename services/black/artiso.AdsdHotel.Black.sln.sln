@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Infrastruc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Infrastructure.MongoDataStorage", "..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj", "{C1A65F90-BD03-4D7A-8A36-886BE4CBE6BE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Infrastructure.NServiceBus", "..\infrastructure\src\nservicebus\artiso.AdsdHotel.Infrastructure.NServiceBus.csproj", "{1576CF75-5FF2-488B-A65E-4FC278E3255C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,18 @@ Global
 		{C1A65F90-BD03-4D7A-8A36-886BE4CBE6BE}.Release|x64.Build.0 = Release|Any CPU
 		{C1A65F90-BD03-4D7A-8A36-886BE4CBE6BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1A65F90-BD03-4D7A-8A36-886BE4CBE6BE}.Release|x86.Build.0 = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|x64.Build.0 = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Debug|x86.Build.0 = Debug|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|x64.ActiveCfg = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|x64.Build.0 = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|x86.ActiveCfg = Release|Any CPU
+		{1576CF75-5FF2-488B-A65E-4FC278E3255C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

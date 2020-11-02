@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.4.0-alpha.20371.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.3" />
-    <PackageReference Include="NServiceBus" Version="7.4.3" />
+    <PackageReference Include="NServiceBus" Version="7.4.4" />
     <PackageReference Include="NServiceBus.Callbacks" Version="3.0.0" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.2.0" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
@@ -18,9 +18,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
+    <ProjectReference Include="..\..\..\infrastructure\src\nservicebus\artiso.AdsdHotel.Infrastructure.NServiceBus.csproj" />
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
     <ProjectReference Include="..\..\..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>artiso.AdsdHotel.Black.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
  </Project>

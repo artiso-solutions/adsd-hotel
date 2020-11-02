@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Black.Contracts;
+using artiso.AdsdHotel.Infrastructure.NServiceBus;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Ambassador
@@ -12,38 +10,21 @@ namespace artiso.AdsdHotel.Black.Ambassador
     {
         private EndpointConfiguration senderConfiguration;
 
-        public BlackClient(string connectionString)
+        public BlackClient(string rabbitMqConnectionString)
         {
             senderConfiguration = new EndpointConfiguration("Black.Ambassador");
-            //senderConfiguration.SendOnly();
-            // ToDo I don't like this callback stuff with nservicebus, we could just use a webapi
             senderConfiguration.EnableCallbacks();
             senderConfiguration.EnableInstallers();
             senderConfiguration.MakeInstanceUniquelyAddressable($"Black.Ambassador.{Guid.NewGuid()}");
             senderConfiguration.UseSerialization<NewtonsoftSerializer>();
 
-            var conventions = senderConfiguration.Conventions();
-
-            conventions.DefiningCommandsAs(t =>
-                t.Namespace != null &&
-                t.Namespace.EndsWith(".Commands") &&
-                !t.Name.EndsWith("Response"));
-
-            conventions.DefiningMessagesAs(t =>
-                t.Namespace != null &&
-                t.Namespace.EndsWith(".Commands") &&
-                t.Name.EndsWith("Response"));
-
-            conventions.DefiningEventsAs(t =>
-                t.Namespace != null &&
-                t.Namespace.EndsWith(".Events"));
+            senderConfiguration.ConfigureConventions();
 
             // ToDo Use mongo persistence etc.
             senderConfiguration.UsePersistence<InMemoryPersistence>();
             var senderTransport = senderConfiguration.UseTransport<RabbitMQTransport>();
             senderTransport.UseConventionalRoutingTopology();
-            senderTransport.ConnectionString(connectionString);
-            // Use that to automatically route all SetGuestInformation to Black.Api instead of having to define it in the call.
+            senderTransport.ConnectionString(rabbitMqConnectionString);
             var routing = senderTransport.Routing();
             routing.RouteToEndpoint(typeof(SetGuestInformation), "Black.Api");
             routing.RouteToEndpoint(typeof(RequestGuestInformation), "Black.Api");
@@ -52,9 +33,8 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task SetGuestInformationAsync(SetGuestInformation guestInformation)
         {
             // ToDo I don't know if we should start and stop the endpoint in this call or do it outside
+            // maybe make the ambassador disposable?
             var senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
-            //var response = senderEndpoint.Request<GuestInformationSet>(guestInformation).ConfigureAwait(false);
-            // ToDo maybe use routing in constructor hence we can omit the endpoint here
             await senderEndpoint.Send(guestInformation).ConfigureAwait(false);
             await senderEndpoint.Stop().ConfigureAwait(false);
         }
@@ -62,7 +42,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<GuestInformationResponse> GetGuestInformationAsync(Guid orderId)
         {
             var senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
-            var response = await senderEndpoint.Request<GuestInformationResponse>(new RequestGuestInformation()).ConfigureAwait(false);
+            var response = await senderEndpoint.Request<GuestInformationResponse>(new RequestGuestInformation { OrderId = orderId }).ConfigureAwait(false);
             await senderEndpoint.Stop().ConfigureAwait(false);
             return response;
         }

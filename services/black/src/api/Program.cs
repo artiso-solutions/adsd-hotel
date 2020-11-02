@@ -11,6 +11,7 @@ using System.Diagnostics;
 using MongoDB.Driver;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
 using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
+using artiso.AdsdHotel.Infrastructure.NServiceBus;
 //using artiso.AdsdHotel.Infrastructure.DataStorage;
 //using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 
@@ -42,14 +43,14 @@ namespace artiso.AdsdHotel.Black.Api
                     //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
                     var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
                     var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
-                    services.AddScoped<IDataStoreClient, MongoDataStoreClient>( sp => new MongoDataStoreClient(mongoUri, dbName, collectionName));
+                    services.AddScoped<IDataStoreClient, MongoDataStoreClient>(sp => new MongoDataStoreClient(mongoUri, dbName, collectionName));
                 }
             });
 
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                // endpointConfiguration.EnableCallbacks(makesRequests: false);
+                endpointConfiguration.EnableCallbacks(makesRequests: false);
                 endpointConfiguration.EnableInstallers();
 
                 // ToDo use durable persistence in production
@@ -70,22 +71,7 @@ namespace artiso.AdsdHotel.Black.Api
                 {
                     endpointConfiguration.UseTransport<LearningTransport>();
                 }
-
-                var conventions = endpointConfiguration.Conventions();
-
-                conventions.DefiningCommandsAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    !t.Name.EndsWith("Response"));
-
-                conventions.DefiningMessagesAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    t.Name.EndsWith("Response"));
-
-                conventions.DefiningEventsAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Events"));
+                endpointConfiguration.ConfigureConventions();
 
                 return endpointConfiguration;
             });
