@@ -18,7 +18,6 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
             client = new MongoClient(connectionString);
             db = client.GetDatabase(database);
             this.collection = collection;
-
         }
 
         public async Task AddOrUpdate<T>(T entity)

@@ -7,7 +7,7 @@ using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Api
 {
-    public class RequestGuestInformationHandler : IHandleMessages<RequestGuestInformation>
+    public class RequestGuestInformationHandler : IHandleMessages<GuestInformationRequest>
     {
         private readonly IDataStoreClient dataStoreClient;
         private readonly ILogger<RequestGuestInformationHandler> logger;
@@ -18,11 +18,11 @@ namespace artiso.AdsdHotel.Black.Api
             this.logger = logger;
         }
 
-        public async Task Handle(RequestGuestInformation message, IMessageHandlerContext context)
+        public async Task Handle(GuestInformationRequest message, IMessageHandlerContext context)
         {
             var result = await dataStoreClient.Get<GuestInformationRecord?>(r => r.OrderId == message.OrderId).ConfigureAwait(false);
             // ToDo what should we return when nothing is found?
-            await context.Reply(new GuestInformationResponse { GuestInformation = result.GuestInformation });
+            await context.Reply(new GuestInformationResponse { GuestInformation = result?.GuestInformation });
         }
     }
 }

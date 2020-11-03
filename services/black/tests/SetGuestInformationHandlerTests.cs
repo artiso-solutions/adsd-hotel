@@ -4,7 +4,6 @@ using artiso.AdsdHotel.Black.Api;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Events;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NServiceBus.Testing;
@@ -30,7 +29,7 @@ namespace artiso.AdsdHotel.Black.Tests
                 EMail = "mail"
             };
 
-            SetGuestInformation message = new SetGuestInformation { OrderId = Guid.NewGuid(), GuestInformation = guestInformation };
+            SetGuestInformation message = new SetGuestInformation(Guid.NewGuid(), guestInformation);
             await handler.Handle(message, context)
                 .ConfigureAwait(false);
 

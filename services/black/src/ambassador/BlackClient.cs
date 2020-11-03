@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
+using artiso.AdsdHotel.Black.Commands.Validation;
+using artiso.AdsdHotel.Black.Contracts;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Ambassador
 {
-    public class BlackClient
+    public class BlackClient : IDisposable
     {
         private EndpointConfiguration senderConfiguration;
+        private bool disposedValue;
+        private IEndpointInstance? senderEndpoint;
 
         public BlackClient(string rabbitMqConnectionString)
         {
@@ -27,24 +31,59 @@ namespace artiso.AdsdHotel.Black.Ambassador
             senderTransport.ConnectionString(rabbitMqConnectionString);
             var routing = senderTransport.Routing();
             routing.RouteToEndpoint(typeof(SetGuestInformation), "Black.Api");
-            routing.RouteToEndpoint(typeof(RequestGuestInformation), "Black.Api");
+            routing.RouteToEndpoint(typeof(GuestInformationRequest), "Black.Api");
+            
         }
 
-        public async Task SetGuestInformationAsync(SetGuestInformation guestInformation)
+        public async Task Start()
         {
-            // ToDo I don't know if we should start and stop the endpoint in this call or do it outside
-            // maybe make the ambassador disposable?
-            var senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
-            await senderEndpoint.Send(guestInformation).ConfigureAwait(false);
-            await senderEndpoint.Stop().ConfigureAwait(false);
+            this.senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
         }
 
-        public async Task<GuestInformationResponse> GetGuestInformationAsync(Guid orderId)
+        public async Task SetGuestInformationAsync(Guid orderId, GuestInformation guestInformation)
         {
-            var senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
-            var response = await senderEndpoint.Request<GuestInformationResponse>(new RequestGuestInformation { OrderId = orderId }).ConfigureAwait(false);
-            await senderEndpoint.Stop().ConfigureAwait(false);
-            return response;
+            ThrowIfNotInitialized();
+            var sgi = new SetGuestInformation(orderId, guestInformation);
+            if (!SetGuestInformationValidator.IsValid(sgi))
+                throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
+
+            await senderEndpoint.Send(sgi).ConfigureAwait(false);
+        }
+
+        public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
+        {
+            ThrowIfNotInitialized();
+            var response = await senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest { OrderId = orderId }).ConfigureAwait(false);
+            return response.GuestInformation;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    senderEndpoint?.Stop().GetAwaiter().GetResult();
+                    senderEndpoint = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void ThrowIfNotInitialized()
+        {
+            if ( this.senderEndpoint == null)
+            {
+                throw new InvalidOperationException($"Client not initialized. Call {nameof(Start)} first.");
+            }
         }
     }
 }
