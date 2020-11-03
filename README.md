@@ -1,13 +1,12 @@
 # Advanced Distributed Systems Design - Hotel Booking
 
-[![License MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
 Demo app designed with the SOA definition described in the Advanced Distributed Systems Design course by Udi Dahan.
 
-### [Requirements](docs/Requirements.md)
-### [Discussion](https://github.com/orgs/artiso-solutions/teams/systems-design)
-
-### See [How to run](docs/how-to-run.md) for running the system
+[![Requirements](https://img.shields.io/badge/view-requirements-informational)](docs/Requirements.md)
+[![Discussions](https://img.shields.io/badge/view-discussions-informational)](https://github.com/artiso-solutions/adsd-hotel/discussions)
+[![How to Run](https://img.shields.io/badge/view-how%20to%20run-informational)](docs/how-to-run.md)
+[![Project Structure](https://img.shields.io/badge/view-project%20structure-informational)](https://github.com/artiso-solutions/adsd-hotel/wiki/Project-structure)
+[![Meeting Notes](https://img.shields.io/badge/view-meeting%20notes-informational)](https://github.com/artiso-solutions/adsd-hotel/wiki/Meeting-notes)
 
 ## Design
 
