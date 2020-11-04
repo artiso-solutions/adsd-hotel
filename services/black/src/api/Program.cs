@@ -48,7 +48,7 @@ namespace artiso.AdsdHotel.Black.Api
                 var connectionString = CreateRabbitMqConnectionString(rabbitUri);
                 endpointConfiguration
                     .ConfigureDefaults(connectionString,null)
-                    .WithCallbackSupport();
+                    .WithServerCallbacks();
                 //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
 

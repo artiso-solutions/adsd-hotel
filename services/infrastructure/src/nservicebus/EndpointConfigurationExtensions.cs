@@ -53,7 +53,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         /// <param name="config">The endpoint configuration.</param>
         /// <param name="uniqueEndpointName">Mandatory unique name for this endpoint, so callbacks can be delivered correctly.</param>
         /// <returns>The endpoint configuration.</returns>
-        public static EndpointConfiguration WithCallbacks(this EndpointConfiguration config, string uniqueEndpointName)
+        public static EndpointConfiguration WithClientCallbacks(this EndpointConfiguration config, string uniqueEndpointName)
         {
             if (string.IsNullOrEmpty(uniqueEndpointName))
             {
@@ -69,7 +69,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         /// </summary>
         /// <param name="config">The endpoint configuration.</param>
         /// <returns>The endpoint configuration.</returns>
-        public static EndpointConfiguration WithCallbackSupport(this EndpointConfiguration config)
+        public static EndpointConfiguration WithServerCallbacks(this EndpointConfiguration config)
         {
             config.EnableCallbacks(false);
             return config;
