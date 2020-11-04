@@ -1,19 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Diagnostics;
-using MongoDB.Driver;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
 using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
-//using artiso.AdsdHotel.Infrastructure.DataStorage;
-//using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 
 namespace artiso.AdsdHotel.Black.Api
 {
@@ -50,28 +44,13 @@ namespace artiso.AdsdHotel.Black.Api
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                endpointConfiguration.EnableCallbacks(makesRequests: false);
-                endpointConfiguration.EnableInstallers();
-
-                // ToDo use durable persistence in production
-                // InMemoryPersistence may loose messages if the transport does not support it natively
-                endpointConfiguration.UsePersistence<InMemoryPersistence>();
-                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-                endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-                if (rabbitUri != null)
-                {
-                    var connectionString = CreateRabbitMqConnectionString(rabbitUri);
-                    var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-                    transport.ConnectionString(connectionString);
-                    transport.UseConventionalRoutingTopology();
-                }
-                else
-                {
-                    endpointConfiguration.UseTransport<LearningTransport>();
-                }
-                endpointConfiguration.ConfigureConventions();
+                var connectionString = CreateRabbitMqConnectionString(rabbitUri);
+                endpointConfiguration
+                    .ConfigureDefaults(connectionString,null)
+                    .WithCallbackSupport();
+                //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+
 
                 return endpointConfiguration;
             });
@@ -79,9 +58,10 @@ namespace artiso.AdsdHotel.Black.Api
             return builder;
         }
 
-        private static string CreateRabbitMqConnectionString(Uri uri)
+        private static string CreateRabbitMqConnectionString(Uri? uri)
         {
-            return $"host={uri.Host}";
+            var host = uri?.Host ?? "localhost";
+            return $"host={host}";
         }
 
         private static async Task OnCriticalError(ICriticalErrorContext context)

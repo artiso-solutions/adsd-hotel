@@ -17,25 +17,15 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public BlackClient(string rabbitMqConnectionString)
         {
             senderConfiguration = new EndpointConfiguration("Black.Ambassador");
-            senderConfiguration.EnableCallbacks();
-            senderConfiguration.EnableInstallers();
-            senderConfiguration.MakeInstanceUniquelyAddressable($"Black.Ambassador.{Guid.NewGuid()}");
-            senderConfiguration.UseSerialization<NewtonsoftSerializer>();
-
-            senderConfiguration.ConfigureConventions();
-
-            // ToDo Use mongo persistence etc.
-            senderConfiguration.UsePersistence<InMemoryPersistence>();
-            var senderTransport = senderConfiguration.UseTransport<RabbitMQTransport>();
-            senderTransport.UseConventionalRoutingTopology();
-            senderTransport.ConnectionString(rabbitMqConnectionString);
-            var routing = senderTransport.Routing();
-            routing.RouteToEndpoint(typeof(SetGuestInformation), "Black.Api");
-            routing.RouteToEndpoint(typeof(GuestInformationRequest), "Black.Api");
-            
+            senderConfiguration
+                .ConfigureDefaults(
+                    rabbitMqConnectionString, 
+                "Black.Api", 
+                    typeof(SetGuestInformation), typeof(GuestInformationRequest))
+                .WithCallbacks($"Black.Ambassador.{Guid.NewGuid()}");
         }
 
-        public async Task Start()
+        public async Task StartAsync()
         {
             this.senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
         }
@@ -63,6 +53,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
             {
                 if (disposing)
                 {
+                    // ToDo maybe use NetStandard2.1 (no .NetFramework support!) and IAsyncDisposable
                     senderEndpoint?.Stop().GetAwaiter().GetResult();
                     senderEndpoint = null;
                 }
@@ -82,7 +73,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         {
             if ( this.senderEndpoint == null)
             {
-                throw new InvalidOperationException($"Client not initialized. Call {nameof(Start)} first.");
+                throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
             }
         }
     }
