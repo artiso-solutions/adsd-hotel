@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "artiso.AdsdHotel.Red.Api";
+
+package rates;
+
+service Rates {
+  rpc GetRoomRatesByRoomType (GetRoomRatesByRoomTypeRequest) returns (GetRoomRatesByRoomTypeReply);
+  rpc InputRoomRates (InputRoomRatesRequest) returns (InputRoomRatesReply);
+}
+
+// GetRoomRatesByRoomType
+message GetRoomRatesByRoomTypeRequest {
+  string name = 1;
+}
+message GetRoomRatesByRoomTypeReply {
+  string message = 1;
+}
+
+// GetRoomRatesByRoomType
+message InputRoomRatesRequest {
+  string name = 1;
+}
+message InputRoomRatesReply {
+  string message = 1;
+}
