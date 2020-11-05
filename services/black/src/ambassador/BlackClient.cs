@@ -31,7 +31,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// </remarks>
     public class BlackClient : IAsyncDisposable, IDisposable
     {
-        private EndpointConfiguration senderConfiguration;
+        private readonly EndpointConfiguration senderConfiguration;
         private bool disposedValue;
         private IEndpointInstance? senderEndpoint;
 

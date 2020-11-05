@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
-		<PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
-		<PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
-		<PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
+    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
+    <PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
+  </ItemGroup>
 
 </Project>

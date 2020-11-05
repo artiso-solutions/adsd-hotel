@@ -1,32 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.4.0-alpha.20371.1" />
-		<PackageReference Include="MongoDB.Driver" Version="2.11.3" />
-		<PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
-		<PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
-		<PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
-		<PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
-		<PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.*" />
-		<PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.*" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.4.0-alpha.20371.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.3" />
+    <PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
+    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
+    <PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
+    <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.*" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.*" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
-		<ProjectReference Include="..\..\..\infrastructure\src\nservicebus\artiso.AdsdHotel.Infrastructure.NServiceBus.csproj" />
-		<ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
-		<ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
-		<ProjectReference Include="..\..\..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>artiso.AdsdHotel.Black.Tests</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
+    <ProjectReference Include="..\..\..\infrastructure\src\nservicebus\artiso.AdsdHotel.Infrastructure.NServiceBus.csproj" />
+    <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
+    <ProjectReference Include="..\..\..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>artiso.AdsdHotel.Black.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
 </Project>
