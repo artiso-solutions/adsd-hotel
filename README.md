@@ -2,11 +2,12 @@
 
 Demo app designed with the SOA definition described in the Advanced Distributed Systems Design course by Udi Dahan.
 
-[![Requirements](https://img.shields.io/badge/view-requirements-informational)](docs/Requirements.md)
-[![Discussions](https://img.shields.io/badge/view-discussions-informational)](https://github.com/artiso-solutions/adsd-hotel/discussions)
-[![How to Run](https://img.shields.io/badge/view-how%20to%20run-informational)](docs/how-to-run.md)
-[![Project Structure](https://img.shields.io/badge/view-project%20structure-informational)](https://github.com/artiso-solutions/adsd-hotel/wiki/Project-structure)
-[![Meeting Notes](https://img.shields.io/badge/view-meeting%20notes-informational)](https://github.com/artiso-solutions/adsd-hotel/wiki/Meeting-notes)
+**Link to:**<br/>
+[Requirements](docs/Requirements.md)<br/>
+[Project Structure](https://github.com/artiso-solutions/adsd-hotel/wiki/Project-structure)<br/>
+[How to Run](docs/how-to-run.md)<br/>
+[Discussions](https://github.com/artiso-solutions/adsd-hotel/discussions)<br/>
+[Meeting Notes](https://github.com/artiso-solutions/adsd-hotel/wiki/Meeting-notes)<br/>
 
 ## Design
 
