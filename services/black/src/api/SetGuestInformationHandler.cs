@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api.DatabaseModel;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Black.Commands.Validation;
+using artiso.AdsdHotel.Black.Contracts.Validation;
 using artiso.AdsdHotel.Black.Events;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
 using DnsClient.Internal;
@@ -24,10 +24,11 @@ namespace artiso.AdsdHotel.Black.Api
 
         public async Task Handle(SetGuestInformation message, IMessageHandlerContext context)
         {
-            if (!SetGuestInformationValidator.IsValid(message))
+            // ToDo what if the sent message does contain invalid data? Move to error queue?
+            if (!GuestInformationValidator.IsValid(message.GuestInformation))
                 return;
 
-            var record = new GuestInformationRecord { OrderId = message.OrderId, GuestInformation = message.GuestInformation };
+            var record = new GuestInformationRecord(message.OrderId, message.GuestInformation);
             await dataStoreClient.AddOrUpdate(record).ConfigureAwait(false);
             this.logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);

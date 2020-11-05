@@ -4,6 +4,11 @@ namespace artiso.AdsdHotel.Black.Commands
 {
     public class GuestInformationRequest
     {
-        public Guid OrderId { get; set; }
+        public GuestInformationRequest(Guid orderId)
+        {
+            OrderId = orderId;
+        }
+
+        public Guid OrderId { get; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Black.Commands.Validation;
 using artiso.AdsdHotel.Black.Contracts;
+using artiso.AdsdHotel.Black.Contracts.Validation;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
 using NServiceBus;
 
@@ -69,10 +69,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task SetGuestInformationAsync(Guid orderId, GuestInformation guestInformation)
         {
             ThrowIfNotInitialized();
-            var sgi = new SetGuestInformation(orderId, guestInformation);
-            if (!SetGuestInformationValidator.IsValid(sgi))
+            if (!GuestInformationValidator.IsValid(guestInformation))
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
+            var sgi = new SetGuestInformation(orderId, guestInformation);
             await senderEndpoint.Send(sgi).ConfigureAwait(false);
         }
 
@@ -85,7 +85,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
         {
             ThrowIfNotInitialized();
-            var response = await senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest { OrderId = orderId }).ConfigureAwait(false);
+            var response = await senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
             return response.GuestInformation;
         }
 

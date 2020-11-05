@@ -22,16 +22,11 @@ namespace artiso.AdsdHotel.Black.Tests
             var handler = new SetGuestInformationHandler(dataStoreMock.Object, loggerMock.Object);
             var context = new TestableMessageHandlerContext();
 
-            var guestInformation = new Contracts.GuestInformation
-            {
-                FirstName = "first",
-                LastName = "last",
-                EMail = "mail"
-            };
+            var guestInformation = new Contracts.GuestInformation("first", "last", "mail");
 
             SetGuestInformation message = new SetGuestInformation(Guid.NewGuid(), guestInformation);
             await handler.Handle(message, context)
-                .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
             Assert.Single(context.PublishedMessages);
             var publishedEvent = context.PublishedMessages[0].Message;

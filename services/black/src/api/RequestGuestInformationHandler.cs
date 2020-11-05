@@ -20,9 +20,16 @@ namespace artiso.AdsdHotel.Black.Api
 
         public async Task Handle(GuestInformationRequest message, IMessageHandlerContext context)
         {
-            var result = await dataStoreClient.Get<GuestInformationRecord?>(r => r.OrderId == message.OrderId).ConfigureAwait(false);
-            // ToDo what should we return when nothing is found?
-            await context.Reply(new GuestInformationResponse { GuestInformation = result?.GuestInformation });
+            var result = await dataStoreClient.Get<GuestInformationRecord?>(r => r!.OrderId == message.OrderId).ConfigureAwait(false);
+            if (result == null)
+            {
+                logger.LogWarning($"No matching entry found for order '{message.OrderId}'.");
+                await context.Reply(new GuestInformationResponse("Not found")).ConfigureAwait(false);
+            }
+            else
+            {
+                await context.Reply(new GuestInformationResponse(result.GuestInformation)).ConfigureAwait(false);
+            }
         }
     }
 }
