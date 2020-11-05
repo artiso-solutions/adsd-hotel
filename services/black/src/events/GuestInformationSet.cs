@@ -5,9 +5,9 @@ namespace artiso.AdsdHotel.Black.Events
 {
     public class GuestInformationSet
     {
-        public Guid OrderId { get; }
+        public Guid OrderId { get; set; }
 
-        public GuestInformation GuestInformation { get; }
+        public GuestInformation GuestInformation { get; set; }
 
         public GuestInformationSet(Guid guid, GuestInformation guestInformation)
         {
