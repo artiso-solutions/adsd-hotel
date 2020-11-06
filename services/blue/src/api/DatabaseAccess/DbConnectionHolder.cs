@@ -5,46 +5,62 @@ using System.Threading.Tasks;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
-    internal interface IDbConnectionHolder : IDbConnection, IAsyncDisposable
-    {
-    }
-
     internal class DbConnectionHolder : IDbConnectionHolder
     {
         private readonly IDbConnection _connection;
+        private IDbTransaction? _transaction;
 
         public DbConnectionHolder(IDbConnection connection)
         {
             _connection = connection;
         }
 
+        public bool HasTransaction => !(_transaction is null);
+
         #region IDbConnection
 
-        string IDbConnection.ConnectionString
+        public string ConnectionString
         {
             get => _connection.ConnectionString;
             set => _connection.ConnectionString = value;
         }
 
-        int IDbConnection.ConnectionTimeout => _connection.ConnectionTimeout;
+        public int ConnectionTimeout => _connection.ConnectionTimeout;
 
-        string IDbConnection.Database => _connection.Database;
+        public string Database => _connection.Database;
 
-        ConnectionState IDbConnection.State => _connection.State;
+        public ConnectionState State => _connection.State;
 
-        IDbTransaction IDbConnection.BeginTransaction() => _connection.BeginTransaction();
+        public void Open() => _connection.Open();
 
-        IDbTransaction IDbConnection.BeginTransaction(IsolationLevel il) => _connection.BeginTransaction(il);
+        public void Close() => _connection.Close();
 
-        void IDbConnection.ChangeDatabase(string databaseName) => _connection.ChangeDatabase(databaseName);
+        public void ChangeDatabase(string databaseName) => _connection.ChangeDatabase(databaseName);
 
-        void IDbConnection.Close() => _connection.Close();
+        public IDbTransaction BeginTransaction()
+        {
+            if (_transaction is null)
+                _transaction = _connection.BeginTransaction();
 
-        IDbCommand IDbConnection.CreateCommand() => _connection.CreateCommand();
+            throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
+        }
 
-        void IDisposable.Dispose() => _connection.Dispose();
+        public IDbTransaction BeginTransaction(IsolationLevel il)
+        {
+            if (_transaction is null)
+                _transaction = _connection.BeginTransaction(il);
 
-        void IDbConnection.Open() => _connection.Open();
+            throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
+        }
+
+        public IDbCommand CreateCommand()
+        {
+            var command = _connection.CreateCommand();
+            command.Transaction = _transaction;
+            return command;
+        }
+
+        public void Dispose() => _connection.Dispose();
 
         #endregion
 
@@ -52,7 +68,11 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public async ValueTask DisposeAsync()
         {
-            if (_connection is DbConnection dbConnection)
+            if (_connection is IAsyncDisposable asyncDisposableConnection)
+            {
+                await asyncDisposableConnection.DisposeAsync();
+            }
+            else if (_connection is DbConnection dbConnection)
             {
                 await dbConnection.DisposeAsync();
             }
