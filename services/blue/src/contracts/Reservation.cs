@@ -20,7 +20,7 @@ namespace artiso.AdsdHotel.Blue.Contracts
 
         public string RoomTypeId { get; }
 
-        public string? RoomId { get; set; }
+        public string? RoomId { get; }
 
         public DateTime Start { get; }
 

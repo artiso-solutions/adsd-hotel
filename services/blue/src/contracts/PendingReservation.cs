@@ -4,7 +4,7 @@ namespace artiso.AdsdHotel.Blue.Contracts
 {
     public class PendingReservation
     {
-        public PendingReservation(
+        internal PendingReservation(
             string id,
             string orderId,
             string roomTypeId,
@@ -25,6 +25,8 @@ namespace artiso.AdsdHotel.Blue.Contracts
         public string OrderId { get; }
 
         public string RoomTypeId { get; }
+
+        public bool Confirmed { get; }
 
         public DateTime Start { get; }
 
