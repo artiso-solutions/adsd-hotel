@@ -39,18 +39,20 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public IDbTransaction BeginTransaction()
         {
-            if (_transaction is null)
-                _transaction = _connection.BeginTransaction();
+            if (!(_transaction is null))
+                throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
-            throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
+            _transaction = _connection.BeginTransaction();
+            return _transaction;
         }
 
         public IDbTransaction BeginTransaction(IsolationLevel il)
         {
-            if (_transaction is null)
-                _transaction = _connection.BeginTransaction(il);
+            if (!(_transaction is null))
+                throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
-            throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
+            _transaction = _connection.BeginTransaction(il);
+            return _transaction;
         }
 
         public IDbCommand CreateCommand()
