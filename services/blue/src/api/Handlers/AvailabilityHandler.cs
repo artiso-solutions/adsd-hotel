@@ -2,32 +2,35 @@
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
-using MySql.Data.MySqlClient;
 using NServiceBus;
 using RepoDb;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
-    class AvailabilityHandler : IHandleMessages<RequestAvailableRoomTypes>
+    internal class AvailabilityHandler : IHandleMessages<RequestAvailableRoomTypes>
     {
+        private readonly IDbConnectionFactory _connectionFactory;
+
+        public AvailabilityHandler(IDbConnectionFactory connectionFactory)
+        {
+            _connectionFactory = connectionFactory;
+        }
+
         public async Task Handle(RequestAvailableRoomTypes message, IMessageHandlerContext context)
         {
-            using (var connection = new MySqlConnection("Server=localhost;Port=13306;Database=adsd-blue;"))
-            {
-                var query = @"
+            await using var connection = await _connectionFactory.CreateAsync();
+
+            var query = @"
 SELECT * FROM RoomTypes
 WHERE Id NOT IN (
     SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End
-);";
+    WHERE Start >= @Start AND Start <= @End);";
 
-                var queryResult = await connection.ExecuteQueryAsync<RoomType>(query,
-                    new { message.Start, message.End });
+            var queryResult = await connection.ExecuteQueryAsync<RoomType>(query, new { message.Start, message.End });
 
-                var availableRoomTypes = queryResult.ToArray();
+            var availableRoomTypes = queryResult.ToArray();
 
-                await context.Reply(new AvailableRoomTypesResponse { RoomTypes = availableRoomTypes });
-            }
+            await context.Reply(new AvailableRoomTypesResponse { RoomTypes = availableRoomTypes });
         }
     }
 }
