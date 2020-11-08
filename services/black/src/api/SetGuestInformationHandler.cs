@@ -12,14 +12,14 @@ namespace artiso.AdsdHotel.Black.Api
 {
     public class SetGuestInformationHandler : IHandleMessages<SetGuestInformation>
     {
-        private readonly ILogger<SetGuestInformationHandler> logger;
+        private readonly ILogger<SetGuestInformationHandler> _logger;
 
-        private readonly IDataStoreClient dataStoreClient;
+        private readonly IDataStoreClient _dataStoreClient;
 
         public SetGuestInformationHandler(IDataStoreClient dataStoreClient, ILogger<SetGuestInformationHandler> logger)
         {
-            this.dataStoreClient = dataStoreClient;
-            this.logger = logger;
+            _dataStoreClient = dataStoreClient;
+            _logger = logger;
         }
 
         public async Task Handle(SetGuestInformation message, IMessageHandlerContext context)
@@ -29,8 +29,8 @@ namespace artiso.AdsdHotel.Black.Api
                 return;
 
             var record = new GuestInformationRecord(message.OrderId, message.GuestInformation);
-            await dataStoreClient.AddOrUpdate(record).ConfigureAwait(false);
-            this.logger.LogInformation($"Handled command for order {message.OrderId}");
+            await _dataStoreClient.AddOrUpdate(record).ConfigureAwait(false);
+            _logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }
     }

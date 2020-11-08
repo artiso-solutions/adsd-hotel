@@ -19,7 +19,11 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         /// <param name="targetEndpoint">The name of the endpoint where messages should be sent to.</param>
         /// <param name="typesToRoute">The types of messages which are routed to <paramref name="targetEndpoint"/>. </param>
         /// <returns>The configured endpoint configuration.</returns>
-        public static EndpointConfiguration ConfigureDefaults(this EndpointConfiguration config, string rabbitMqConnectionString, string? targetEndpoint, params Type[] typesToRoute)
+        public static EndpointConfiguration ConfigureDefaults(
+            this EndpointConfiguration config, 
+            string rabbitMqConnectionString, 
+            string? targetEndpoint, 
+            params Type[] typesToRoute)
         {
             if (string.IsNullOrEmpty(rabbitMqConnectionString))
                 throw new InvalidOperationException($"{nameof(rabbitMqConnectionString)} cannot be empty.");
