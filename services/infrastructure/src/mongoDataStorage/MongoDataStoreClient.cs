@@ -20,15 +20,25 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
             this.collection = collection;
         }
 
-        public async Task AddOrUpdate<T>(T entity)
+        public async Task AddOrUpdate<T,TFilterField,TValueField>(
+            T entity, 
+            Expression<Func<T,TFilterField>> filterKey, 
+            Expression<Func<T,TValueField>> propertyToSet )
         {
             var col = db.GetCollection<T>(collection);
-            //var filter = Builders<GuestInformationRecord>.Filter.Eq(x => x.OrderId, message.OrderId);
-            //var update = Builders<GuestInformationRecord>.Update.Set(x => x.GuestInformation, message.GuestInformation);
-            //var options = new FindOneAndUpdateOptions<GuestInformationRecord>();
-            //options.IsUpsert = true;
-            //var proj = await collection.FindOneAndUpdateAsync(filter, update, options).ConfigureAwait(false);
-            await col.InsertOneAsync(entity).ConfigureAwait(false);
+
+            // that may be slow here
+            var filterCompareValue = filterKey.Compile().Invoke(entity);
+            var filterDefinition = Builders<T>.Filter.Eq(filterKey, filterCompareValue);
+
+            // that may be slow here
+            var updateValue = propertyToSet.Compile().Invoke(entity);
+            var update = Builders<T>.Update.Set(propertyToSet, updateValue);
+
+            var options = new UpdateOptions();
+            options.IsUpsert = true;
+
+            await col.UpdateOneAsync(filterDefinition, update, options, default);
         }
 
         public async Task<T> Get<T> (Expression<Func<T, bool>> filter)

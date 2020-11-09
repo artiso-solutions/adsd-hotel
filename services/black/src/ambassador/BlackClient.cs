@@ -31,9 +31,9 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// </remarks>
     public class BlackClient : IAsyncDisposable, IDisposable
     {
-        private readonly EndpointConfiguration senderConfiguration;
-        private bool disposedValue;
-        private IEndpointInstance? senderEndpoint;
+        private readonly EndpointConfiguration _senderConfiguration;
+        private bool _disposedValue;
+        private IEndpointInstance? _senderEndpoint;
 
         /// <summary>
         /// Creates an object of type <see cref="BlackClient"/>.
@@ -41,8 +41,8 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
         public BlackClient(string rabbitMqConnectionString)
         {
-            senderConfiguration = new EndpointConfiguration("Black.Ambassador");
-            senderConfiguration
+            _senderConfiguration = new EndpointConfiguration("Black.Ambassador");
+            _senderConfiguration
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
                 "Black.Api",
@@ -56,7 +56,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <returns>A task that can be awaited.</returns>
         public async Task StartAsync()
         {
-            this.senderEndpoint = await Endpoint.Start(senderConfiguration).ConfigureAwait(false);
+            this._senderEndpoint = await Endpoint.Start(_senderConfiguration).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
             var sgi = new SetGuestInformation(orderId, guestInformation);
-            await senderEndpoint.Send(sgi).ConfigureAwait(false);
+            await _senderEndpoint.Send(sgi).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
         {
             ThrowIfNotInitialized();
-            var response = await senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
+            var response = await _senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
             return response.GuestInformation;
         }
 
@@ -95,15 +95,15 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
-                    senderEndpoint?.Stop().GetAwaiter().GetResult();
+                    _senderEndpoint?.Stop().GetAwaiter().GetResult();
                 }
-                senderEndpoint = null;
+                _senderEndpoint = null;
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 
@@ -119,7 +119,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
 
         private void ThrowIfNotInitialized()
         {
-            if (this.senderEndpoint == null)
+            if (this._senderEndpoint == null)
             {
                 throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
             }
@@ -144,11 +144,11 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <returns>A ValueTask that can be awaited.</returns>
         protected virtual async ValueTask DisposeAsyncCore()
         {
-            if (senderEndpoint != null)
+            if (_senderEndpoint != null)
             {
-                await senderEndpoint.Stop().ConfigureAwait(false);
+                await _senderEndpoint.Stop().ConfigureAwait(false);
             }
-            senderEndpoint = null;
+            _senderEndpoint = null;
         }
     }
 }
