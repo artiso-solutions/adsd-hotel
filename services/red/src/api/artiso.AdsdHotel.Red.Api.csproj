@@ -13,4 +13,8 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Data.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using artiso.AdsdHotel.Red.Api.Service;
+﻿using artiso.AdsdHotel.Red.Api.Service;
+using artiso.AdsdHotel.Red.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace artiso.AdsdHotel.Red.Api
 {
@@ -23,6 +21,7 @@ namespace artiso.AdsdHotel.Red.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -39,6 +38,10 @@ namespace artiso.AdsdHotel.Red.Api
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
+
+            IRoomPriceService roomPriceService = new RoomPriceService();
+
+            roomPriceService.GetRoomRatesByRoomType("Bed & Breakfast")?.ForEach(Console.WriteLine);
         }
     }
 }
