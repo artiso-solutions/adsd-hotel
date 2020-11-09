@@ -13,13 +13,12 @@ namespace artiso.AdsdHotel.Blue.Api
             _connectionString = connectionString;
         }
 
-        public async Task<IDbConnectionHolder> CreateAsync(bool open)
+        public async Task<IDbConnectionHolder> CreateAsync()
         {
             var mySqlConnection = new MySqlConnection(_connectionString);
             var holder = new DbConnectionHolder(mySqlConnection);
 
-            if (open)
-                await holder.EnsureOpenAsync();
+            await holder.EnsureOpenAsync();
 
             return holder;
         }

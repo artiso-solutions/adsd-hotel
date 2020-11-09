@@ -48,7 +48,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
         {
             var query = @"
 SELECT * FROM PendingReservations
-WHERE OrderId = @OrderId;";
+WHERE OrderId = @orderId;";
 
             var queryResult = await connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
 

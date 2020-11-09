@@ -4,6 +4,6 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal interface IDbConnectionFactory
     {
-        Task<IDbConnectionHolder> CreateAsync(bool open = true);
+        Task<IDbConnectionHolder> CreateAsync();
     }
 }
