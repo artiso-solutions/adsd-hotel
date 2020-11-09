@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace artiso.AdsdHotel.Black.Api.DatabaseModel
 {
-    class GuestInformationRecord
+    internal class GuestInformationRecord
     {
         public GuestInformationRecord(Guid orderId, GuestInformation guestInformation)
         {
