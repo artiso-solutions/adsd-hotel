@@ -39,7 +39,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             await MarkPendingReservationAsConfirmed(connection, pendingReservation.Id);
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
 
         private async Task<PendingReservation> FindPendingReservationAsync(

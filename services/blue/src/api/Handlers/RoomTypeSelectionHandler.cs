@@ -50,7 +50,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
                 message.End,
                 DateTime.UtcNow);
 
-            await connection.InsertAsync(DatabaseTableNames.PendingReservation, pendingReservation);
+            await connection.InsertAsync(DatabaseTableNames.PendingReservations, pendingReservation);
         }
     }
 }

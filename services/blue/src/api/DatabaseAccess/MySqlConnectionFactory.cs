@@ -6,16 +6,18 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal class MySqlConnectionFactory : IDbConnectionFactory
     {
-        private readonly string _connectionString;
+        private readonly DatabaseConfiguration _dbConfig;
 
-        public MySqlConnectionFactory(string connectionString)
+        public MySqlConnectionFactory(DatabaseConfiguration dbConfig)
         {
-            _connectionString = connectionString;
+            _dbConfig = dbConfig;
         }
 
         public async Task<IDbConnectionHolder> CreateAsync()
         {
-            var mySqlConnection = new MySqlConnection(_connectionString);
+            var connectionString = _dbConfig.ToMySqlConnectionString();
+
+            var mySqlConnection = new MySqlConnection(connectionString);
             var holder = new DbConnectionHolder(mySqlConnection);
 
             await holder.EnsureOpenAsync();
