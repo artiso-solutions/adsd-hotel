@@ -15,6 +15,7 @@ namespace artiso.AdsdHotel.Blue.Contracts
             Id = id;
             OrderId = orderId;
             RoomTypeId = roomTypeId;
+            Confirmed = false;
             Start = start;
             End = end;
             CreatedAt = createdAt;
