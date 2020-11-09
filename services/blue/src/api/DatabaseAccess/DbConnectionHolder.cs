@@ -15,7 +15,7 @@ namespace artiso.AdsdHotel.Blue.Api
             _connection = connection;
         }
 
-        public bool HasTransaction => !(_transaction is null);
+        public bool HasTransaction => _transaction is object;
 
         #region IDbConnection
 
@@ -39,7 +39,7 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public IDbTransaction BeginTransaction()
         {
-            if (!(_transaction is null))
+            if (_transaction is object)
                 throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
             _transaction = _connection.BeginTransaction();
@@ -48,7 +48,7 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public IDbTransaction BeginTransaction(IsolationLevel il)
         {
-            if (!(_transaction is null))
+            if (_transaction is object)
                 throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
             _transaction = _connection.BeginTransaction(il);

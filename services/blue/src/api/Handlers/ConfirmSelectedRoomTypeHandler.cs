@@ -70,7 +70,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
 
             var availableRoomType = queryResult.FirstOrDefault();
 
-            return !(availableRoomType is null);
+            return availableRoomType is object;
         }
 
         private async Task MarkPendingReservationAsConfirmed(
