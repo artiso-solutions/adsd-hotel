@@ -13,7 +13,11 @@ services:
     image: mysql
     bindings:
       - name: mysql
-        port: 13306
+        port: 3306
+        containerPort: 3306
+    env:
+      - name: MYSQL_ALLOW_EMPTY_PASSWORD
+        value: true
   - name: rabbit
     image: rabbitmq:management-alpine
     bindings:
