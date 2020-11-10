@@ -70,13 +70,13 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public async ValueTask DisposeAsync()
         {
-            if (_connection is IAsyncDisposable asyncDisposableConnection)
-            {
-                await asyncDisposableConnection.DisposeAsync();
-            }
-            else if (_connection is DbConnection dbConnection)
+            if (_connection is DbConnection dbConnection)
             {
                 await dbConnection.DisposeAsync();
+            }
+            else if (_connection is IAsyncDisposable asyncDisposable)
+            {
+                await asyncDisposable.DisposeAsync();
             }
             else
             {
