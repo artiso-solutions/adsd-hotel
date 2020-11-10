@@ -6,6 +6,7 @@ using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using NServiceBus;
 using RepoDb;
+using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api.Handlers
 {
@@ -39,16 +40,16 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             await MarkPendingReservationAsConfirmed(connection, pendingReservation.Id);
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
 
         private async Task<PendingReservation> FindPendingReservationAsync(
             IDbConnection connection,
             string orderId)
         {
-            var query = @"
-SELECT * FROM PendingReservations
-WHERE OrderId = @orderId;";
+            var query = $@"
+SELECT * FROM {PendingReservations}
+WHERE OrderId = @orderId";
 
             var queryResult = await connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
 
@@ -59,11 +60,11 @@ WHERE OrderId = @orderId;";
             IDbConnection connection,
             PendingReservation pendingReservation)
         {
-            var query = @"
-SELECT * FROM RoomTypes
+            var query = $@"
+SELECT * FROM {RoomTypes}
 WHERE Id = @RoomTypeId AND Id NOT IN (
-    SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End);";
+    SELECT DISTINCT RoomTypeId FROM {Reservations}
+    WHERE Start >= @Start AND Start <= @End)";
 
             var queryResult = await connection.ExecuteQueryAsync<RoomType>(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
@@ -77,10 +78,10 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             IDbConnection connection,
             string pendingReservationId)
         {
-            var query = @"
-UPDATE PendingReservations
+            var query = $@"
+UPDATE {PendingReservations}
 SET Confirmed = True
-WHERE PendingReservationId = @pendingReservationId;";
+WHERE PendingReservationId = @pendingReservationId";
 
             await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
         }
@@ -99,7 +100,7 @@ WHERE PendingReservationId = @pendingReservationId;";
                 pendingReservation.End,
                 DateTime.UtcNow);
 
-            await connection.InsertAsync(DatabaseTableNames.Reservations, reservation);
+            await connection.InsertAsync(Reservations, reservation);
 
             return reservation;
         }

@@ -5,6 +5,7 @@ using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using NServiceBus;
 using RepoDb;
+using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
@@ -21,11 +22,11 @@ namespace artiso.AdsdHotel.Blue.Api
         {
             await using var connection = await _connectionFactory.CreateAsync();
 
-            var query = @"
-SELECT * FROM RoomTypes
+            var query = $@"
+SELECT * FROM {RoomTypes}
 WHERE Id = @RoomTypeId AND Id NOT IN (
-    SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End);";
+    SELECT DISTINCT RoomTypeId FROM {Reservations}
+    WHERE Start >= @Start AND Start <= @End)";
 
             var queryResult = await connection.ExecuteQueryAsync<RoomType>(query, new
             {
@@ -50,7 +51,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
                 message.End,
                 DateTime.UtcNow);
 
-            await connection.InsertAsync(DatabaseTableNames.PendingReservation, pendingReservation);
+            await connection.InsertAsync(PendingReservations, pendingReservation);
         }
     }
 }

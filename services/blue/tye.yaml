@@ -1,14 +1,7 @@
-# tye application configuration file
-# read all about it at https://github.com/dotnet/tye
-#
-# when you've given us a try, we'd love to know what you think:
-#    https://aka.ms/AA7q20u
-#
-# define global settings here
 name: adsd-blue
 services:
-  - name: blueservice
-    project: src\api\artiso.AdsdHotel.Blue.Api.csproj # msbuild project path (relative to this file)
+  # - name: blueservice
+  #   project: src\api\artiso.AdsdHotel.Blue.Api.csproj
   - name: mysql
     image: mysql
     bindings:
@@ -24,7 +17,6 @@ services:
       - name: rabbit
         port: 5672
         protocol: amqp
-        #connectionString: host=${host}
       - name: ui
         port: 15672
         containerPort: 15672

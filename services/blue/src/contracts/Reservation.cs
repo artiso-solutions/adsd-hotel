@@ -4,11 +4,18 @@ namespace artiso.AdsdHotel.Blue.Contracts
 {
     public class Reservation
     {
-        internal Reservation(string id, string orderId, string roomTypeId, DateTime start, DateTime end, DateTime createdAt)
+        internal Reservation(
+            string id,
+            string orderId,
+            string roomTypeId,
+            DateTime start,
+            DateTime end,
+            DateTime createdAt)
         {
             Id = id;
             OrderId = orderId;
             RoomTypeId = roomTypeId;
+            RoomId = null;
             Start = start;
             End = end;
             CreatedAt = createdAt;
