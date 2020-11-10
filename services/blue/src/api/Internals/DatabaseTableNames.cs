@@ -14,5 +14,9 @@ namespace artiso.AdsdHotel.Blue.Api
         public const string Reservations = "Reservations";
 
         public const string PendingReservations = "PendingReservations";
+
+        public const string V_RoomTypes = "V_RoomTypes";
+
+        public const string V_Reservations = "V_Reservations";
     }
 }

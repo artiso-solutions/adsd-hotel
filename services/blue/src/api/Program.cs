@@ -57,8 +57,12 @@ namespace artiso.AdsdHotel.Blue.Api
             await dbInitializer.EnsureCreatedAsync();
 
             var runner = services.GetRequiredService<IMigrationRunner>();
-            runner.ListMigrations();
-            runner.MigrateUp();
+
+            if (runner.HasMigrationsToApplyUp())
+            {
+                runner.ListMigrations();
+                runner.MigrateUp();
+            }
         }
     }
 }
