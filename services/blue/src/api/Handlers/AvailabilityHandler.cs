@@ -22,10 +22,10 @@ namespace artiso.AdsdHotel.Blue.Api
             await using var connection = await _connectionFactory.CreateAsync();
 
             var query = $@"
-SELECT * FROM {RoomTypes}
-WHERE Id NOT IN (
-    SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End)";
+SELECT * FROM {V_RoomTypes} AS vrt
+WHERE vrt.Id NOT IN (
+	SELECT DISTINCT RoomTypeId FROM Reservations
+	WHERE Start >= @Start AND Start <= @End)";
 
             var queryResult = await connection.ExecuteQueryAsync<RoomType>(query, new { message.Start, message.End });
 
