@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
@@ -30,9 +29,9 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
                 // TODO: reply to caller with "fault" message.
                 throw new Exception($"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}");
 
-            var pendindReservationIsValid = await IsPendingReservationValidAsync(connection, pendingReservation);
+            var isValid = await IsPendingReservationValidAsync(connection, pendingReservation);
 
-            if (!pendindReservationIsValid)
+            if (!isValid)
                 // TODO: reply to caller with "fault" message.
                 throw new Exception("Pending reservation is not valid");
 
@@ -43,17 +42,30 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             await transaction.CommitAsync();
         }
 
-        private async Task<PendingReservation> FindPendingReservationAsync(
+        private async Task<PendingReservation?> FindPendingReservationAsync(
             IDbConnection connection,
             string orderId)
         {
             var query = $@"
-SELECT * FROM {PendingReservations}
+SELECT Id, OrderId, RoomTypeId, Start, End, CreatedAt
+FROM {PendingReservations}
 WHERE OrderId = @orderId";
 
-            var queryResult = await connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
+            using var reader = await connection.ExecuteReaderAsync(query, new { orderId });
 
-            return queryResult.ToArray().FirstOrDefault();
+            if (!reader.Read())
+                return null;
+
+            var i = 0;
+            var pendingReservation = new PendingReservation(
+                id: reader.GetString(i++),
+                orderId: reader.GetString(i++),
+                roomTypeId: reader.GetString(i++),
+                start: reader.GetDateTime(i++),
+                end: reader.GetDateTime(i++),
+                createdAt: reader.GetDateTime(i++));
+
+            return pendingReservation;
         }
 
         private async Task<bool> IsPendingReservationValidAsync(
@@ -61,29 +73,18 @@ WHERE OrderId = @orderId";
             PendingReservation pendingReservation)
         {
             var query = $@"
-SELECT * FROM {RoomTypes}
+SELECT Id FROM {RoomTypes}
 WHERE Id = @RoomTypeId AND Id NOT IN (
     SELECT DISTINCT RoomTypeId FROM {Reservations}
     WHERE Start >= @Start AND Start <= @End)";
 
-            var queryResult = await connection.ExecuteQueryAsync<RoomType>(query,
+            using var reader = await connection.ExecuteReaderAsync(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
 
-            var availableRoomType = queryResult.FirstOrDefault();
+            if (!reader.Read())
+                return false;
 
-            return availableRoomType is object;
-        }
-
-        private async Task MarkPendingReservationAsConfirmed(
-            IDbConnection connection,
-            string pendingReservationId)
-        {
-            var query = $@"
-UPDATE {PendingReservations}
-SET Confirmed = True
-WHERE PendingReservationId = @pendingReservationId";
-
-            await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
+            return true;
         }
 
         private async Task<Reservation> CreateReservationAsync(
@@ -103,6 +104,18 @@ WHERE PendingReservationId = @pendingReservationId";
             await connection.InsertAsync(Reservations, reservation);
 
             return reservation;
+        }
+
+        private async Task MarkPendingReservationAsConfirmed(
+            IDbConnection connection,
+            string pendingReservationId)
+        {
+            var query = $@"
+UPDATE {PendingReservations}
+SET Confirmed = True
+WHERE PendingReservationId = @pendingReservationId";
+
+            await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
         }
     }
 }
