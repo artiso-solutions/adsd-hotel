@@ -49,7 +49,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
         {
             var query = $@"
 SELECT * FROM {PendingReservations}
-WHERE OrderId = @orderId;";
+WHERE OrderId = @orderId";
 
             var queryResult = await connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
 
@@ -64,7 +64,7 @@ WHERE OrderId = @orderId;";
 SELECT * FROM {RoomTypes}
 WHERE Id = @RoomTypeId AND Id NOT IN (
     SELECT DISTINCT RoomTypeId FROM {Reservations}
-    WHERE Start >= @Start AND Start <= @End);";
+    WHERE Start >= @Start AND Start <= @End)";
 
             var queryResult = await connection.ExecuteQueryAsync<RoomType>(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
@@ -81,7 +81,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             var query = $@"
 UPDATE {PendingReservations}
 SET Confirmed = True
-WHERE PendingReservationId = @pendingReservationId;";
+WHERE PendingReservationId = @pendingReservationId";
 
             await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
         }

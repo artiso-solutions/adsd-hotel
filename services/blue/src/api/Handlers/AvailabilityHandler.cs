@@ -25,7 +25,7 @@ namespace artiso.AdsdHotel.Blue.Api
 SELECT * FROM {RoomTypes}
 WHERE Id NOT IN (
     SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End);";
+    WHERE Start >= @Start AND Start <= @End)";
 
             var queryResult = await connection.ExecuteQueryAsync<RoomType>(query, new { message.Start, message.End });
 
