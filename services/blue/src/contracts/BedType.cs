@@ -2,20 +2,20 @@
 {
     public class BedType
     {
-        internal BedType(string id, string name, int width, int length)
+        internal BedType(string id, string internalName, double width, double length)
         {
             Id = id;
-            Name = name;
+            InternalName = internalName;
             Width = width;
             Length = length;
         }
 
         public string Id { get; }
 
-        public string Name { get; }
+        public string InternalName { get; }
 
-        public int Width { get; }
+        public double Width { get; }
 
-        public int Length { get; }
+        public double Length { get; }
     }
 }

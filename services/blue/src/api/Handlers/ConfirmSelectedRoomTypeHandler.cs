@@ -4,85 +4,91 @@ using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
-using MySql.Data.MySqlClient;
 using NServiceBus;
 using RepoDb;
+using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api.Handlers
 {
-    class ConfirmSelectedRoomTypeHandler : IHandleMessages<ConfirmSelectedRoomType>
+    internal class ConfirmSelectedRoomTypeHandler : IHandleMessages<ConfirmSelectedRoomType>
     {
-        private MySqlConnection? _connection;
-        private IDbTransaction? _transaction;
+        private readonly IDbConnectionFactory _connectionFactory;
+
+        public ConfirmSelectedRoomTypeHandler(IDbConnectionFactory connectionFactory)
+        {
+            _connectionFactory = connectionFactory;
+        }
 
         public async Task Handle(ConfirmSelectedRoomType message, IMessageHandlerContext context)
         {
-            _connection = new MySqlConnection("Server=localhost;Port=13306;Database=adsd-blue;");
-            _transaction = _connection.EnsureOpen().BeginTransaction();
+            await using var connection = await _connectionFactory.CreateAsync();
+            using var transaction = connection.BeginTransaction();
 
-            using var connection = _connection;
-            using var transaction = _transaction;
-
-            var pendingReservation = await FindPendingReservationAsync(message.OrderId);
+            var pendingReservation = await FindPendingReservationAsync(connection, message.OrderId);
 
             if (pendingReservation is null)
                 // TODO: reply to caller with "fault" message.
                 throw new Exception($"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}");
 
-            var valid = await IsPendingReservationValidAsync(pendingReservation);
+            var pendindReservationIsValid = await IsPendingReservationValidAsync(connection, pendingReservation);
 
-            if (!valid)
+            if (!pendindReservationIsValid)
                 // TODO: reply to caller with "fault" message.
                 throw new Exception("Pending reservation is not valid");
 
-            await CreateReservationAsync(pendingReservation);
+            await CreateReservationAsync(connection, pendingReservation);
 
-            await ConfirmPendingReservationAsync(pendingReservation.Id);
+            await MarkPendingReservationAsConfirmed(connection, pendingReservation.Id);
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
 
-        private async Task<PendingReservation> FindPendingReservationAsync(string orderId)
+        private async Task<PendingReservation> FindPendingReservationAsync(
+            IDbConnection connection,
+            string orderId)
         {
-            var query = @"
-SELECT * FROM PendingReservations
-WHERE OrderId = @OrderId;
-";
+            var query = $@"
+SELECT * FROM {PendingReservations}
+WHERE OrderId = @orderId";
 
-            var queryResult = await _connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
+            var queryResult = await connection.ExecuteQueryAsync<PendingReservation>(query, new { orderId });
 
             return queryResult.ToArray().FirstOrDefault();
         }
 
-        private async Task<bool> IsPendingReservationValidAsync(PendingReservation pendingReservation)
+        private async Task<bool> IsPendingReservationValidAsync(
+            IDbConnection connection,
+            PendingReservation pendingReservation)
         {
-            var query = @"
-SELECT * FROM RoomTypes
+            var query = $@"
+SELECT * FROM {RoomTypes}
 WHERE Id = @RoomTypeId AND Id NOT IN (
-    SELECT DISTINCT RoomTypeId FROM Reservations
-    WHERE Start >= @Start AND Start <= @End
-);";
+    SELECT DISTINCT RoomTypeId FROM {Reservations}
+    WHERE Start >= @Start AND Start <= @End)";
 
-            var queryResult = await _connection.ExecuteQueryAsync<RoomType>(query,
+            var queryResult = await connection.ExecuteQueryAsync<RoomType>(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
 
-            var availableRoomType = queryResult.ToArray().FirstOrDefault();
+            var availableRoomType = queryResult.FirstOrDefault();
 
-            return availableRoomType != null;
+            return availableRoomType is object;
         }
 
-        private async Task ConfirmPendingReservationAsync(string pendingReservationId)
+        private async Task MarkPendingReservationAsConfirmed(
+            IDbConnection connection,
+            string pendingReservationId)
         {
-            var query = @"
-UPDATE PendingReservations
+            var query = $@"
+UPDATE {PendingReservations}
 SET Confirmed = True
-WHERE PendingReservationId = @PendingReservationId;
-";
+WHERE PendingReservationId = @pendingReservationId";
 
-            await _connection.ExecuteNonQueryAsync(query, new { PendingReservationId = pendingReservationId }, transaction: _transaction);
+            await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
         }
 
-        private async Task<Reservation> CreateReservationAsync(PendingReservation pendingReservation)
+        private async Task<Reservation> CreateReservationAsync(
+            IDbConnection connection,
+            PendingReservation pendingReservation)
         {
             var reservationId = Guid.NewGuid().ToString();
 
@@ -94,7 +100,7 @@ WHERE PendingReservationId = @PendingReservationId;
                 pendingReservation.End,
                 DateTime.UtcNow);
 
-            await _connection.InsertAsync(DatabaseTableNames.Reservations, reservation, transaction: _transaction);
+            await connection.InsertAsync(Reservations, reservation);
 
             return reservation;
         }
