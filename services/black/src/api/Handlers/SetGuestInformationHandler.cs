@@ -17,8 +17,8 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
 
         public SetGuestInformationHandler(IDataStoreClient dataStoreClient, ILogger<SetGuestInformationHandler> logger)
         {
-            this._dataStoreClient = dataStoreClient;
-            this._logger = logger;
+            _dataStoreClient = dataStoreClient;
+            _logger = logger;
         }
 
         public async Task Handle(SetGuestInformation message, IMessageHandlerContext context)
@@ -29,7 +29,7 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
 
             var record = new GuestInformationRecord(message.OrderId, message.GuestInformation);
             await _dataStoreClient.AddOrUpdate(record, gir => gir.OrderId == message.OrderId).ConfigureAwait(false);
-            this._logger.LogInformation($"Handled command for order {message.OrderId}");
+            _logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }
     }
