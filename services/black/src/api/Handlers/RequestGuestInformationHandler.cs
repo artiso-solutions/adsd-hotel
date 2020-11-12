@@ -5,7 +5,7 @@ using artiso.AdsdHotel.Infrastructure.DataStorage;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.Black.Api
+namespace artiso.AdsdHotel.Black.Api.Handlers
 {
     public class RequestGuestInformationHandler : IHandleMessages<GuestInformationRequest>
     {

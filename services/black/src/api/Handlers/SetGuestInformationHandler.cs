@@ -8,7 +8,7 @@ using DnsClient.Internal;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.Black.Api
+namespace artiso.AdsdHotel.Black.Api.Handlers
 {
     public class SetGuestInformationHandler : IHandleMessages<SetGuestInformation>
     {
