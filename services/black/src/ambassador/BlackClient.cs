@@ -56,7 +56,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <returns>A task that can be awaited.</returns>
         public async Task StartAsync()
         {
-            this._senderEndpoint = await Endpoint.Start(_senderConfiguration).ConfigureAwait(false);
+            _senderEndpoint = await Endpoint.Start(_senderConfiguration).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
 
         private void ThrowIfNotInitialized()
         {
-            if (this._senderEndpoint == null)
+            if (_senderEndpoint == null)
             {
                 throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
             }

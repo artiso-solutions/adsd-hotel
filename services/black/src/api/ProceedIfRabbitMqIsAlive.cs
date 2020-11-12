@@ -10,13 +10,13 @@ namespace artiso.AdsdHotel.Black.Api
 {
     public class ProceedIfRabbitMqIsAlive : IHostedService
     {
-        private readonly string host;
-        private readonly int port;
+        private readonly string _host;
+        private readonly int _port;
 
         public ProceedIfRabbitMqIsAlive(string host, int port)
         {
-            this.host = host;
-            this.port = port;
+            _host = host;
+            _port = port;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace artiso.AdsdHotel.Black.Api
                 try
                 {
                     using var tcpClientB = new TcpClient();
-                    await tcpClientB.ConnectAsync(host, port).ConfigureAwait(false);
+                    await tcpClientB.ConnectAsync(_host, _port).ConfigureAwait(false);
                     return;
                 }
                 catch

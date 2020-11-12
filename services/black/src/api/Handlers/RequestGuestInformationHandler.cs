@@ -9,21 +9,21 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
 {
     public class RequestGuestInformationHandler : IHandleMessages<GuestInformationRequest>
     {
-        private readonly IDataStoreClient dataStoreClient;
-        private readonly ILogger<RequestGuestInformationHandler> logger;
+        private readonly IDataStoreClient _dataStoreClient;
+        private readonly ILogger<RequestGuestInformationHandler> _logger;
 
         public RequestGuestInformationHandler(IDataStoreClient dataStoreClient, ILogger<RequestGuestInformationHandler> logger)
         {
-            this.dataStoreClient = dataStoreClient;
-            this.logger = logger;
+            _dataStoreClient = dataStoreClient;
+            _logger = logger;
         }
 
         public async Task Handle(GuestInformationRequest message, IMessageHandlerContext context)
         {
-            var result = await dataStoreClient.Get<GuestInformationRecord?>(r => r!.OrderId == message.OrderId).ConfigureAwait(false);
+            var result = await _dataStoreClient.Get<GuestInformationRecord?>(r => r!.OrderId == message.OrderId).ConfigureAwait(false);
             if (result == null)
             {
-                logger.LogWarning($"No matching entry found for order '{message.OrderId}'.");
+                _logger.LogWarning($"No matching entry found for order '{message.OrderId}'.");
                 await context.Reply(new GuestInformationResponse("Not found")).ConfigureAwait(false);
             }
             else
