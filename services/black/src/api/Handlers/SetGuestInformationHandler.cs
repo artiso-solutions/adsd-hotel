@@ -28,7 +28,7 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
                 return;
 
             var record = new GuestInformationRecord(message.OrderId, message.GuestInformation);
-            await _dataStoreClient.AddOrUpdate(record, gir => gir.OrderId, gir => gir.GuestInformation).ConfigureAwait(false);
+            await _dataStoreClient.AddOrUpdate(record, gir => gir.OrderId == message.OrderId).ConfigureAwait(false);
             this._logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }
