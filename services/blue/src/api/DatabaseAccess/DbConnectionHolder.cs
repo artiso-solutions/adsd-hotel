@@ -17,8 +17,6 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public bool HasTransaction => _transaction is object;
 
-        #region IDbConnection
-
         public string ConnectionString
         {
             get => _connection.ConnectionString;
@@ -64,10 +62,6 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public void Dispose() => _connection.Dispose();
 
-        #endregion
-
-        #region IAsyncDisposable
-
         public async ValueTask DisposeAsync()
         {
             if (_connection is DbConnection dbConnection)
@@ -83,7 +77,5 @@ namespace artiso.AdsdHotel.Blue.Api
                 _connection.Dispose();
             }
         }
-
-        #endregion
     }
 }
