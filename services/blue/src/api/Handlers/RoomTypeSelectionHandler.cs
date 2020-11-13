@@ -33,7 +33,7 @@ namespace artiso.AdsdHotel.Blue.Api
                 message.Start,
                 message.End);
 
-            if (isAvailable)
+            if (!isAvailable)
                 throw new Exception(
                     $"Room type '{message.RoomTypeId}' is not available " +
                     $"anymore on the given period: {message.Start} - {message.End}");
