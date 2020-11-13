@@ -65,19 +65,19 @@ WHERE vrt.Id NOT IN (
             {
                 var id = reader.GetString(0);
 
-                if (!stash.TryGetValue(id, out var roomTypeQueryModel))
+                if (stash.TryGetValue(id, out var existingRoomTypeQueryModel))
+                    return existingRoomTypeQueryModel;
+
+                var newRoomTypeQueryModel = new RoomTypeQueryModel
                 {
-                    roomTypeQueryModel = new RoomTypeQueryModel
-                    {
-                        Id = id,
-                        InternalName = reader.GetString(1),
-                        Capacity = reader.GetInt32(2)
-                    };
+                    Id = id,
+                    InternalName = reader.GetString(1),
+                    Capacity = reader.GetInt32(2)
+                };
 
-                    stash.Add(id, roomTypeQueryModel);
-                }
+                stash.Add(id, newRoomTypeQueryModel);
 
-                return roomTypeQueryModel;
+                return newRoomTypeQueryModel;
             }
         }
     }
