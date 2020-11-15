@@ -47,7 +47,7 @@ namespace artiso.AdsdHotel.Black.Api
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
                 var connectionString = CreateRabbitMqConnectionString(rabbitUri);
                 endpointConfiguration
-                    .ConfigureDefaults(connectionString,null)
+                    .ConfigureDefaults(connectionString)
                     .WithServerCallbacks();
                 //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
