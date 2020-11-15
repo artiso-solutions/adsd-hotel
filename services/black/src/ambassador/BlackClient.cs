@@ -118,7 +118,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
 
         private void ThrowIfNotInitialized()
         {
-            if (_senderEndpoint == null)
+            if (_senderEndpoint is null)
             {
                 throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
             }
@@ -143,7 +143,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <returns>A ValueTask that can be awaited.</returns>
         protected virtual async ValueTask DisposeAsyncCore()
         {
-            if (_senderEndpoint != null)
+            if (_senderEndpoint is not null)
             {
                 await _senderEndpoint.Stop().ConfigureAwait(false);
             }

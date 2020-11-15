@@ -36,7 +36,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
             senderTransport.UseConventionalRoutingTopology();
             senderTransport.ConnectionString(rabbitMqConnectionString);
             var routing = senderTransport.Routing();
-            if (typesToRoute != null)
+            if (typesToRoute is not null)
             {
                 if (string.IsNullOrEmpty(targetEndpoint))
                 {

@@ -8,12 +8,12 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         public string Name => "Message conventions for adsd hotel";
 
         public bool IsCommandType(Type type)
-            => type.Namespace != null && type.Namespace.EndsWith(".Commands") && !type.Name.EndsWith("Response");
+            => type.Namespace is not null && type.Namespace.EndsWith(".Commands") && !type.Name.EndsWith("Response");
 
         public bool IsEventType(Type type)
-            => type.Namespace != null && type.Namespace.EndsWith(".Events");
+            => type.Namespace is not null && type.Namespace.EndsWith(".Events");
 
         public bool IsMessageType(Type type)
-            => type.Namespace != null && type.Namespace.EndsWith(".Commands") && type.Name.EndsWith("Response");
+            => type.Namespace is not null && type.Namespace.EndsWith(".Commands") && type.Name.EndsWith("Response");
     }
 }
