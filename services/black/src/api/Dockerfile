@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1 as base
+FROM mcr.microsoft.com/dotnet/runtime:5.0 as base
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 
 WORKDIR /
 COPY . . 
