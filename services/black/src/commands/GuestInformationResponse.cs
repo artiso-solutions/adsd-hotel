@@ -2,20 +2,10 @@
 
 namespace artiso.AdsdHotel.Black.Commands
 {
-    public class GuestInformationResponse
+    public record GuestInformationResponse
     {
-        public GuestInformationResponse(GuestInformation guestInformation)
-        {
-            GuestInformation = guestInformation;
-        }
+        public GuestInformation? GuestInformation { get; init; }
 
-        public GuestInformationResponse(string error)
-        {
-            Error = error;
-        }
-
-        public GuestInformation? GuestInformation { get; }
-
-        public string? Error { get; }
+        public string? Error { get; init; }
     }
 }
