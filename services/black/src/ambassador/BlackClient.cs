@@ -14,16 +14,15 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// <remarks>
     /// <list type="bullet">
     ///     <item>
-    ///         <description>Call <see cref="StartAsync"/> to start the endpoint.</description>
+    ///        Call <see cref="StartAsync"/> to start the endpoint.
     ///     </item>
     ///     <item>
-    ///         <description>Implements <see cref="IAsyncDisposable"/> so you should use it with <b>await using</b> and don't forget <b>ConfigureAwait(false)</b>.</description>
+    ///         Implements <see cref="IAsyncDisposable"/> so you should use it with <b>await using</b> or call <b>DisposeAsync</b> explicitly.
     ///     </item>
     /// </list>
     /// Example usage:
     /// <code>
-    /// var blackClient = new BlackClient ( "host=localhost" );<br/>
-    /// await using ( blackClient.ConfigureAwait(false) )<br/>
+    /// await using ( var blackClient = new BlackClient ( "host=localhost" ) )<br/>
     /// {<br/>
     ///     await blackClient.StartAsync();<br/>
     /// }
@@ -41,7 +40,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
         public BlackClient(string rabbitMqConnectionString)
         {
-            _senderConfiguration = new EndpointConfiguration("Black.Ambassador");
+            _senderConfiguration = new ("Black.Ambassador");
             _senderConfiguration
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
@@ -72,7 +71,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
             if (!GuestInformationValidator.IsValid(guestInformation))
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
-            var sgi = new SetGuestInformation(orderId, guestInformation);
+            SetGuestInformation sgi = new (orderId, guestInformation);
             await _senderEndpoint.Send(sgi).ConfigureAwait(false);
         }
 
@@ -113,7 +112,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
