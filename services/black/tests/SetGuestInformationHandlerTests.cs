@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Black.Api;
+using artiso.AdsdHotel.Black.Api.Handlers;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Events;
 using artiso.AdsdHotel.Infrastructure.DataStorage;

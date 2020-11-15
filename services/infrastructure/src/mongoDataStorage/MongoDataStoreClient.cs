@@ -12,6 +12,12 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         private readonly IMongoDatabase _db;
         private readonly string _collection;
 
+        /// <summary>
+        /// Creates a client for accessing a mongodb.
+        /// </summary>
+        /// <param name="endpoint">The host where the mongodb runs.</param>
+        /// <param name="database">The name of the database.</param>
+        /// <param name="collection">The name of the collection.</param>
         public MongoDataStoreClient(Uri endpoint, string database, string collection)
         {
             var connectionString = $"{endpoint.Scheme}://{endpoint.Host}:{endpoint.Port}";
@@ -20,18 +26,16 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
             _collection = collection;
         }
 
-        public async Task AddOrUpdate<T>(T entity)
+        /// <inheritdoc/>
+        public async Task AddOrUpdate<T>(T entity, Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
-            //var filter = Builders<GuestInformationRecord>.Filter.Eq(x => x.OrderId, message.OrderId);
-            //var update = Builders<GuestInformationRecord>.Update.Set(x => x.GuestInformation, message.GuestInformation);
-            //var options = new FindOneAndUpdateOptions<GuestInformationRecord>();
-            //options.IsUpsert = true;
-            //var proj = await collection.FindOneAndUpdateAsync(filter, update, options).ConfigureAwait(false);
-            await col.InsertOneAsync(entity).ConfigureAwait(false);
+            // ToDo should we return a generated id here?
+            await col.ReplaceOneAsync(filter, entity, new ReplaceOptions { IsUpsert = true }).ConfigureAwait(false);
         }
 
-        public async Task<T> Get<T> (Expression<Func<T, bool>> filter)
+        /// <inheritdoc/>
+        public async Task<T> Get<T>(Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
             var resultCollection = await col.FindAsync<T>(filter).ConfigureAwait(false);

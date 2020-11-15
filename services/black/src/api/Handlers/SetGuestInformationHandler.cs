@@ -8,12 +8,11 @@ using DnsClient.Internal;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.Black.Api
+namespace artiso.AdsdHotel.Black.Api.Handlers
 {
     public class SetGuestInformationHandler : IHandleMessages<SetGuestInformation>
     {
         private readonly ILogger<SetGuestInformationHandler> _logger;
-
         private readonly IDataStoreClient _dataStoreClient;
 
         public SetGuestInformationHandler(IDataStoreClient dataStoreClient, ILogger<SetGuestInformationHandler> logger)
@@ -29,7 +28,7 @@ namespace artiso.AdsdHotel.Black.Api
                 return;
 
             var record = new GuestInformationRecord(message.OrderId, message.GuestInformation);
-            await _dataStoreClient.AddOrUpdate(record).ConfigureAwait(false);
+            await _dataStoreClient.AddOrUpdate(record, gir => gir.OrderId == message.OrderId).ConfigureAwait(false);
             _logger.LogInformation($"Handled command for order {message.OrderId}");
             await context.Publish(new GuestInformationSet(message.OrderId, message.GuestInformation)).ConfigureAwait(false);
         }
