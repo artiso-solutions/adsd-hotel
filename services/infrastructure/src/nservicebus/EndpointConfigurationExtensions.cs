@@ -22,7 +22,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         public static EndpointConfiguration ConfigureDefaults(
             this EndpointConfiguration config, 
             string rabbitMqConnectionString, 
-            string? targetEndpoint, 
+            string? targetEndpoint = null, 
             params Type[] typesToRoute)
         {
             if (string.IsNullOrEmpty(rabbitMqConnectionString))
@@ -36,7 +36,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
             senderTransport.UseConventionalRoutingTopology();
             senderTransport.ConnectionString(rabbitMqConnectionString);
             var routing = senderTransport.Routing();
-            if (typesToRoute != null)
+            if (typesToRoute is { Length: > 0})
             {
                 if (string.IsNullOrEmpty(targetEndpoint))
                 {

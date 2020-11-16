@@ -25,14 +25,14 @@ namespace artiso.AdsdHotel.Black.Api
             builder.ConfigureServices((ctx, services) =>
             {
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-                if (rabbitUri != null)
+                if (rabbitUri is not null)
                 {
                     // this blocks further initialization until the rabbitmq instance is running
                     services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
                 }
 
                 var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
-                if (mongoUri != null)
+                if (mongoUri is not null)
                 {
                     //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
                     var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
@@ -47,7 +47,7 @@ namespace artiso.AdsdHotel.Black.Api
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
                 var connectionString = CreateRabbitMqConnectionString(rabbitUri);
                 endpointConfiguration
-                    .ConfigureDefaults(connectionString,null)
+                    .ConfigureDefaults(connectionString)
                     .WithServerCallbacks();
                 //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 

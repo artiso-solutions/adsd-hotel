@@ -24,11 +24,11 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
             if (result == null)
             {
                 _logger.LogWarning($"No matching entry found for order '{message.OrderId}'.");
-                await context.Reply(new GuestInformationResponse("Not found")).ConfigureAwait(false);
+                await context.Reply(new GuestInformationResponse { Error = "Not found" }).ConfigureAwait(false);
             }
             else
             {
-                await context.Reply(new GuestInformationResponse(result.GuestInformation)).ConfigureAwait(false);
+                await context.Reply(new GuestInformationResponse { GuestInformation = result.GuestInformation }).ConfigureAwait(false);
             }
         }
     }
