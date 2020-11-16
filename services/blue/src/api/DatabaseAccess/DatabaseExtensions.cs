@@ -30,15 +30,27 @@ namespace artiso.AdsdHotel.Blue.Api
             }
         }
 
-        public static async Task ExecuteNonQueryAsync(this IDbCommand command)
+        public static async Task<int> ExecuteNonQueryAsync(this IDbCommand command)
         {
             if (command is DbCommand dbCommand)
             {
-                await dbCommand.ExecuteNonQueryAsync();
+                return await dbCommand.ExecuteNonQueryAsync();
             }
             else
             {
-                command.ExecuteNonQuery();
+                return command.ExecuteNonQuery();
+            }
+        }
+
+        public static async Task<bool> ReadAsync(this IDataReader reader)
+        {
+            if (reader is DbDataReader dbDataReader)
+            {
+                return await dbDataReader.ReadAsync();
+            }
+            else
+            {
+                return reader.Read();
             }
         }
     }

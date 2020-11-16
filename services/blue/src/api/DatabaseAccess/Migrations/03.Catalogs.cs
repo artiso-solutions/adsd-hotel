@@ -20,7 +20,7 @@ namespace artiso.AdsdHotel.Blue.Api.DatabaseAccess.Migrations
                 .Row(new { Id = "RMTY-002", InternalName = "Double", Capacity = 2 })
                 .Row(new { Id = "RMTY-Q04", InternalName = "Quad", Capacity = 4 })
                 .Row(new { Id = "RMTY-K02", InternalName = "King", Capacity = 2 })
-                .Row(new { Id = "RMTY-F05", InternalName = "Family", Capacity = 2 });
+                .Row(new { Id = "RMTY-F05", InternalName = "Family", Capacity = 5 });
 
             Insert.IntoTable(BedTypesInRoomTypes)
                 // Single

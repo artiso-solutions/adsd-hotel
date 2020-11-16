@@ -13,8 +13,8 @@ CREATE VIEW `{V_RoomTypes}` AS
 SELECT available_rt.*, bt.Id AS `BedType.Id`, bt.InternalName AS `BedType.InternalName`, bt.Width, bt.Length
 FROM {BedTypes} bt
 INNER JOIN (
-	SELECT rt.Id, rt.InternalName, rt.Capacity
-	FROM {RoomTypes} rt
+    SELECT rt.Id, rt.InternalName, rt.Capacity
+    FROM {RoomTypes} rt
 ) as `available_rt`
 INNER JOIN {BedTypesInRoomTypes} nm ON nm.RoomTypeId = available_rt.Id AND nm.BedTypeId = bt.Id";
 
