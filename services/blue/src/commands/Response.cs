@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace artiso.AdsdHotel.Blue.Commands
 {
-    public record Response<TValue>
+    public class Response<TValue>
     {
         public bool IsSuccessful => Exception is null;
 
@@ -13,10 +13,18 @@ namespace artiso.AdsdHotel.Blue.Commands
 
         public Exception? Exception { get; }
 
-        public Response([AllowNull] TValue value) =>
+        public Response(TValue value) =>
             Value = value;
 
         public Response(Exception exception) =>
             Exception = exception;
+
+        public void Deconstruct(
+            [MaybeNull] out TValue value,
+            out Exception? exception)
+        {
+            value = Value;
+            exception = Exception;
+        }
     }
 }
