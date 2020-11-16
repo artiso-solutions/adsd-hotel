@@ -1,7 +1,12 @@
-﻿using artiso.AdsdHotel.Black.Contracts;
+﻿using System;
+using artiso.AdsdHotel.Black.Contracts;
 
 namespace artiso.AdsdHotel.Black.Commands
 {
+    public record SetGuestInformation(Guid OrderId, GuestInformation GuestInformation);
+
+    public record GuestInformationRequest(Guid OrderId);
+
     public record GuestInformationResponse
     {
         public GuestInformation? GuestInformation { get; init; }
