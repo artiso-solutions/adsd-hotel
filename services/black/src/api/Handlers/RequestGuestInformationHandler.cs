@@ -20,15 +20,15 @@ namespace artiso.AdsdHotel.Black.Api.Handlers
 
         public async Task Handle(GuestInformationRequest message, IMessageHandlerContext context)
         {
-            var result = await _dataStoreClient.Get<GuestInformationRecord?>(r => r!.OrderId == message.OrderId).ConfigureAwait(false);
+            var result = await _dataStoreClient.Get<GuestInformationRecord?>(r => r!.OrderId == message.OrderId);
             if (result == null)
             {
                 _logger.LogWarning($"No matching entry found for order '{message.OrderId}'.");
-                await context.Reply(new GuestInformationResponse { Error = "Not found" }).ConfigureAwait(false);
+                await context.Reply(new GuestInformationResponse { Error = "Not found" });
             }
             else
             {
-                await context.Reply(new GuestInformationResponse { GuestInformation = result.GuestInformation }).ConfigureAwait(false);
+                await context.Reply(new GuestInformationResponse { GuestInformation = result.GuestInformation });
             }
         }
     }
