@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
@@ -20,26 +21,46 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
         public async Task Handle(ConfirmSelectedRoomType message, IMessageHandlerContext context)
         {
+            try
+            {
+                Ensure.Valid(message);
+            }
+            catch (ValidationException validationEx)
+            {
+                await context.Reply(new Response<bool>(validationEx));
+                return;
+            }
+
             await using var connection = await _connectionFactory.CreateAsync();
             using var transaction = connection.BeginTransaction();
 
             var pendingReservation = await FindPendingReservationAsync(connection, message.OrderId);
 
             if (pendingReservation is null)
-                // TODO: reply to caller with "fault" message.
-                throw new Exception($"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}");
+            {
+                await context.Reply(new Response<bool>(new Exception(
+                    $"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}")));
+                
+                return;
+            }
 
             var isValid = await IsPendingReservationValidAsync(connection, pendingReservation);
 
             if (!isValid)
-                // TODO: reply to caller with "fault" message.
-                throw new Exception("Pending reservation is not valid");
+            {
+                await context.Reply(new Response<bool>(new Exception(
+                    "Pending reservation is not valid")));
+
+                return;
+            }
 
             await CreateReservationAsync(connection, pendingReservation);
 
             await MarkPendingReservationAsConfirmed(connection, pendingReservation.Id);
 
             await transaction.CommitAsync();
+
+            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<PendingReservation?> FindPendingReservationAsync(
@@ -58,12 +79,12 @@ WHERE OrderId = @orderId";
 
             var i = 0;
             var pendingReservation = new PendingReservation(
-                id: reader.GetString(i++),
-                orderId: reader.GetString(i++),
-                roomTypeId: reader.GetString(i++),
-                start: reader.GetDateTime(i++),
-                end: reader.GetDateTime(i++),
-                createdAt: reader.GetDateTime(i++));
+                Id: reader.GetString(i++),
+                OrderId: reader.GetString(i++),
+                RoomTypeId: reader.GetString(i++),
+                Start: reader.GetDateTime(i++),
+                End: reader.GetDateTime(i++),
+                CreatedAt: reader.GetDateTime(i++));
 
             return pendingReservation;
         }

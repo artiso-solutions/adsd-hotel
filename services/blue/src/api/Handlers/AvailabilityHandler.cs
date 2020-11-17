@@ -3,13 +3,15 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
+using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
-    internal class AvailabilityHandler : IHandleMessages<RequestAvailableRoomTypes>
+    internal class AvailabilityHandler : IHandleMessages<AvailableRoomTypesRequest>
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
@@ -18,66 +20,76 @@ namespace artiso.AdsdHotel.Blue.Api
             _connectionFactory = connectionFactory;
         }
 
-        public async Task Handle(RequestAvailableRoomTypes message, IMessageHandlerContext context)
+        public async Task Handle(AvailableRoomTypesRequest message, IMessageHandlerContext context)
         {
+            try
+            {
+                Ensure.Valid(message);
+            }
+            catch (ValidationException validationEx)
+            {
+                await context.Reply(new Response<AvailableRoomTypesResponse>(validationEx));
+                return;
+            }
+
             await using var connection = await _connectionFactory.CreateAsync();
 
             var query = $@"
 SELECT Id, InternalName, Capacity, `BedType.Id`, `BedType.InternalName`, `Width`, `Length`
 FROM {V_RoomTypes} AS vrt
 WHERE vrt.Id NOT IN (
-	SELECT DISTINCT RoomTypeId FROM {Reservations}
-	WHERE Start >= @Start AND Start <= @End)";
+    SELECT DISTINCT RoomTypeId FROM {Reservations}
+    WHERE Start >= @Start AND Start <= @End)";
 
             using var reader = await connection.ExecuteReaderAsync(query, new { message.Start, message.End });
 
-            var queryModels = ReadQueryModels(reader);
-            var availableRoomTypes = queryModels.Select(QueryModelMapper.Map).ToList();
+            var availableRoomTypes = await ReadRoomTypesAsync(reader);
 
-            await context.Reply(new AvailableRoomTypesResponse { RoomTypes = availableRoomTypes });
+            await context.Reply(new Response<AvailableRoomTypesResponse>(
+                new AvailableRoomTypesResponse(availableRoomTypes)));
         }
 
-        private IReadOnlyList<RoomTypeQueryModel> ReadQueryModels(IDataReader reader)
+        private async Task<IReadOnlyList<RoomType>> ReadRoomTypesAsync(IDataReader reader)
         {
-            var stash = new Dictionary<string, RoomTypeQueryModel>();
+            var stash = new Dictionary<string, (RoomType roomType, List<BedType> bedTypes)>();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
-                var roomTypeQueryModel = ReadRoomTypeIfNew();
+                var (_, bedTypes) = ReadRoomTypeIfNew();
 
-                var bedTypeQueryModel = new BedTypeQueryModel
-                {
-                    Id = reader.GetString(4),
-                    InternalName = reader.GetString(5),
-                    Width = reader.GetDouble(6),
-                    Length = reader.GetDouble(7),
-                };
+                var bedType = new BedType(
+                    Id: reader.GetString(4),
+                    InternalName: reader.GetString(5),
+                    Width: reader.GetDouble(6),
+                    Length: reader.GetDouble(7));
 
-                roomTypeQueryModel.BedTypes.Add(bedTypeQueryModel);
+                bedTypes.Add(bedType);
             }
 
-            var queryModels = stash.Values.ToArray();
-            return queryModels;
+            var roomTypes = stash.Values.Select(pair => pair.roomType).ToArray();
+            return roomTypes;
 
             // Local functions.
 
-            RoomTypeQueryModel ReadRoomTypeIfNew()
+            (RoomType roomType, List<BedType> bedTypes) ReadRoomTypeIfNew()
             {
                 var id = reader.GetString(0);
 
-                if (stash.TryGetValue(id, out var existingRoomTypeQueryModel))
-                    return existingRoomTypeQueryModel;
+                if (stash.TryGetValue(id, out var existingRoomTypeAndBedTypes))
+                    return existingRoomTypeAndBedTypes;
 
-                var newRoomTypeQueryModel = new RoomTypeQueryModel
-                {
-                    Id = id,
-                    InternalName = reader.GetString(1),
-                    Capacity = reader.GetInt32(2)
-                };
+                var mutableBedTypes = new List<BedType>();
 
-                stash.Add(id, newRoomTypeQueryModel);
+                var roomType = new RoomType(
+                    Id: id,
+                    InternalName: reader.GetString(1),
+                    Capacity: reader.GetInt32(2),
+                    BedTypes: mutableBedTypes);
 
-                return newRoomTypeQueryModel;
+                var newPair = (roomType, mutableBedTypes);
+                stash.Add(id, newPair);
+
+                return (roomType, mutableBedTypes);
             }
         }
     }

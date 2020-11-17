@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
@@ -20,6 +21,16 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public async Task Handle(SelectRoomType message, IMessageHandlerContext context)
         {
+            try
+            {
+                Ensure.Valid(message);
+            }
+            catch (ValidationException validationEx)
+            {
+                await context.Reply(new Response<bool>(validationEx));
+                return;
+            }
+
             await using var connection = await _connectionFactory.CreateAsync();
 
             var exists = await ExistsAsync(connection, message.RoomTypeId);
@@ -34,9 +45,13 @@ namespace artiso.AdsdHotel.Blue.Api
                 message.End);
 
             if (!isAvailable)
-                throw new Exception(
+            {
+                await context.Reply(new Response<bool>(new Exception(
                     $"Room type '{message.RoomTypeId}' is not available " +
-                    $"anymore on the given period: {message.Start} - {message.End}");
+                    $"anymore on the given period: {message.Start} - {message.End}")));
+
+                return;
+            }
 
             var pendingReservation = new PendingReservation(
                 Guid.NewGuid().ToString(),
@@ -47,6 +62,8 @@ namespace artiso.AdsdHotel.Blue.Api
                 DateTime.UtcNow);
 
             await connection.InsertAsync(PendingReservations, pendingReservation);
+
+            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<bool> ExistsAsync(IDbConnection connection, string roomTypeId)
