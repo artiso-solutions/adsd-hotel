@@ -69,7 +69,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             string orderId)
         {
             var query = $@"
-SELECT Id, OrderId, RoomTypeId, Start, End, CreatedAt
+SELECT Id, OrderId, RoomTypeId, Start, End, CreatedAt, Confirmed
 FROM {PendingReservations}
 WHERE OrderId = @orderId";
 
@@ -85,7 +85,10 @@ WHERE OrderId = @orderId";
                 RoomTypeId: reader.GetString(i++),
                 Start: reader.GetDateTime(i++),
                 End: reader.GetDateTime(i++),
-                CreatedAt: reader.GetDateTime(i++));
+                CreatedAt: reader.GetDateTime(i++))
+            {
+                Confirmed = reader.GetBoolean(i++)
+            };
 
             return pendingReservation;
         }
