@@ -40,7 +40,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             if (pendingReservation is null)
             {
                 await context.Reply(new Response<bool>(new Exception(
-                    $"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}")));
+                    $"Could not find a pending reservation for {nameof(message.OrderId)} {message.OrderId}")));
                 
                 return;
             }
@@ -75,7 +75,7 @@ WHERE OrderId = @orderId";
 
             using var reader = await connection.ExecuteReaderAsync(query, new { orderId });
 
-            if (!reader.Read())
+            if (!await reader.ReadAsync())
                 return null;
 
             var i = 0;
@@ -103,7 +103,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             using var reader = await connection.ExecuteReaderAsync(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
 
-            if (!reader.Read())
+            if (!await reader.ReadAsync())
                 return false;
 
             return true;
