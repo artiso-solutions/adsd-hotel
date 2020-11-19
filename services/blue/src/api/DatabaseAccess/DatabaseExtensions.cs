@@ -6,6 +6,18 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal static class DatabaseExtensions
     {
+        public static async ValueTask<IDbTransaction> BeginTransactionAsync(this IDbConnection connection)
+        {
+            if (connection is DbConnection dbConnection)
+            {
+                return await dbConnection.BeginTransactionAsync();
+            }
+            else
+            {
+                return connection.BeginTransaction();
+            }
+        }
+
         public static async Task CommitAsync(this IDbTransaction transaction)
         {
             if (transaction is DbTransaction dbTransaction)
