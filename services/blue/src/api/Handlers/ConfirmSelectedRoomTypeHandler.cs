@@ -32,7 +32,8 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             }
 
             await using var connection = await _connectionFactory.CreateAsync();
-            using var transaction = connection.BeginTransaction();
+            
+            using var transaction = await connection.BeginTransactionAsync();
 
             var pendingReservation = await FindPendingReservationAsync(connection, message.OrderId);
 
