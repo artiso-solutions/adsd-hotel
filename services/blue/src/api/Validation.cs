@@ -43,6 +43,15 @@ namespace artiso.AdsdHotel.Blue.Validation
             if (message.End < message.Start)
                 throw new ValidationException($"'{nameof(message.Start)}' must be before '{nameof(message.End)}'.");
         }
+
+        public static void Valid(GetRoomNumberRequest message)
+        {
+            if (message is null)
+                throw new NullReferenceException(nameof(ConfirmSelectedRoomType));
+
+            if (string.IsNullOrWhiteSpace(message.OrderId))
+                throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
+        }
     }
 
     public class ValidationException : Exception
