@@ -6,6 +6,7 @@ using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
+using static artiso.AdsdHotel.Blue.Api.CommonQueries;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api.Handlers
@@ -60,7 +61,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             // Select a room for this reservation.
 
-            var availableRoom = await FindRoomFor(connection, reservation);
+            var availableRoom = await FindAnAvailableRoomFor(connection, reservation);
 
             if (availableRoom is null)
             {
@@ -77,55 +78,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             await context.Reply(new Response<GetRoomNumberResponse>(new GetRoomNumberResponse(availableRoom.Number)));
         }
 
-        private async Task<Reservation?> FindReservationAsync(IDbConnection connection, string orderId)
-        {
-            var query = $@"
-SELECT Id, OrderId, RoomTypeId, Start, End, CreatedAt, RoomId
-FROM {Reservations}
-WHERE OrderId = @orderId";
-
-            using var reader = await connection.ExecuteReaderAsync(query, new { orderId });
-
-            if (!await reader.ReadAsync())
-                return null;
-
-            var i = 0;
-            var reservation = new Reservation(
-                Id: reader.GetString(i++),
-                OrderId: reader.GetString(i++),
-                RoomTypeId: reader.GetString(i++),
-                Start: reader.GetDateTime(i++),
-                End: reader.GetDateTime(i++),
-                CreatedAt: reader.GetDateTime(i++))
-            {
-                RoomId = reader.GetString(i++)
-            };
-
-            return reservation;
-        }
-
-        private async Task<Room?> FindRoomAsync(IDbConnection connection, string roomId)
-        {
-            var query = $@"
-SELECT Id, RoomTypeId, Number
-FROM {Rooms}
-WHERE OrderId = @roomId";
-
-            using var reader = await connection.ExecuteReaderAsync(query, new { roomId });
-
-            if (!await reader.ReadAsync())
-                return null;
-
-            var i = 0;
-            var room = new Room(
-                Id: reader.GetString(i++),
-                RoomTypeId: reader.GetString(i++),
-                Number: reader.GetString(i++));
-
-            return room;
-        }
-
-        private async Task<Room?> FindRoomFor(IDbConnection connection, Reservation reservation)
+        private async Task<Room?> FindAnAvailableRoomFor(IDbConnection connection, Reservation reservation)
         {
             // A room should be:
             // - free given the reservation's period
