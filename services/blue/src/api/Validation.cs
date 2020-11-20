@@ -52,6 +52,15 @@ namespace artiso.AdsdHotel.Blue.Validation
             if (string.IsNullOrWhiteSpace(message.OrderId))
                 throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
         }
+
+        public static void Valid(OrderSummaryRequest message)
+        {
+            if (message is null)
+                throw new NullReferenceException(nameof(ConfirmSelectedRoomType));
+
+            if (string.IsNullOrWhiteSpace(message.OrderId))
+                throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
+        }
     }
 
     public class ValidationException : Exception
