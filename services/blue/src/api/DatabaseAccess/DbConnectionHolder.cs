@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace artiso.AdsdHotel.Blue.Api
@@ -15,12 +16,11 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public bool HasTransaction => _transaction is not null;
 
+        [AllowNull]
         public string ConnectionString
         {
             get => _connection.ConnectionString;
-#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
             set => _connection.ConnectionString = value;
-#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         }
 
         public int ConnectionTimeout => _connection.ConnectionTimeout;
