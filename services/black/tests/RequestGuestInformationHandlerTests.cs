@@ -26,7 +26,7 @@ namespace artiso.AdsdHotel.Black.Tests
             var context = new TestableMessageHandlerContext();
 
             GuestInformationRecord guestInformation = new GuestInformationRecord(Guid.NewGuid(), new("first", "last", "mail"));
-            dataStoreMock.Setup(m => m.Get(It.IsAny<Expression<Func<GuestInformationRecord, bool>>>()))
+            dataStoreMock.Setup(m => m.GetAsync(It.IsAny<Expression<Func<GuestInformationRecord, bool>>>()))
                 .Returns(Task.FromResult(guestInformation));
 
             GuestInformationRequest message = new(guestInformation.OrderId);
