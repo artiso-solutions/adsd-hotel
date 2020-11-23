@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <StartupObject></StartupObject>
-    <OutputType>Library</OutputType>
+    <StartupObject>artiso.AdsdHotel.Red.Api.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Api.csproj" />
   </ItemGroup>
 
 </Project>
