@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
+using Microsoft.VisualBasic.FileIO;
 using MongoDB.Driver;
 
 namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
@@ -27,20 +30,28 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         }
 
         /// <inheritdoc/>
-        public async Task AddOrUpdate<T>(T entity, Expression<Func<T, bool>> filter)
+        public async Task AddOrUpdateAsync<T>(T entity, Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
-            // ToDo should we return a generated id here?
             await col.ReplaceOneAsync(filter, entity, new ReplaceOptions { IsUpsert = true }).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<T> Get<T>(Expression<Func<T, bool>> filter)
+        public async Task<T> GetAsync<T>(Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
             var resultCollection = await col.FindAsync<T>(filter).ConfigureAwait(false);
             var result = await resultCollection.FirstOrDefaultAsync().ConfigureAwait(false);
             return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> GetAllAsync<T>(Expression<Func<T, bool>> filter)
+        {
+            var col = _db.GetCollection<T>(_collection);
+            var result = await col.FindAsync(filter).ConfigureAwait(false);
+            var list = await result.ToListAsync().ConfigureAwait(false);
+            return list;
         }
     }
 }
