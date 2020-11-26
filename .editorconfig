@@ -83,6 +83,7 @@ dotnet_style_readonly_field = true:suggestion
 
 # Parameter preferences
 dotnet_code_quality_unused_parameters = all:warning
+dotnet_code_quality.ca2208.api_surface = public
 
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = none
