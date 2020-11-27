@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace artiso.AdsdHotel.Blue.Api
@@ -15,6 +16,7 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public bool HasTransaction => _transaction is not null;
 
+        [AllowNull]
         public string ConnectionString
         {
             get => _connection.ConnectionString;

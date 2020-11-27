@@ -75,7 +75,7 @@ LIMIT 1";
 
             using var reader = await connection.ExecuteReaderAsync(query, new { roomTypeId });
 
-            if (!reader.Read())
+            if (!await reader.ReadAsync())
                 return false;
 
             return true;
@@ -101,7 +101,7 @@ LIMIT 1";
                 end
             });
 
-            if (!reader.Read())
+            if (!await reader.ReadAsync())
                 return false;
 
             return true;

@@ -8,7 +8,7 @@ namespace artiso.AdsdHotel.Blue.Validation
         public static void Valid(AvailableRoomTypesRequest message)
         {
             if (message is null)
-                throw new NullReferenceException(nameof(AvailableRoomTypesRequest));
+                throw new ArgumentNullException(nameof(AvailableRoomTypesRequest));
 
             if (message.Start == message.End)
                 throw new ValidationException($"Dates range must not be 0.");
@@ -20,7 +20,7 @@ namespace artiso.AdsdHotel.Blue.Validation
         public static void Valid(ConfirmSelectedRoomType message)
         {
             if (message is null)
-                throw new NullReferenceException(nameof(ConfirmSelectedRoomType));
+                throw new ArgumentNullException(nameof(ConfirmSelectedRoomType));
 
             if (string.IsNullOrWhiteSpace(message.OrderId))
                 throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
@@ -29,7 +29,7 @@ namespace artiso.AdsdHotel.Blue.Validation
         public static void Valid(SelectRoomType message)
         {
             if (message is null)
-                throw new NullReferenceException(nameof(ConfirmSelectedRoomType));
+                throw new ArgumentNullException(nameof(SelectRoomType));
 
             if (string.IsNullOrWhiteSpace(message.OrderId))
                 throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
@@ -42,6 +42,24 @@ namespace artiso.AdsdHotel.Blue.Validation
 
             if (message.End < message.Start)
                 throw new ValidationException($"'{nameof(message.Start)}' must be before '{nameof(message.End)}'.");
+        }
+
+        public static void Valid(GetRoomNumberRequest message)
+        {
+            if (message is null)
+                throw new ArgumentNullException(nameof(GetRoomNumberRequest));
+
+            if (string.IsNullOrWhiteSpace(message.OrderId))
+                throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
+        }
+
+        public static void Valid(OrderSummaryRequest message)
+        {
+            if (message is null)
+                throw new ArgumentNullException(nameof(OrderSummaryRequest));
+
+            if (string.IsNullOrWhiteSpace(message.OrderId))
+                throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
         }
     }
 

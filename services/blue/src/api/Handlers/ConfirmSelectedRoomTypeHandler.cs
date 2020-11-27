@@ -6,6 +6,7 @@ using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
+using static artiso.AdsdHotel.Blue.Api.CommonQueries;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api.Handlers
@@ -32,15 +33,16 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             }
 
             await using var connection = await _connectionFactory.CreateAsync();
-            using var transaction = connection.BeginTransaction();
+
+            using var transaction = await connection.BeginTransactionAsync();
 
             var pendingReservation = await FindPendingReservationAsync(connection, message.OrderId);
 
             if (pendingReservation is null)
             {
                 await context.Reply(new Response<bool>(new Exception(
-                    $"Could not find pending reservation for {nameof(message.OrderId)} {message.OrderId}")));
-                
+                    $"Could not find a pending reservation for {nameof(message.OrderId)} {message.OrderId}")));
+
                 return;
             }
 
@@ -63,32 +65,6 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             await context.Reply(new Response<bool>(true));
         }
 
-        private async Task<PendingReservation?> FindPendingReservationAsync(
-            IDbConnection connection,
-            string orderId)
-        {
-            var query = $@"
-SELECT Id, OrderId, RoomTypeId, Start, End, CreatedAt
-FROM {PendingReservations}
-WHERE OrderId = @orderId";
-
-            using var reader = await connection.ExecuteReaderAsync(query, new { orderId });
-
-            if (!reader.Read())
-                return null;
-
-            var i = 0;
-            var pendingReservation = new PendingReservation(
-                Id: reader.GetString(i++),
-                OrderId: reader.GetString(i++),
-                RoomTypeId: reader.GetString(i++),
-                Start: reader.GetDateTime(i++),
-                End: reader.GetDateTime(i++),
-                CreatedAt: reader.GetDateTime(i++));
-
-            return pendingReservation;
-        }
-
         private async Task<bool> IsPendingReservationValidAsync(
             IDbConnection connection,
             PendingReservation pendingReservation)
@@ -102,7 +78,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             using var reader = await connection.ExecuteReaderAsync(query,
                 new { pendingReservation.RoomTypeId, pendingReservation.Start, pendingReservation.End });
 
-            if (!reader.Read())
+            if (!await reader.ReadAsync())
                 return false;
 
             return true;
@@ -112,10 +88,8 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             IDbConnection connection,
             PendingReservation pendingReservation)
         {
-            var reservationId = Guid.NewGuid().ToString();
-
             var reservation = new Reservation(
-                reservationId,
+                Id: Guid.NewGuid().ToString(),
                 pendingReservation.OrderId,
                 pendingReservation.RoomTypeId,
                 pendingReservation.Start,
