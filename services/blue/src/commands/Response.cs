@@ -7,12 +7,12 @@ namespace artiso.AdsdHotel.Blue.Commands
     {
         public bool IsSuccessful => Exception is null;
 
-        [AllowNull, MaybeNull]
+        [MaybeNull]
         public TValue Value { get; }
 
         public Exception? Exception { get; }
 
-        public Response([AllowNull] TValue value) =>
+        public Response(TValue value) =>
             Value = value;
 
         public Response(Exception exception) =>
