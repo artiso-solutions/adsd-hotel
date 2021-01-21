@@ -1,8 +1,4 @@
-﻿using System;
-
-namespace artiso.AdsdHotel.Blue.Events
+﻿namespace artiso.AdsdHotel.Blue.Events
 {
-    public class SelectedRooomTypeReserved
-    {
-    }
+    public record SelectedRooomTypeReserved(string OrderId);
 }
