@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Events;
 using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
@@ -75,6 +76,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             await transaction.CommitAsync();
 
+            await context.Publish(new RoomNumberAssigned(message.OrderId, availableRoom.Number));
             await context.Reply(new Response<GetRoomNumberResponse>(new GetRoomNumberResponse(availableRoom.Number)));
         }
 

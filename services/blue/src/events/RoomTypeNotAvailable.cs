@@ -2,10 +2,9 @@
 
 namespace artiso.AdsdHotel.Blue.Events
 {
-    public record RoomTypeSelected(
+    public record RoomTypeNotAvailable(
         string OrderId,
-        string RoomTypeId,
         DateTime Start,
         DateTime End,
-        DateTime SelectedAt);
+        string RoomTypeId);
 }

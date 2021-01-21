@@ -3,7 +3,9 @@ using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Events;
 using artiso.AdsdHotel.Blue.Validation;
+using Microsoft.Extensions.Logging;
 using NServiceBus;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
@@ -12,10 +14,14 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal class RoomTypeSelectionHandler : IHandleMessages<SelectRoomType>
     {
+        private readonly ILogger<RoomTypeSelectionHandler> _logger;
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public RoomTypeSelectionHandler(IDbConnectionFactory connectionFactory)
+        public RoomTypeSelectionHandler(
+            ILogger<RoomTypeSelectionHandler> logger,
+            IDbConnectionFactory connectionFactory)
         {
+            _logger = logger;
             _connectionFactory = connectionFactory;
         }
 
@@ -46,9 +52,15 @@ namespace artiso.AdsdHotel.Blue.Api
 
             if (!isAvailable)
             {
-                await context.Reply(new Response<bool>(new Exception(
+                _logger.LogDebug(
                     $"Room type '{message.RoomTypeId}' is not available " +
-                    $"anymore on the given period: {message.Start} - {message.End}")));
+                    $"anymore on the given period: {message.Start} - {message.End}");
+
+                await context.Publish(new RoomTypeNotAvailable(
+                    message.OrderId,
+                    message.Start,
+                    message.End,
+                    message.RoomTypeId));
 
                 return;
             }
@@ -62,6 +74,13 @@ namespace artiso.AdsdHotel.Blue.Api
                 DateTime.UtcNow);
 
             await connection.InsertAsync(PendingReservations, pendingReservation);
+
+            await context.Publish(new RoomTypeSelected(
+                message.OrderId,
+                message.RoomTypeId,
+                message.Start,
+                message.End,
+                DateTime.UtcNow));
 
             await context.Reply(new Response<bool>(true));
         }
