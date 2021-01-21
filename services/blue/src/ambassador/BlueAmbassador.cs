@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using artiso.AdsdHotel.Blue.Commands;
+using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Validation;
+
+namespace artiso.AdsdHotel.Blue.Ambassador
+{
+    public class BlueAmbassador
+    {
+        private readonly IChannel _channel;
+
+        public BlueAmbassador(IChannel channel)
+        {
+            _channel = channel;
+        }
+
+        public async Task<IReadOnlyList<RoomType>> ListRoomTypesAvailableBetweenAsync(
+            DateTime start,
+            DateTime end,
+            CancellationToken cancellationToken = default)
+        {
+            Ensure.Valid(start, end);
+
+            var request = new AvailableRoomTypesRequest(start, end);
+            var (response, exception) =
+                await _channel.Request<Response<AvailableRoomTypesResponse>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            if (response is null)
+                throw new ServiceUnavailableException();
+
+            return response.RoomTypes;
+        }
+
+        public async Task<bool> SelectRoomTypeBetweenAsync(
+            string orderId,
+            string roomTypeId,
+            DateTime start,
+            DateTime end,
+            CancellationToken cancellationToken = default)
+        {
+            Ensure.Valid(orderId, nameof(orderId));
+            Ensure.Valid(roomTypeId, nameof(roomTypeId));
+            Ensure.Valid(start, end);
+
+            var request = new SelectRoomType(orderId, roomTypeId, start, end);
+            var (response, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            return response;
+        }
+
+        public async Task<bool> ConfirmSelectedRoomTypeAsync(
+            string orderId,
+            CancellationToken cancellationToken = default)
+        {
+            Ensure.Valid(orderId, nameof(orderId));
+
+            var request = new ConfirmSelectedRoomType(orderId);
+            var (response, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            return response;
+        }
+
+        public async Task<string> GetReservationRoomNumber(
+            string orderId,
+            CancellationToken cancellationToken = default)
+        {
+            Ensure.Valid(orderId, nameof(orderId));
+
+            var request = new GetRoomNumberRequest(orderId);
+            var (response, exception) =
+                await _channel.Request<Response<GetRoomNumberResponse>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            if (response is null)
+                throw new ServiceUnavailableException();
+
+            return response.RoomNumber;
+        }
+
+        public async Task<OrderSummary?> GetOrderSummaryAsync(
+            string orderId,
+            CancellationToken cancellationToken = default)
+        {
+            Ensure.Valid(orderId, nameof(orderId));
+
+            var request = new OrderSummaryRequest(orderId);
+            var (response, exception) =
+                await _channel.Request<Response<OrderSummaryResponse>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            if (response is null)
+                throw new ServiceUnavailableException();
+
+            return response.OrderSummary;
+        }
+    }
+}
