@@ -137,6 +137,9 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
 
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = silent
+
 #### C# Formatting Rules ####
 
 # New line preferences
