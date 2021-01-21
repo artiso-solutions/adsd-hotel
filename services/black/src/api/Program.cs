@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NServiceBus;
 using System.Diagnostics;
+using artiso.AdsdHotel.Infrastructure.DataStorage;
+using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
+using artiso.AdsdHotel.Infrastructure.NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Api
 {
@@ -25,53 +25,32 @@ namespace artiso.AdsdHotel.Black.Api
             builder.ConfigureServices((ctx, services) =>
             {
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-                if (rabbitUri != null)
+                if (rabbitUri is not null)
                 {
                     // this blocks further initialization until the rabbitmq instance is running
                     services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
+                }
+
+                var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
+                if (mongoUri is not null)
+                {
+                    //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
+                    var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
+                    var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
+                    services.AddScoped<IDataStoreClient, MongoDataStoreClient>(sp => new MongoDataStoreClient(mongoUri, dbName, collectionName));
                 }
             });
 
             builder.UseNServiceBus(ctx =>
             {
                 var endpointConfiguration = new EndpointConfiguration("Black.Api");
-                endpointConfiguration.EnableCallbacks(makesRequests: false);
-                endpointConfiguration.EnableInstallers();
-
-                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-                // ToDo use durable persistence in production
-                // InMemoryPersistence may loose messages if the transport does not support it natively
-                endpointConfiguration.UsePersistence<InMemoryPersistence>();
-                endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
                 var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-                if (rabbitUri != null)
-                {
-                    var connectionString = CreateRabbitMqConnectionString(rabbitUri);
-                    var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-                    transport.ConnectionString(connectionString);
-                    transport.UseConventionalRoutingTopology();
-                }
-                else
-                {
-                    endpointConfiguration.UseTransport<LearningTransport>();
-                }
+                var connectionString = CreateRabbitMqConnectionString(rabbitUri);
+                endpointConfiguration
+                    .ConfigureDefaults(connectionString)
+                    .WithServerCallbacks();
+                //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-                var conventions = endpointConfiguration.Conventions();
-
-                conventions.DefiningCommandsAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    !t.Name.EndsWith("Response"));
-
-                conventions.DefiningMessagesAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    t.Name.EndsWith("Response"));
-
-                conventions.DefiningEventsAs(t =>
-                    t.Namespace != null &&
-                    t.Namespace.EndsWith(".Events"));
 
                 return endpointConfiguration;
             });
@@ -79,9 +58,10 @@ namespace artiso.AdsdHotel.Black.Api
             return builder;
         }
 
-        private static string CreateRabbitMqConnectionString(Uri uri)
+        private static string CreateRabbitMqConnectionString(Uri? uri)
         {
-            return $"host={uri.Host}";
+            var host = uri?.Host ?? "localhost";
+            return $"host={host}";
         }
 
         private static async Task OnCriticalError(ICriticalErrorContext context)

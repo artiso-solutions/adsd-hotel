@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambassador", "src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{01BF02A7-F72D-42D6-8FD2-9D6BED942248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Data", "src\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Data.csproj", "{40C2D6FF-0FF4-47F0-80B7-081F33B7C085}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Service", "src\service\artiso.AdsdHotel.Red.Service.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Data", "src\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Data.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +31,14 @@ Global
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40C2D6FF-0FF4-47F0-80B7-081F33B7C085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40C2D6FF-0FF4-47F0-80B7-081F33B7C085}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40C2D6FF-0FF4-47F0-80B7-081F33B7C085}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40C2D6FF-0FF4-47F0-80B7-081F33B7C085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

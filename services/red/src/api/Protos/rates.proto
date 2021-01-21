@@ -11,16 +11,23 @@ service Rates {
 
 // GetRoomRatesByRoomType
 message GetRoomRatesByRoomTypeRequest {
-  string name = 1;
+  string room_type = 1;
 }
+
 message GetRoomRatesByRoomTypeReply {
-  string message = 1;
+  repeated RoomRate room_rates  = 1;
+}
+
+message RoomRate {
+  string name = 1;
+  float price = 2;
 }
 
 // GetRoomRatesByRoomType
 message InputRoomRatesRequest {
   string name = 1;
 }
+
 message InputRoomRatesReply {
   string message = 1;
 }

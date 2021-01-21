@@ -1,0 +1,27 @@
+name: adsd-blue
+services:
+  - name: blueservice
+    project: src\api\artiso.AdsdHotel.Blue.Api.csproj
+  - name: mysql
+    image: mysql
+    tags:
+      - inf
+    bindings:
+      - name: mysql
+        port: 3306
+        containerPort: 3306
+    env:
+      - name: MYSQL_ALLOW_EMPTY_PASSWORD
+        value: true
+  - name: rabbit
+    image: rabbitmq:management-alpine
+    tags:
+      - inf
+    bindings:
+      - name: rabbit
+        port: 5672
+        protocol: amqp
+      - name: ui
+        port: 15672
+        containerPort: 15672
+        protocol: http
