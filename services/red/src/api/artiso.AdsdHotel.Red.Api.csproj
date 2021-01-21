@@ -18,4 +18,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Update="Protos\rates.proto" GrpcServices="Both" />
+  </ItemGroup>
+
 </Project>

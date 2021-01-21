@@ -15,9 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Protobuf Include="Protos\rates.proto">
-        <GrpcServices>Client</GrpcServices>
-      </Protobuf>
+      <ProjectReference Include="..\..\api\artiso.AdsdHotel.Red.Api.csproj" />
     </ItemGroup>
 
 </Project>

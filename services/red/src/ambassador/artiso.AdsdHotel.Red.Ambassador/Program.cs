@@ -16,7 +16,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
                 {
                     Name = "Rates1"
                 });
-            Console.WriteLine("Test response" + reply.Message);
+            Console.WriteLine($"Test response: {reply.Message}");
             Console.ReadKey();
         }
     }
