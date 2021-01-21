@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace artiso.AdsdHotel.Blue.Events
+﻿namespace artiso.AdsdHotel.Blue.Events
 {
-    class RoomNumberAssigned
-    {
-    }
+    public record RoomNumberAssigned(string OrderId, string RoomNumber);
 }
