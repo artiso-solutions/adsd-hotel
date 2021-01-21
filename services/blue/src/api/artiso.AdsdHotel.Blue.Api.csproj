@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Blue.Commands.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Blue.Events.csproj" />
   </ItemGroup>
 
 </Project>

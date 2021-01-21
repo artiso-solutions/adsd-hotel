@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Events;
 using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
 using RepoDb;
@@ -62,6 +63,13 @@ namespace artiso.AdsdHotel.Blue.Api
                 DateTime.UtcNow);
 
             await connection.InsertAsync(PendingReservations, pendingReservation);
+
+            await context.Publish(new RoomTypeSelected(
+                message.OrderId,
+                message.RoomTypeId,
+                message.Start,
+                message.End,
+                DateTime.UtcNow));
 
             await context.Reply(new Response<bool>(true));
         }
