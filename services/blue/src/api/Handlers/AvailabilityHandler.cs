@@ -1,14 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
-using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.Blue.Validation;
 using NServiceBus;
-using RepoDb;
-using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
+using static artiso.AdsdHotel.Blue.Api.CommonQueries;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
-    internal class AvailabilityHandler : IHandleMessages<RequestAvailableRoomTypes>
+    internal class AvailabilityHandler : IHandleMessages<AvailableRoomTypesRequest>
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
@@ -17,21 +15,24 @@ namespace artiso.AdsdHotel.Blue.Api
             _connectionFactory = connectionFactory;
         }
 
-        public async Task Handle(RequestAvailableRoomTypes message, IMessageHandlerContext context)
+        public async Task Handle(AvailableRoomTypesRequest message, IMessageHandlerContext context)
         {
+            try
+            {
+                Ensure.Valid(message);
+            }
+            catch (ValidationException validationEx)
+            {
+                await context.Reply(new Response<AvailableRoomTypesResponse>(validationEx));
+                return;
+            }
+
             await using var connection = await _connectionFactory.CreateAsync();
 
-            var query = $@"
-SELECT * FROM {V_RoomTypes} AS vrt
-WHERE vrt.Id NOT IN (
-	SELECT DISTINCT RoomTypeId FROM Reservations
-	WHERE Start >= @Start AND Start <= @End)";
+            var availableRoomTypes = await FindAvailableRoomTypesInPeriodAsync(connection, message.Start, message.End);
 
-            var queryResult = await connection.ExecuteQueryAsync<RoomType>(query, new { message.Start, message.End });
-
-            var availableRoomTypes = queryResult.ToArray();
-
-            await context.Reply(new AvailableRoomTypesResponse { RoomTypes = availableRoomTypes });
+            await context.Reply(new Response<AvailableRoomTypesResponse>(
+                new AvailableRoomTypesResponse(availableRoomTypes)));
         }
     }
 }

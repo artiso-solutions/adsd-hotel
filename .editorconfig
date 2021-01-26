@@ -83,6 +83,7 @@ dotnet_style_readonly_field = true:suggestion
 
 # Parameter preferences
 dotnet_code_quality_unused_parameters = all:warning
+dotnet_code_quality.ca2208.api_surface = public
 
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = none
@@ -135,6 +136,9 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:sil
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = silent
 
 #### C# Formatting Rules ####
 

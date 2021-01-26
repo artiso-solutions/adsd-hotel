@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace artiso.AdsdHotel.Blue.Api
@@ -10,15 +11,12 @@ namespace artiso.AdsdHotel.Blue.Api
         private readonly IDbConnection _connection;
         private IDbTransaction? _transaction;
 
-        public DbConnectionHolder(IDbConnection connection)
-        {
+        public DbConnectionHolder(IDbConnection connection) =>
             _connection = connection;
-        }
 
-        public bool HasTransaction => _transaction is object;
+        public bool HasTransaction => _transaction is not null;
 
-        #region IDbConnection
-
+        [AllowNull]
         public string ConnectionString
         {
             get => _connection.ConnectionString;
@@ -39,7 +37,7 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public IDbTransaction BeginTransaction()
         {
-            if (_transaction is object)
+            if (_transaction is not null)
                 throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
             _transaction = _connection.BeginTransaction();
@@ -48,7 +46,7 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public IDbTransaction BeginTransaction(IsolationLevel il)
         {
-            if (_transaction is object)
+            if (_transaction is not null)
                 throw new InvalidOperationException("Can't create multiple transactions on this connection instance.");
 
             _transaction = _connection.BeginTransaction(il);
@@ -64,26 +62,20 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public void Dispose() => _connection.Dispose();
 
-        #endregion
-
-        #region IAsyncDisposable
-
         public async ValueTask DisposeAsync()
         {
-            if (_connection is IAsyncDisposable asyncDisposableConnection)
-            {
-                await asyncDisposableConnection.DisposeAsync();
-            }
-            else if (_connection is DbConnection dbConnection)
+            if (_connection is DbConnection dbConnection)
             {
                 await dbConnection.DisposeAsync();
+            }
+            else if (_connection is IAsyncDisposable asyncDisposable)
+            {
+                await asyncDisposable.DisposeAsync();
             }
             else
             {
                 _connection.Dispose();
             }
         }
-
-        #endregion
     }
 }
