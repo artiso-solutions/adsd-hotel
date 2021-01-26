@@ -5,6 +5,7 @@ using artiso.AdsdHotel.Black.Api;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
 using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,6 @@ await CreateHostBuilder(args).Build().RunAsync();
 static IHostBuilder CreateHostBuilder(string[] args)
 {
     var builder = Host.CreateDefaultBuilder(args);
-    builder.UseConsoleLifetime();
     builder.ConfigureServices((ctx, services) =>
     {
         var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
@@ -49,6 +49,10 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
 
         return endpointConfiguration;
+    });
+    builder.ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
     });
 
     return builder;

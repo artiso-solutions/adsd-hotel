@@ -46,9 +46,25 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         }
 
         /// <inheritdoc/>
-        public async Task<List<T>> GetAllAsync<T>(Expression<Func<T, bool>> filter)
+        public async Task<List<T>> GetAllAsync<T>(string combinator, params Expression<Func<T, bool>>[] filters)
         {
+            // combinator is a workaround until we figure out how combined expressions work correctly
+
             var col = _db.GetCollection<T>(_collection);
+            var builder = new FilterDefinitionBuilder<T>();
+            var filter = builder.Empty;
+            switch (combinator.ToLowerInvariant())
+            {
+                case "and":
+                    filter = builder.And(filters.Select(f => builder.Where(f)));
+                    break;
+                case "or":
+                    filter = builder.Or(filters.Select(f => builder.Where(f)));
+                    break;
+                default:
+                    filter = filters.First();
+                    break;
+            }
             var result = await col.FindAsync(filter).ConfigureAwait(false);
             var list = await result.ToListAsync().ConfigureAwait(false);
             return list;
