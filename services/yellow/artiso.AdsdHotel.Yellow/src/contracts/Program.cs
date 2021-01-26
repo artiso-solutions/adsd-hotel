@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace artiso.AdsdHotel.Yellow.contracts
+namespace artiso.AdsdHotel.Yellow.Contracts
 {
     class Program
     {
