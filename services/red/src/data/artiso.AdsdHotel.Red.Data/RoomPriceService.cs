@@ -1,5 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using System;
+using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Data.Entities;
 
 namespace artiso.AdsdHotel.Red.Data
@@ -10,7 +12,7 @@ namespace artiso.AdsdHotel.Red.Data
 
         public RoomPriceService(bool repopulate = false)
         {
-            _roomTypesCollection = MongoDatabase.GetCollection<RoomType>("roomtypes");
+            _roomTypesCollection = _mongoDatabase.GetCollection<RoomType>("roomtypes");
             if (repopulate)
             {
                 _roomTypesCollection.DeleteMany(type => true);
@@ -24,17 +26,17 @@ namespace artiso.AdsdHotel.Red.Data
                     new RoomType("Honeymoon", new[]
                     {
                         new Rate("Overnight stay", 500),
-                        new Rate("Breakfast", 15),
+                        new Rate("Breakfast", 35),
                         new Rate("Champagne", 50)
                     })
                 });
             }
         }
 
-        public List<Rate>? GetRoomRatesByRoomType(string roomType)
+        public async Task<List<Rate>> GetRoomRatesByRoomType(string roomType)
         {
-            var roomRatesByRoomType = _roomTypesCollection?.Find(type => type.Name.Equals(roomType)).First().Rates;
-            return roomRatesByRoomType;
+            var find = await _roomTypesCollection.FindAsync(type => type.Name.Equals(roomType));
+            return find?.First().Rates ?? new List<Rate>();
         }
     }
 }

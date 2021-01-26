@@ -26,8 +26,9 @@ namespace artiso.AdsdHotel.Red.Ambassador
                 Console.WriteLine($"Test response for {s}:");
                 foreach (var replyRoomRate in reply.RoomRates)
                 {
-                    Console.WriteLine($"{replyRoomRate.Name} - {replyRoomRate.Price} €");
+                    Console.WriteLine($"{replyRoomRate.Name} - {replyRoomRate.Price} Euro");
                 }
+                Console.WriteLine($"Total price - {reply.TotalPrice} Euro");
                 Console.WriteLine();
             }
             Console.ReadKey();

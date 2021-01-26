@@ -4,18 +4,20 @@ option csharp_namespace = "artiso.AdsdHotel.Red.Api";
 
 package rates;
 
+
 service Rates {
   rpc GetRoomRatesByRoomType (GetRoomRatesByRoomTypeRequest) returns (GetRoomRatesByRoomTypeReply);
   rpc InputRoomRates (InputRoomRatesRequest) returns (InputRoomRatesReply);
 }
 
-// GetRoomRatesByRoomType
 message GetRoomRatesByRoomTypeRequest {
   string room_type = 1;
 }
 
 message GetRoomRatesByRoomTypeReply {
-  repeated RoomRate room_rates  = 1;
+	repeated RoomRate room_rates  = 1;
+	ConfirmationDetails confirmation_details = 2;
+	float total_price = 3;
 }
 
 message RoomRate {
@@ -23,11 +25,29 @@ message RoomRate {
   float price = 2;
 }
 
-// GetRoomRatesByRoomType
 message InputRoomRatesRequest {
-  string name = 1;
+  string order_id = 1;
+  Date start_date = 2;
+  Date end_date = 3; 
+  repeated RoomRate room_rates = 4;
 }
 
 message InputRoomRatesReply {
-  string message = 1;
+	bool success = 1;
+	string error_message = 2;
+}
+
+message ConfirmationDetails {
+	repeated CancellationFee cancellation_fees = 1;
+}
+
+message Date {
+	int32 year = 1;
+	int32 month = 2;
+	int32 day = 3;
+}
+
+message CancellationFee {
+	Date dead_line = 1;
+	float fee_in_percentage = 2;
 }

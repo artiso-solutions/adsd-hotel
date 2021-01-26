@@ -10,21 +10,23 @@ namespace artiso.AdsdHotel.Red.Service.Service
 {
     public class RatesService : Rates.RatesBase
     {
-        readonly IRoomPriceService _RoomPriceService = new RoomPriceService();
+        private readonly IRoomPriceService _roomPriceService = new RoomPriceService();
 
-        public override Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request,
+        public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request,
             ServerCallContext context)
         {
-            var roomRatesByRoomType = _RoomPriceService.GetRoomRatesByRoomType(request.RoomType);
-            var roomRates= roomRatesByRoomType?.ConvertAll(rate => new RoomRate()
+            var roomRatesByRoomType = await _roomPriceService.GetRoomRatesByRoomType(request.RoomType);
+            var roomRates= roomRatesByRoomType.ConvertAll(rate => new RoomRate()
             {
                 Name = rate.Name,
                 Price = rate.Price
             });
 
-            return Task.FromResult(new GetRoomRatesByRoomTypeReply
+            return await Task.FromResult(new GetRoomRatesByRoomTypeReply
             {
-                RoomRates = { roomRates }
+                RoomRates = { roomRates },
+                ConfirmationDetails = new ConfirmationDetails(),
+                TotalPrice = roomRates.Select(rate => rate.Price).Sum()
             });
         }
 
@@ -32,7 +34,7 @@ namespace artiso.AdsdHotel.Red.Service.Service
         {
             return Task.FromResult(new InputRoomRatesReply
             {
-                Message = request.Name
+                Success = true
             });
         }
     }
