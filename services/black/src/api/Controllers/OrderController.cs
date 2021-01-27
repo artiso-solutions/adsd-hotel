@@ -43,8 +43,8 @@ namespace artiso.AdsdHotel.Black.Api.Controllers
                 Expression<Func<GuestInformationRecord, bool>> fEx = r => r.GuestInformation.EMail.ToLowerInvariant().Contains(eMail);
                 filters.Add(fEx);
             }
-
-            var result = await _dataStoreClient.GetAllAsync("and", filters.ToArray());
+            
+            var result = await _dataStoreClient.GetAllAsync(ExpressionCombinationOperator.And, filters.ToArray());
             var ids = result.Select(r => r.OrderId).ToList();
             return new OrderIdRespone(ids);
         }

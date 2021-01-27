@@ -31,7 +31,7 @@ namespace artiso.AdsdHotel.Black.Api.Controllers
             if (orderId == null)
                 return BadRequest();
 
-            var result = await _dataStoreClient.GetAsync<GuestInformationRecord?>(r => r!.OrderId == orderId);
+            var result = await _dataStoreClient.GetAsync<GuestInformationRecord?>(ExpressionCombinationOperator.And, r => r!.OrderId == orderId);
             if (result == null)
             {
                 _logger.LogWarning($"No matching entry found for order '{orderId}'.");

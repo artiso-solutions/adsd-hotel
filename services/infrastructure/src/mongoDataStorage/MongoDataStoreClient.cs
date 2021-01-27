@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
-using Microsoft.VisualBasic.FileIO;
 using MongoDB.Driver;
 
 namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
@@ -37,37 +36,45 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetAsync<T>(Expression<Func<T, bool>> filter)
+        public async Task<T> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
         {
             var col = _db.GetCollection<T>(_collection);
+            var filter = CombineFilters(combinator, filters);
             var resultCollection = await col.FindAsync<T>(filter).ConfigureAwait(false);
             var result = await resultCollection.FirstOrDefaultAsync().ConfigureAwait(false);
             return result;
         }
 
         /// <inheritdoc/>
-        public async Task<List<T>> GetAllAsync<T>(string combinator, params Expression<Func<T, bool>>[] filters)
+        public async Task<List<T>> GetAllAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
         {
             // combinator is a workaround until we figure out how combined expressions work correctly
 
             var col = _db.GetCollection<T>(_collection);
-            var builder = new FilterDefinitionBuilder<T>();
-            var filter = builder.Empty;
-            switch (combinator.ToLowerInvariant())
-            {
-                case "and":
-                    filter = builder.And(filters.Select(f => builder.Where(f)));
-                    break;
-                case "or":
-                    filter = builder.Or(filters.Select(f => builder.Where(f)));
-                    break;
-                default:
-                    filter = filters.First();
-                    break;
-            }
+            var filter = CombineFilters(combinator, filters);
             var result = await col.FindAsync(filter).ConfigureAwait(false);
             var list = await result.ToListAsync().ConfigureAwait(false);
             return list;
+        }
+
+        private FilterDefinition<T> CombineFilters<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
+        {
+            var builder = new FilterDefinitionBuilder<T>();
+            var filter = builder.Empty;
+            if (filters is { Length: 1 })
+            {
+                filter = filters.First();
+            }
+            else
+            {
+                filter = combinator switch
+                {
+                    ExpressionCombinationOperator.And => builder.And(filters.Select(f => builder.Where(f))),
+                    ExpressionCombinationOperator.Or => builder.Or(filters.Select(f => builder.Where(f))),
+                    _ => filters.First(),
+                };
+            }
+            return filter;
         }
     }
 }

@@ -26,14 +26,15 @@ namespace artiso.AdsdHotel.Infrastructure.DataStorage
         /// <param name="combinator">How to combine the filters. and/or </param>
         /// <param name="filter">The filters to search for the entity.</param>
         /// <returns>A task that can be awaited with the found entities if any.</returns>
-        Task<List<T>> GetAllAsync<T>(string combinator, params Expression<Func<T, bool>>[] filters);
+        Task<List<T>> GetAllAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters);
 
         /// <summary>
         /// Retrieves an single entity from the data store given a filter.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
-        /// <param name="filter">The filter to search for the entity.</param>
+        /// <param name="combinator">How to combine the filters. and/or </param>
+        /// <param name="filters">The filters to search for the entity.</param>
         /// <returns>A task that can be awaited with the found entity if it was found.</returns>
-        Task<T> GetAsync<T>(Expression<Func<T, bool>> filter);
+        Task<T> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters);
     }
 }
