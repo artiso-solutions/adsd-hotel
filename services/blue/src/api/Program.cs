@@ -1,20 +1,12 @@
-﻿using System;
-using artiso.AdsdHotel.Blue.Api;
+﻿using artiso.AdsdHotel.Blue.Api;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-// Run.
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureApp()
+    .Build();
 
-var dbConfig = new DatabaseConfiguration(
-    host: "localhost",
-    port: 3306,
-    database: "adsd-blue",
-    username: "root",
-    password: null);
-
-var services = Startup.ConfigureServices(dbConfig);
-
-using var scope = services.CreateScope();
-
+using var scope = host.Services.CreateScope();
 await Startup.SetupDatabaseAsync(scope.ServiceProvider);
 
-Console.ReadLine();
+await host.RunAsync();

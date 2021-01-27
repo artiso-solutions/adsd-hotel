@@ -1,5 +1,4 @@
-﻿using System;
-using NServiceBus;
+﻿using NServiceBus;
 
 namespace artiso.AdsdHotel.Blue.Ambassador
 {
@@ -10,14 +9,7 @@ namespace artiso.AdsdHotel.Blue.Ambassador
             string endpointDestination,
             string rabbitMqConnectionString)
         {
-            var config = new EndpointConfiguration(channelName);
-            config.MakeInstanceUniquelyAddressable($"{channelName}.{Guid.NewGuid()}");
-
-            NServiceBusEndpointConfigurator.Configure(config);
-
-            config.UseTransport<RabbitMQTransport>()
-                .UseConventionalRoutingTopology()
-                .ConnectionString(rabbitMqConnectionString);
+            var config = NServiceBusEndpointConfigurationFactory.Create(channelName, rabbitMqConnectionString);
 
             var holder = new EndpointHolder(Endpoint.Start(config));
             var channel = new NServiceBusChannel(holder, endpointDestination);

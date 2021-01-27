@@ -2,17 +2,25 @@
 using System.Threading.Tasks;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace artiso.AdsdHotel.Blue.Api
 {
     internal class Startup
     {
-        public static IServiceProvider ConfigureServices(DatabaseConfiguration dbConfig)
+        public static void ConfigureServices(
+            HostBuilderContext _,
+            IServiceCollection services)
         {
-            var cs = dbConfig.ToMySqlConnectionString();
+            var dbConfig = new DatabaseConfiguration(
+                host: "localhost",
+                port: 3306,
+                database: "adsd-blue",
+                username: "root",
+                password: null);
 
-            var services = new ServiceCollection();
+            var cs = dbConfig.ToMySqlConnectionString();
 
             services.AddLogging(builder => builder.AddConsole());
 
@@ -29,8 +37,6 @@ namespace artiso.AdsdHotel.Blue.Api
                     .WithGlobalConnectionString(cs)
                     .ScanIn(typeof(MySqlConnectionFactory).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
-
-            return services.BuildServiceProvider();
         }
 
         public static async Task SetupDatabaseAsync(IServiceProvider services)
