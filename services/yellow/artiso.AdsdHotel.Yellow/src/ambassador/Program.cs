@@ -6,7 +6,7 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }
