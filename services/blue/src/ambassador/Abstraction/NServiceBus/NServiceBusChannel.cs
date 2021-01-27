@@ -8,12 +8,16 @@ namespace artiso.AdsdHotel.Blue.Ambassador
     {
         private readonly EndpointHolder _holder;
         private readonly string _destination;
+        private readonly SendOptions _sendOptions;
 
         public NServiceBusChannel(
             EndpointHolder holder, string destination)
         {
             _holder = holder;
             _destination = destination;
+            
+            _sendOptions = new SendOptions();
+            _sendOptions.SetDestination(destination);
         }
 
         public async Task Send(object command)
@@ -25,7 +29,8 @@ namespace artiso.AdsdHotel.Blue.Ambassador
         public async Task<TResponse> Request<TResponse>(object request, CancellationToken cancellationToken)
         {
             await _holder.EndpointReady.ConfigureAwait(false);
-            var response = await _holder.Endpoint.Request<TResponse>(request, cancellationToken).ConfigureAwait(false);
+            var response = await _holder.Endpoint.Request<TResponse>(
+                request, _sendOptions, cancellationToken).ConfigureAwait(false);
             return response;
         }
 

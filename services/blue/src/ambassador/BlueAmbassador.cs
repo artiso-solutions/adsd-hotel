@@ -74,7 +74,7 @@ namespace artiso.AdsdHotel.Blue.Ambassador
             return response;
         }
 
-        public async Task<string> GetReservationRoomNumber(
+        public async Task<string> GetReservationRoomNumberAsync(
             string orderId,
             CancellationToken cancellationToken = default)
         {
