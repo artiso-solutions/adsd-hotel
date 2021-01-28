@@ -4,20 +4,20 @@
 The service is responsible for managing payment for orders.
 
 ## Commands
-- `artiso.AdsdHotel.Yellow.Contracts.Commands.AuthorizeCancellationFeeRequest`<br>
+- `artiso.AdsdHotel.Yellow.Contracts.Commands.AuthorizeOrderCancellationFeeRequest`<br>
   Checks for the request having a FormOfPayment with a valid CreditCard. <br>
-  Checks for the CreditCard having the required <br>
-  amount of money to pay the `Rate` `CancellationFee`. <br> 
+  Checks for the CreditCard having the required amount of money to pay the `Order` `CancellationFee`. <br> 
   Gets a Payment token to be used for in future transactions for this order.
-- `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeCancellationFeeRequest`<br>
-  Gets the Amount of money to pay the order `Rate` `CancellationFee`.
-- `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeForFullAmountRequest`<br>
-  Gets the Amount of money to pay the order `Rate` `Amount`.
+- `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeForOrderCancellationFeeRequest`<br>
+  Gets the Amount of money to pay the order `Order` `CancellationFee`.
+- `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeForOrderFullAmountRequest`<br>
+  Gets the Amount of money to pay the order `Order` `Amount`.
 
 ## Events
-- `artiso.AdsdHotel.Yellow.Events.RateCancellationFeeAuthorizationAcquired`<br>
-  Triggered when the `AuthorizeCancellationFeeRequest` ends.
-- `artiso.AdsdHotel.Yellow.Events.RateCancellationFeeCharged`<br>
-  Triggered when the `ChargeCancellationFeeRequest` ends.
-- `artiso.AdsdHotel.Yellow.Events.RateAmountCharged`<br>
-  Triggered when the `ChargeForFullAmountRequest` ends.
+- `artiso.AdsdHotel.Yellow.Events.OrderCancellationFeeAuthorizationAcquired`<br>
+  Triggered when the `AuthorizeOrderCancellationFeeRequest` ends.
+- `artiso.AdsdHotel.Yellow.Events.OrderCancellationFeeCharged`<br>
+  Triggered when the `ChargeForOrderCancellationFeeRequest` ends.
+- `artiso.AdsdHotel.Yellow.Events.OrderFullAmountCharged`<br>
+  Triggered when the `ChargeForOrderFullAmountRequest` ends.
+  
