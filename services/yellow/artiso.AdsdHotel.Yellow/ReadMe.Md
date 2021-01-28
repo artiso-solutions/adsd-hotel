@@ -7,7 +7,7 @@ The service is responsible for managing payment for orders.
 - `artiso.AdsdHotel.Yellow.Contracts.Commands.AuthorizeOrderCancellationFeeRequest`<br>
   Checks for the request having a FormOfPayment with a valid CreditCard. <br>
   Checks for the CreditCard having the required amount of money to pay the `Order` `CancellationFee`. <br> 
-  Gets a Payment token to be used for in future transactions for this order.
+  Gets a Payment token to be used for future order transactions.
 - `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeForOrderCancellationFeeRequest`<br>
   Gets the Amount of money to pay the order `Order` `CancellationFee`.
 - `artiso.AdsdHotel.Yellow.Contracts.Commands.ChargeForOrderFullAmountRequest`<br>
