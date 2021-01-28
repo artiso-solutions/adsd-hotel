@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api.DatabaseModel;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
-using DnsClient.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace artiso.AdsdHotel.Black.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class GuestInformationController : ControllerBase
     {
         private readonly IDataStoreClient _dataStoreClient;

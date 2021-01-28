@@ -47,8 +47,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
                 "Black.Api",
-                    typeof(SetGuestInformation), typeof(GuestInformationRequest), typeof(OrderIdRequest))
-                .WithClientCallbacks($"Black.Ambassador.{Guid.NewGuid()}");
+                    typeof(SetGuestInformation));
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         {
             ThrowIfNotInitialized();
             var response = await _senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
-            return response.GuestInformation;
+            return response?.GuestInformation;
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         {
             ThrowIfNotInitialized();
             var response = await _senderEndpoint.Request<OrderIdRespone>(new OrderIdRequest(firstName, lastName, eMail)).ConfigureAwait(false);
-            return response.OrderIds;
+            return response?.OrderIds;
         }
 
         /// <summary>

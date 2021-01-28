@@ -12,7 +12,7 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
         /// - configures default conventions <br/>
         /// - use InMemoryPersistence <br/>
         /// - use RabbitMQTransport with conventional routing <br/>
-        /// - configures the routing if endpoint and types are passed 
+        /// - configures the routing, if endpoint and types are passed 
         /// </summary>
         /// <param name="config">The endpoint configuration.</param>
         /// <param name="rabbitMqConnectionString">The connection string for the rabbitMQ endpoint.</param>
@@ -44,7 +44,6 @@ namespace artiso.AdsdHotel.Infrastructure.NServiceBus
                 }
                 foreach (var item in typesToRoute)
                 {
-                    routing.RouteToEndpoint(item, targetEndpoint);
                     routing.RouteToEndpoint(item, targetEndpoint);
                 }
             }
