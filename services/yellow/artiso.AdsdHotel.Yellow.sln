@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Eve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Contracts", "src\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj", "{BE4417ED-7FD8-4EED-80E0-296C3F5204E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Tests", "tests\artiso.AdsdHotel.Yellow.Tests\artiso.AdsdHotel.Yellow.Tests.csproj", "{862BCCEF-4724-47F2-91E7-25E7E4194F7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Tests", "tests\artiso.AdsdHotel.Yellow.Tests.csproj", "{862BCCEF-4724-47F2-91E7-25E7E4194F7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events.External", "src\external\events\artiso.AdsdHotel.Yellow.Events.External\artiso.AdsdHotel.Yellow.Events.External.csproj", "{36032424-5D43-4E4B-9F91-8A92BEA21684}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events.External", "src\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj", "{36032424-5D43-4E4B-9F91-8A92BEA21684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Api", "src\api\artiso.AdsdHotel.Yellow.Api\artiso.AdsdHotel.Yellow.Api.csproj", "{F51C14F4-9378-49FB-96A5-CAB13450B6F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Api", "src\api\artiso.AdsdHotel.Yellow.Api.csproj", "{F51C14F4-9378-49FB-96A5-CAB13450B6F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
