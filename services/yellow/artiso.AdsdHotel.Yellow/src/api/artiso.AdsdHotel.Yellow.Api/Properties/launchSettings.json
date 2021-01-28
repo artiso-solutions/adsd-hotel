@@ -1,0 +1,35 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:49451",
+      "sslPort": 44314
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "artiso.AdsdHotel.Yellow.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SERVICE__rabbit__rabbit__protocol": "amqp",
+        "SERVICE__rabbit__rabbit__host": "localhost",
+        "SERVICE__rabbit__rabbit__port": "5672",
+        "SERVICE__mongodb__mongodb__protocol": "mongodb",
+        "SERVICE__mongodb__mongodb__host": "localhost",
+        "SERVICE__mongodb__mongodb__port": "27017",
+        "YELLOW_API_DBNAME": "blackDatabase"
+      }
+    }
+  }
+}
