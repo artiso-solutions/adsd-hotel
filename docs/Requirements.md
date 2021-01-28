@@ -30,8 +30,8 @@
 - Confirmation details
 
 ### Payment
-- Guest Info needs to be stored for later verifyication
-- Payment Mehtods 
+- Guest Info needs to be stored for later verification
+- Payment Methods 
   - Limited Methods due to complexity
 
 ### Booking validation and confirmation
