@@ -1,43 +1,70 @@
+using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
+using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
+using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
-using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class AuthorizeOrderCancellationFeeHandler : IHandleMessages<AuthorizeOrderCancellationFeeRequest>
+    public class AuthorizeOrderCancellationFeeHandler : AbstractHandler<AuthorizeOrderCancellationFeeRequest, OrderCancellationFeeAuthorizationAcquired>
     {
-        public async Task Handle(AuthorizeOrderCancellationFeeRequest requestMessage, IMessageHandlerContext context)
+        private readonly IOrderService _orderService;
+        private readonly ICreditCardPaymentService _paymentService;
+
+        public AuthorizeOrderCancellationFeeHandler(IOrderService orderService, 
+            ICreditCardPaymentService paymentService)
         {
-            var validateResult = requestMessage.Validate()
+            _orderService = orderService;
+            _paymentService = paymentService;
+        }
+        
+        protected override async Task<OrderCancellationFeeAuthorizationAcquired> Handle(AuthorizeOrderCancellationFeeRequest message)
+        {
+            // FormOfPayment validation
+                // CreditCard
+            
+            // Collection
+                // Order
+                // FormOfPayments
+                    // CreditCard (Register the last 4 digit of PAN)
+                        // PaymentToken
+                // Transactions
+                    // OrderId
+                    // FopId
+
+            // EnsureOrder(orderId)
+            // Get the CancellationFee from Order
+            Order order = await _orderService.FindOneById(message.OrderId);
+            var cancellationFee = order.Price.CancellationFee;
+            var creditCard = message.PaymentMethod.CreditCard;
+            
+            // Make Authorization
+            // Payment Service
+            // Given a ValidCreditCard
+            // Check if the CreditCard has the required CancellationFee amount
+            var authorizeResult = await _paymentService.Authorize(cancellationFee, creditCard!);
+            if (authorizeResult.IsSuccess != true)
+                throw authorizeResult.Exception ?? new ArgumentNullException($"{nameof(authorizeResult)}");
+            
+            // Store the authorize result
+            order.OrderPaymentMethod = new OrderPaymentMethod(creditCard.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken));
+            // Transaction??
+
+            return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
+        }
+
+        protected override ValidationModelResult<AuthorizeOrderCancellationFeeRequest> Validate(AuthorizeOrderCancellationFeeRequest message)
+        {
+            return message.Validate()
                 .HasData(r => r.OrderId, 
-                    $"{nameof(AuthorizeOrderCancellationFeeRequest.OrderId)} should not be null")
+                    $"{nameof(AuthorizeOrderCancellationFeeRequest.OrderId)} should contain data")
                 .NotNull(r => r.PaymentMethod, 
                     $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod)} should not be null")
                 .NotNull(r => r.PaymentMethod.CreditCard, 
                     $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod.CreditCard)} should not be null");
-            
-            if (!validateResult.IsValid())
-            {
-                var ex = new ValidationException(validateResult);
-                
-                var r = new Response<OrderCancellationFeeAuthorizationAcquired>(ex);
-                
-                await context.Publish(r);
-                
-                return;
-            }
-            
-            //
-            
-            string orderId = requestMessage.OrderId;
-            
-            var responseMessage = new OrderCancellationFeeAuthorizationAcquired(orderId);
-            
-            var response = new Response<OrderCancellationFeeAuthorizationAcquired>(responseMessage);
-
-            await context.Publish(response);
         }
     }
 }
