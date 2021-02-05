@@ -1,19 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Api;
 using artiso.AdsdHotel.Red.Data;
 using artiso.AdsdHotel.Red.Data.Entities;
 using Grpc.Core;
-using MongoDB.Driver;
 using RoomRate = artiso.AdsdHotel.Red.Api.RoomRate;
 
 namespace artiso.AdsdHotel.Red.Service.Service
 {
     public sealed class RatesService : Rates.RatesBase
     {
-        private readonly IRoomPriceService _roomPriceService = new RoomPriceService();
+
+        private readonly IRoomPriceService _roomPriceService;
+
+        public RatesService()
+        {
+            _roomPriceService = new RoomPriceService();
+        }
+
+        public RatesService(IRoomPriceService roomPriceService)
+        {
+            _roomPriceService = roomPriceService;
+        }
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(
             GetRoomRatesByRoomTypeRequest request,

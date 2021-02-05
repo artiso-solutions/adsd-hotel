@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace artiso.AdsdHotel.Red.Api
+namespace artiso.AdsdHotel.Red.Service
 {
     public class Program
     {

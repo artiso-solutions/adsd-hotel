@@ -16,7 +16,7 @@ namespace artiso.AdsdHotel.Red.Data.Entities
         [BsonElement]
         public string Type { get; internal set; }
 
-        internal RoomType(Guid id, string type, IEnumerable<Rate> rates)
+        public RoomType(Guid id, string type, IEnumerable<Rate> rates)
         {
             Id = id;
             Type = type;

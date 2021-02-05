@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Api;
-using Google.Protobuf.Collections;
 using Grpc.Net.Client;
-using MongoDB.Driver;
 
 namespace artiso.AdsdHotel.Red.Ambassador
 {

@@ -6,15 +6,17 @@ using artiso.AdsdHotel.Red.Data.Entities;
 
 namespace artiso.AdsdHotel.Red.Data
 {
-    public class RoomPriceService : BaseDatabaseService, IRoomPriceService
+    public class RoomPriceService : IRoomPriceService
     {
+        private static readonly MongoClient DbClient = new MongoClient("mongodb://root:example@127.0.0.1:27017");
         private readonly IMongoCollection<RoomType>? _roomTypesCollection;
         private readonly IMongoCollection<RoomRate>? _roomRatesCollection;
 
         public RoomPriceService(bool repopulate = true)
         {
-            _roomTypesCollection = _mongoDatabase.GetCollection<RoomType>("roomtypes");
-            _roomRatesCollection = _mongoDatabase.GetCollection<RoomRate>("roomrates");
+            IMongoDatabase mongoDatabase = DbClient.GetDatabase("red");
+            _roomTypesCollection = mongoDatabase.GetCollection<RoomType>("roomtypes");
+            _roomRatesCollection = mongoDatabase.GetCollection<RoomRate>("roomrates");
             if (repopulate)
             {
                 _roomTypesCollection.DeleteMany(type => true);
@@ -37,8 +39,10 @@ namespace artiso.AdsdHotel.Red.Data
 
         public async Task<List<Rate>> GetRoomRatesByRoomType(string roomType)
         {
+            if (string.IsNullOrEmpty(roomType)) throw new ArgumentException(nameof(roomType));
+
             var find = await _roomTypesCollection.FindAsync(type => type.Type.Equals(roomType));
-            return find?.First().Rates ?? new List<Rate>();
+            return find?.Single().Rates ?? new List<Rate>();
         }
 
         public async void InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<Rate> enumerable)

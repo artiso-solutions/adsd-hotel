@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <StartupObject>artiso.AdsdHotel.Red.Api.Program</StartupObject>
+    <StartupObject>artiso.AdsdHotel.Red.Service.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

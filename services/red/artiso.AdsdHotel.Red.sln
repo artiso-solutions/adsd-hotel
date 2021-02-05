@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "src\api\artiso.AdsdHotel.Red.Api.csproj", "{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Tests", "tests\artiso.AdsdHotel.Red.Tests\artiso.AdsdHotel.Red.Tests.csproj", "{6C90A82C-F59E-4742-8929-2D1C6951BE3A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambassador", "src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{01BF02A7-F72D-42D6-8FD2-9D6BED942248}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Service", "src\service\artiso.AdsdHotel.Red.Service.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Data", "src\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Data.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Tests", "tests\artiso.AdsdHotel.Red.Tests\artiso.AdsdHotel.Red.Tests.csproj", "{B9D21CF3-00A6-426F-AA7E-B045552D18BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C90A82C-F59E-4742-8929-2D1C6951BE3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C90A82C-F59E-4742-8929-2D1C6951BE3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C90A82C-F59E-4742-8929-2D1C6951BE3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C90A82C-F59E-4742-8929-2D1C6951BE3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9D21CF3-00A6-426F-AA7E-B045552D18BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D21CF3-00A6-426F-AA7E-B045552D18BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D21CF3-00A6-426F-AA7E-B045552D18BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D21CF3-00A6-426F-AA7E-B045552D18BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

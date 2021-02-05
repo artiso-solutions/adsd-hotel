@@ -1,13 +1,11 @@
-﻿using artiso.AdsdHotel.Red.Data;
+﻿using artiso.AdsdHotel.Red.Service.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using artiso.AdsdHotel.Red.Service.Service;
 
-namespace artiso.AdsdHotel.Red.Api
+namespace artiso.AdsdHotel.Red.Service
 {
     public class Startup
     {
