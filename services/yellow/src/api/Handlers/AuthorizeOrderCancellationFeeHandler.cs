@@ -23,31 +23,14 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         
         protected override async Task<OrderCancellationFeeAuthorizationAcquired> Handle(AuthorizeOrderCancellationFeeRequest message)
         {
-            // Collection
-                // Order
-                // FormOfPayments
-                    // CreditCard (Register the last 4 digit of PAN)
-                        // PaymentToken
-                // Transactions
-                    // OrderId
-                    // FopId
-
             Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
-            var cancellationFee = order.Price.CancellationFee;
-            var creditCard = message.PaymentMethod.CreditCard;
-            
-            // Make Authorization
-                // Payment Service
-                // Given a ValidCreditCard
-                // Check if the CreditCard has the required CancellationFee amount
-            var authorizeResult = await _paymentService.Authorize(cancellationFee, creditCard!);
+
+            var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, message.PaymentMethod.CreditCard!);
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new ArgumentNullException($"{nameof(authorizeResult)}");
             
-            // Store the authorize result
-            order.OrderPaymentMethod = new OrderPaymentMethod(creditCard!.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken));
+            _orderService.AddPaymentMethod(order, new OrderPaymentMethod(message.PaymentMethod.CreditCard.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken)));
 
-            // Transaction??
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }
 

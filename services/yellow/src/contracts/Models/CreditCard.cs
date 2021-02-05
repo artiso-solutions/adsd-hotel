@@ -4,8 +4,10 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
 {
     public record OrderCreditCard(
         IssuingNetwork IssuingNetwork,
+        string CardHolder,
+        DateTime ExpirationDate,
         string CardNumber,
-        string ProviderPaymentToken);
+        string? ProviderPaymentToken);
     
     public record CreditCard(
         IssuingNetwork IssuingNetwork,

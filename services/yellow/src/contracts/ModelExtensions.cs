@@ -6,9 +6,9 @@ namespace artiso.AdsdHotel.Yellow.Contracts
     {
         public static OrderCreditCard GetOrderCreditCard(this CreditCard creditCard, string token)
         {
-            var pan = "************1650";
+            var pan = creditCard.CardNumber.Substring(creditCard.CardNumber.Length - 4, 4).PadLeft(creditCard.CardNumber.Length, '*');
             
-            return new OrderCreditCard(creditCard.IssuingNetwork, pan, token);
+            return new OrderCreditCard(creditCard.IssuingNetwork,  creditCard.CardHolder, creditCard.ExpirationDate, pan, token);
         }
     }
 }
