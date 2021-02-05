@@ -35,28 +35,26 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                     // OrderId
                     // FopId
 
-            // EnsureOrder(orderId)
-            // Get the CancellationFee from Order
-            Order order = await _orderService.FindOneById(message.OrderId);
+            Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
             var cancellationFee = order.Price.CancellationFee;
             var creditCard = message.PaymentMethod.CreditCard;
             
             // Make Authorization
-            // Payment Service
-            // Given a ValidCreditCard
-            // Check if the CreditCard has the required CancellationFee amount
+                // Payment Service
+                // Given a ValidCreditCard
+                // Check if the CreditCard has the required CancellationFee amount
             var authorizeResult = await _paymentService.Authorize(cancellationFee, creditCard!);
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new ArgumentNullException($"{nameof(authorizeResult)}");
             
             // Store the authorize result
-            order.OrderPaymentMethod = new OrderPaymentMethod(creditCard.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken));
-            // Transaction??
+            order.OrderPaymentMethod = new OrderPaymentMethod(creditCard!.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken));
 
+            // Transaction??
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }
 
-        protected override ValidationModelResult<AuthorizeOrderCancellationFeeRequest> Validate(AuthorizeOrderCancellationFeeRequest message)
+        protected override ValidationModelResult<AuthorizeOrderCancellationFeeRequest> ValidateRequest(AuthorizeOrderCancellationFeeRequest message)
         {
             return message.Validate()
                 .HasData(r => r.OrderId, 

@@ -25,14 +25,14 @@ namespace artiso.AdsdHotel.Yellow.Api.Validation
         {
             var provValue = rule(v.Instance);
 
-            return v.That(_ => !string.IsNullOrWhiteSpace(provValue));
+            return v.That(_ => !string.IsNullOrWhiteSpace(provValue), errorMessage);
         }
         
         public static ValidationModelResult<T> NotNull<T>(this ValidationModelResult<T> v, Func<T, object?> rule, string errorMessage)
         {
             var provValue = rule(v.Instance);
 
-            return v.That(_ => provValue is not null);
+            return v.That(_ => provValue is not null, errorMessage);
         }
     }
 }

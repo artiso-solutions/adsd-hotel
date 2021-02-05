@@ -1,6 +1,6 @@
 namespace artiso.AdsdHotel.Yellow.Api.Validation
 {
-    internal interface IValidateModelResult
+    public interface IValidateModelResult
     {
         string GetErrors();
     }

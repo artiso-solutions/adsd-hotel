@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Handlers;
 using artiso.AdsdHotel.Yellow.Api.Services;
+using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
@@ -77,8 +78,19 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
 
             var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
-            Assert.NotNull(r?.Exception);
-            Assert.False(r?.IsSuccessful);
+
+            if (r?.Exception is null)
+            {
+                Assert.Fail("Expected exception");
+                return;
+            }
+
+            Assert.NotNull(r.Exception);
+            Assert.False(r.IsSuccessful);
+            Assert.IsNotEmpty(r.Exception.Message, "Expected exception message");
+            Assert.IsInstanceOf<ValidationException>(r.Exception);
+
+            await TestContext.Out.WriteLineAsync($"Exception {r.Exception.GetType().Name}, message {r.Exception.Message}");
         }
 
         #region InvalidRequestTestCaseSources

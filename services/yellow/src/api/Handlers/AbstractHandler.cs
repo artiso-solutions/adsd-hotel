@@ -12,7 +12,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         {
             try
             {
-                var validateResult = Validate(message);
+                var validateResult = ValidateRequest(message);
 
                 if (!validateResult.IsValid())
                     throw new ValidationException(validateResult);
@@ -33,6 +33,16 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
         protected abstract Task<TResponseMessage> Handle(TRequestMessage message);
 
-        protected virtual ValidationModelResult<TRequestMessage> Validate(TRequestMessage message) => message.Validate();
+        protected virtual ValidationModelResult<TRequestMessage> ValidateRequest(TRequestMessage message) => message.Validate();
+
+        protected static async Task<TResult> Ensure<TMessage, TResult>(TMessage m, Func<TMessage, Task<TResult>> func)
+        {
+            var result = await func(m);
+
+            if (result is null)
+                throw new ValidationException($"{nameof(TResult)} should not be null");
+
+            return result;
+        }
     }
 }
