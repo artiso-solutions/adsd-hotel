@@ -1,20 +1,22 @@
-﻿namespace artiso.AdsdHotel.Red.Data.Entities
+﻿using System;
+
+namespace artiso.AdsdHotel.Red.Data.Entities
 {
     public class Rate
     {
-        public string Name { get; internal set; }
+        public Guid Id { get; internal set; }
 
         public float Price { get; internal set; }
 
-        internal Rate(string name, float price)
+        public Rate(Guid id, float price)
         {
-            Name = name;
+            Id = id;
             Price = price;
         }
 
         public override string ToString()
         {
-            return $"{nameof(Name)}: {Name}, {nameof(Price)}: {Price}";
+            return $"{nameof(Id)}: {Id}, {nameof(Price)}: {Price}";
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Api;
+using Google.Protobuf.Collections;
 using Grpc.Net.Client;
 using MongoDB.Driver;
 
@@ -15,8 +16,8 @@ namespace artiso.AdsdHotel.Red.Ambassador
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new Rates.RatesClient(channel);
-            List<string> cases = new List<string>(){"Bed & Breakfast", "Honeymoon"};
-            foreach(string s in cases)
+            List<string> cases = new List<string>(){"BedNBreakfast", "Honeymoon"};
+            foreach (string s in cases)
             {
                 var reply = await client.GetRoomRatesByRoomTypeAsync(new GetRoomRatesByRoomTypeRequest
                 {
@@ -26,11 +27,25 @@ namespace artiso.AdsdHotel.Red.Ambassador
                 Console.WriteLine($"Test response for {s}:");
                 foreach (var replyRoomRate in reply.RoomRates)
                 {
-                    Console.WriteLine($"{replyRoomRate.Name} - {replyRoomRate.Price} Euro");
+                    Console.WriteLine($"{replyRoomRate.Id} - {replyRoomRate.Price} Euro");
                 }
+
                 Console.WriteLine($"Total price - {reply.TotalPrice} Euro");
                 Console.WriteLine();
+                var inputRoomRatesRequest = new InputRoomRatesRequest()
+                {
+                    OrderId = Guid.NewGuid().ToString(),
+                    StartDate = new Date(DateTime.Now),
+                    EndDate = new Date(DateTime.Now + new TimeSpan(7))
+                };
+                inputRoomRatesRequest.RoomRates.AddRange(reply.RoomRates);
+                var inputRoomRatesResponse = await client.InputRoomRatesAsync(inputRoomRatesRequest);
+                if (inputRoomRatesResponse.Success)
+                {
+                    Console.WriteLine($"Order for {s} successfully written");
+                }
             }
+
             Console.ReadKey();
         }
     }

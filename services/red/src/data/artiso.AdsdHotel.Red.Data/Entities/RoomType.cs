@@ -11,14 +11,15 @@ namespace artiso.AdsdHotel.Red.Data.Entities
         public Guid Id { get; internal set; }
 
         [BsonElement]
-        public string Name { get; internal set; }
-
-        [BsonElement]
         public List<Rate> Rates { get; internal set; }
 
-        internal RoomType(string name, IEnumerable<Rate> rates)
+        [BsonElement]
+        public string Type { get; internal set; }
+
+        internal RoomType(Guid id, string type, IEnumerable<Rate> rates)
         {
-            Name = name;
+            Id = id;
+            Type = type;
             Rates = rates.ToList();
         }
 
@@ -33,7 +34,7 @@ namespace artiso.AdsdHotel.Red.Data.Entities
 
         public override string ToString()
         {
-            return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Rates)}: {Rates}, {nameof(Price)}: {Price}";
+            return $"{nameof(Id)}: {Id}, {nameof(Type)}: {Type}, {nameof(Rates)}: {Rates}, {nameof(Price)}: {Price}";
         }
     }
 }

@@ -9,25 +9,27 @@ namespace artiso.AdsdHotel.Red.Data
     public class RoomPriceService : BaseDatabaseService, IRoomPriceService
     {
         private readonly IMongoCollection<RoomType>? _roomTypesCollection;
+        private readonly IMongoCollection<RoomRate>? _roomRatesCollection;
 
-        public RoomPriceService(bool repopulate = false)
+        public RoomPriceService(bool repopulate = true)
         {
             _roomTypesCollection = _mongoDatabase.GetCollection<RoomType>("roomtypes");
+            _roomRatesCollection = _mongoDatabase.GetCollection<RoomRate>("roomrates");
             if (repopulate)
             {
                 _roomTypesCollection.DeleteMany(type => true);
                 _roomTypesCollection.InsertMany(new[]
                 {
-                    new RoomType("Bed & Breakfast", new[]
+                    new RoomType(Guid.NewGuid(), "BedNBreakfast", new[]
                     {
-                        new Rate("Overnight stay", 50),
-                        new Rate("Breakfast", 15)
+                        new Rate(Guid.NewGuid(), 50),
+                        new Rate(Guid.NewGuid(), 15)
                     }),
-                    new RoomType("Honeymoon", new[]
+                    new RoomType(Guid.NewGuid(), "Honeymoon" , new[]
                     {
-                        new Rate("Overnight stay", 500),
-                        new Rate("Breakfast", 35),
-                        new Rate("Champagne", 50)
+                        new Rate(Guid.NewGuid(), 500),
+                        new Rate(Guid.NewGuid(), 35),
+                        new Rate(Guid.NewGuid(), 50)
                     })
                 });
             }
@@ -35,8 +37,13 @@ namespace artiso.AdsdHotel.Red.Data
 
         public async Task<List<Rate>> GetRoomRatesByRoomType(string roomType)
         {
-            var find = await _roomTypesCollection.FindAsync(type => type.Name.Equals(roomType));
+            var find = await _roomTypesCollection.FindAsync(type => type.Type.Equals(roomType));
             return find?.First().Rates ?? new List<Rate>();
+        }
+
+        public async void InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<Rate> enumerable)
+        {
+            await _roomRatesCollection?.InsertOneAsync(new RoomRate(orderId, startDate, endDate, enumerable))!;
         }
     }
 }
