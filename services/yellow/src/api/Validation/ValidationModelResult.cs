@@ -17,7 +17,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Validation
             Instance = model;
         }
 
-        internal bool IsValid()
+        public bool IsValid()
         {
             return !_errors.Any();
         }

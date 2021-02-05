@@ -23,9 +23,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         
         protected override async Task<OrderCancellationFeeAuthorizationAcquired> Handle(AuthorizeOrderCancellationFeeRequest message)
         {
-            // FormOfPayment validation
-                // CreditCard
-            
             // Collection
                 // Order
                 // FormOfPayments
@@ -62,7 +59,9 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 .NotNull(r => r.PaymentMethod, 
                     $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod)} should not be null")
                 .NotNull(r => r.PaymentMethod.CreditCard, 
-                    $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod.CreditCard)} should not be null");
+                    $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod.CreditCard)} should not be null")
+                .PaymentMethodIsValid(r => r.PaymentMethod);
+            
         }
     }
 }

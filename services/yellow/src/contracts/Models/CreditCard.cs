@@ -10,8 +10,8 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
     public record CreditCard(
         IssuingNetwork IssuingNetwork,
         string CardHolder,
-        long CardNumber,
-        int Cvv,
+        string CardNumber,
+        string Cvv,
         DateTime ExpirationDate);
 
     public enum IssuingNetwork
@@ -19,9 +19,9 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
         AmericanExpress,
         MasterCard,
         Visa,
-        Maestro,
-        DinersClub, 
-        Jcb,
-        Discover
+        // Maestro,
+        // DinersClub, 
+        // Jcb,
+        // Discover
     }
 }
