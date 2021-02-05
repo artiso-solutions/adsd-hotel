@@ -27,7 +27,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
             var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, message.PaymentMethod.CreditCard!);
             if (authorizeResult.IsSuccess != true)
-                throw authorizeResult.Exception ?? new ArgumentNullException($"{nameof(authorizeResult)}");
+                throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
             _orderService.AddPaymentMethod(order, new OrderPaymentMethod(message.PaymentMethod.CreditCard.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken)));
 

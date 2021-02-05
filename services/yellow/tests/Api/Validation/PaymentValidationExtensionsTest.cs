@@ -2,25 +2,12 @@ using System;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace artiso.AdsdHotel.Yellow.Tests.Api.Validation
 {
     [TestFixture]
     public class PaymentValidationExtensionsTest
     {
-        // [Test]
-        // public void PaymentValidationTest()
-        // {
-        //     var paymentMethod = new PaymentMethod(new CreditCard(IssuingNetwork.AmericanExpress, string.Empty, 0, 0, DateTime.MaxValue));
-        //
-        //     var v = paymentMethod.Validate();
-        //     
-        //     v.PaymentMethodIsValid(_ => paymentMethod);
-        //     
-        //     Assert.True(v.IsValid());
-        // }
-
         [Test]
         public void PaymentMethodMustHaveCreditCard()
         {

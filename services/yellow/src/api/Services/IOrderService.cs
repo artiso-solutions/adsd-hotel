@@ -12,13 +12,14 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// <returns></returns>
         Task<Order> FindOneById(string id);
         
-        // Collection
-        // Order
-        // PaymentMethods
-        // CreditCard (Register the last 4 digit of PAN)
-        // PaymentToken
         /// <summary>
-        /// Adds a Payment Method to an order 
+        /// Adds a Payment Method to an order
+        /// 
+        /// Collection
+        /// Order
+        /// PaymentMethods
+        /// CreditCard (Register the last 4 digit of PAN)
+        /// PaymentToken 
         /// </summary>
         /// <param name="order"></param>
         /// <param name="orderPaymentMethod"></param>

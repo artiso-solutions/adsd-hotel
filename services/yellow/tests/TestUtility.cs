@@ -1,5 +1,3 @@
-// unset
-
 using System;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using NUnit.Framework;
