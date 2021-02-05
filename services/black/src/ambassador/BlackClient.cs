@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Contracts;
@@ -25,6 +26,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// await using ( var blackClient = new BlackClient ( "host=localhost" ) )<br/>
     /// {<br/>
     ///     await blackClient.StartAsync();<br/>
+    /// 
     /// }
     /// </code>
     /// </remarks>
@@ -40,13 +42,12 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
         public BlackClient(string rabbitMqConnectionString)
         {
-            _senderConfiguration = new ("Black.Ambassador");
+            _senderConfiguration = new("Black.Ambassador");
             _senderConfiguration
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
                 "Black.Api",
-                    typeof(SetGuestInformation), typeof(GuestInformationRequest))
-                .WithClientCallbacks($"Black.Ambassador.{Guid.NewGuid()}");
+                    typeof(SetGuestInformation));
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
             if (!GuestInformationValidator.IsValid(guestInformation))
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
-            SetGuestInformation sgi = new (orderId, guestInformation);
+            SetGuestInformation sgi = new(orderId, guestInformation);
             await _senderEndpoint.Send(sgi).ConfigureAwait(false);
         }
 
@@ -85,7 +86,21 @@ namespace artiso.AdsdHotel.Black.Ambassador
         {
             ThrowIfNotInitialized();
             var response = await _senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
-            return response.GuestInformation;
+            return response?.GuestInformation;
+        }
+
+        /// <summary>
+        /// Searches for all orders where the guest information contains either the parameters.
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="eMail"></param>
+        /// <returns>All order ids where the guest information of the order contains any of the parametes.</returns>
+        public async Task<List<Guid>?> GetOrdersAsync(string? firstName, string? lastName, string? eMail)
+        {
+            ThrowIfNotInitialized();
+            var response = await _senderEndpoint.Request<OrderIdRespone>(new OrderIdRequest(firstName, lastName, eMail)).ConfigureAwait(false);
+            return response?.OrderIds;
         }
 
         /// <summary>
