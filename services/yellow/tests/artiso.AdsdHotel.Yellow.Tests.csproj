@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Moq" Version="4.16.0" />
+        <PackageReference Include="NServiceBus" Version="7.4.3" />
+        <PackageReference Include="NServiceBus.Testing" Version="7.2.0" />
+        <PackageReference Include="NUnit" Version="3.13.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.0.0-beta.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\src\api\artiso.AdsdHotel.Yellow.Api.csproj" />
+      <ProjectReference Include="..\src\events\artiso.AdsdHotel.Yellow.Events.csproj" />
+    </ItemGroup>
+
+</Project>
