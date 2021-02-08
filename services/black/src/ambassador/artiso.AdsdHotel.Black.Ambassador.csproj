@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.0.1" />
     <PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />

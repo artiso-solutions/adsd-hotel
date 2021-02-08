@@ -47,7 +47,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <param name="httpClientFactory">HttpClientFactory to provide a HttpClient in StartAsync calls.</param>
         public BlackClient(string rabbitMqConnectionString, IHttpClientFactory httpClientFactory)
         {
-            _senderConfiguration = new("Black.Ambassador");
+            _senderConfiguration = new($"Black.Ambassador.{Guid.NewGuid()}");
             _senderConfiguration
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
