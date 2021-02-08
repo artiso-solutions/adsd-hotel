@@ -25,3 +25,7 @@ This shape is used to make a `GET` request on the `order` endpoint to retrieve a
 
 - `artiso.AdsdHotel.Black.Events.GuestInformationSet`<br>
 Is published when new guest information for a specific order was set.
+
+## Ambassador
+
+This ambassador encapsulates the usage of the black service, i.e. providing support for request/response and command patterns via REST and NServiceBus.
