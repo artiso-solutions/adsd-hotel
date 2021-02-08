@@ -7,6 +7,7 @@ using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Contracts;
 using artiso.AdsdHotel.Black.Contracts.Validation;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
+using Flurl;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Ambassador
@@ -92,7 +93,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
         {
             ThrowIfNotInitialized();
-            var response = await _httpClient!.GetAsync($"/guestinformation?orderId={orderId}").ConfigureAwait(false);
+            var query = _httpClient!.BaseAddress
+                .AppendPathSegment("guestInformation")
+                .SetQueryParams(new { orderId }, NullValueHandling.Ignore);
+            var response = await _httpClient!.GetAsync(query).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadFromJsonAsync<GuestInformationResponse>().ConfigureAwait(false);
@@ -111,7 +115,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<List<Guid>?> GetOrdersAsync(string? firstName, string? lastName, string? eMail)
         {
             ThrowIfNotInitialized();
-            var response = await _httpClient!.GetAsync($"/order?firstName={firstName}&lastName={lastName}&eMail={eMail}").ConfigureAwait(false);
+            var query = _httpClient!.BaseAddress
+                .AppendPathSegment("order")
+                .SetQueryParams(new { firstName, lastName, eMail }, NullValueHandling.Ignore);
+            var response = await _httpClient!.GetAsync(query).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadFromJsonAsync<OrderIdRespone>().ConfigureAwait(false);
