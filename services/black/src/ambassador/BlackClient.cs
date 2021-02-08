@@ -44,6 +44,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// Creates an object of type <see cref="BlackClient"/>.
         /// </summary>
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
+        /// <param name="httpClientFactory">HttpClientFactory to provide a HttpClient in StartAsync calls.</param>
         public BlackClient(string rabbitMqConnectionString, IHttpClientFactory httpClientFactory)
         {
             _senderConfiguration = new("Black.Ambassador");
