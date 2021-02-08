@@ -45,7 +45,6 @@ static IHostBuilder CreateHostBuilder(string[] args)
         endpointConfiguration
             .ConfigureDefaults(connectionString)
             .WithServerCallbacks();
-        //endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
 
         return endpointConfiguration;
@@ -62,22 +61,4 @@ static string CreateRabbitMqConnectionString(Uri? uri)
 {
     var host = uri?.Host ?? "localhost";
     return $"host={host}";
-}
-
-static async Task OnCriticalError(ICriticalErrorContext context)
-{
-    var fatalMessage = $"The following critical error was " +
-                       $"encountered: {Environment.NewLine}{context.Error}{Environment.NewLine}Process is shutting down. " +
-                       $"StackTrace: {Environment.NewLine}{context.Exception.StackTrace}";
-
-    EventLog.WriteEntry(".NET Runtime", fatalMessage, EventLogEntryType.Error);
-
-    try
-    {
-        await context.Stop().ConfigureAwait(false);
-    }
-    finally
-    {
-        Environment.FailFast(fatalMessage, context.Exception);
-    }
 }
