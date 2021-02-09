@@ -1,6 +1,6 @@
 ﻿using NServiceBus;
 
-namespace artiso.AdsdHotel.Blue.Ambassador
+namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
 {
     public class NServiceBusChannelFactory
     {

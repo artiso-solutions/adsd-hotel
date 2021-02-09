@@ -2,22 +2,18 @@
 using System.Threading.Tasks;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.Blue.Ambassador
+namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
 {
     public class NServiceBusChannel : IChannel
     {
         private readonly EndpointHolder _holder;
         private readonly string _destination;
-        private readonly SendOptions _sendOptions;
 
         public NServiceBusChannel(
             EndpointHolder holder, string destination)
         {
             _holder = holder;
             _destination = destination;
-            
-            _sendOptions = new SendOptions();
-            _sendOptions.SetDestination(destination);
         }
 
         public async Task Send(object command)
@@ -29,8 +25,10 @@ namespace artiso.AdsdHotel.Blue.Ambassador
         public async Task<TResponse> Request<TResponse>(object request, CancellationToken cancellationToken)
         {
             await _holder.EndpointReady.ConfigureAwait(false);
+            
             var response = await _holder.Endpoint.Request<TResponse>(
-                request, _sendOptions, cancellationToken).ConfigureAwait(false);
+                request, GetOptions(), cancellationToken).ConfigureAwait(false);
+
             return response;
         }
 
@@ -42,5 +40,12 @@ namespace artiso.AdsdHotel.Blue.Ambassador
 
         public ValueTask DisposeAsync() =>
             _holder.DisposeAsync();
+
+        private SendOptions GetOptions()
+        {
+            var options = new SendOptions();
+            options.SetDestination(_destination);
+            return options;
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
+using artiso.AdsdHotel.ITOps.Communication;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.Blue.Ambassador
+namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
 {
     public class NServiceBusEndpointConfigurationFactory
     {
@@ -30,17 +31,30 @@ namespace artiso.AdsdHotel.Blue.Ambassador
             config.UsePersistence<InMemoryPersistence>();
 
             config.Conventions()
-                .DefiningCommandsAs(t =>
-                    t.Namespace is not null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    !t.Name.EndsWith("Response"))
-                .DefiningMessagesAs(t =>
-                    t.Namespace is not null &&
-                    t.Namespace.EndsWith(".Commands") &&
-                    t.Name.EndsWith("Response"))
-                .DefiningEventsAs(t =>
-                    t.Namespace is not null &&
-                    t.Namespace.EndsWith(".Events"));
+                .DefiningCommandsAs(t => IsACommand(t) && !IsGenericResponse(t))
+                .DefiningMessagesAs(t => IsAResponse(t) || IsGenericResponse(t))
+                .DefiningEventsAs(IsAnEvent);
+
+            static bool IsACommand(Type t) =>
+                t.Namespace is not null &&
+                t.Namespace.EndsWith(".Commands") &&
+                !t.Name.EndsWith("Response");
+
+            static bool IsAResponse(Type t) =>
+                t.Namespace is not null &&
+                t.Namespace.EndsWith(".Commands") &&
+                t.Name.EndsWith("Response");
+
+            static bool IsGenericResponse(Type t)
+            {
+                if (!t.IsGenericType) return false;
+                var generic = t.GetGenericTypeDefinition();
+                return generic == typeof(Response<>);
+            }
+
+            static bool IsAnEvent(Type t) =>
+                t.Namespace is not null &&
+                t.Namespace.EndsWith(".Events");
         }
 
         private static void ConfigureRabbitMQ(EndpointConfiguration config, string rabbitMqConnectionString)

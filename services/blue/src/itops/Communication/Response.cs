@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
-namespace artiso.AdsdHotel.Blue.Commands
+namespace artiso.AdsdHotel.ITOps.Communication
 {
     public class Response<TValue>
     {
@@ -17,6 +18,10 @@ namespace artiso.AdsdHotel.Blue.Commands
 
         public Response(Exception exception) =>
             Exception = exception;
+
+        [JsonConstructor]
+        internal Response(TValue value, Exception exception) =>
+            (Value, Exception) = (value, exception);
 
         public void Deconstruct(
             [MaybeNull] out TValue value,

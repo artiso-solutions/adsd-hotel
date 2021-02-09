@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace artiso.AdsdHotel.Blue.Ambassador
+namespace artiso.AdsdHotel.ITOps.Abstraction
 {
     public interface IChannel : IAsyncDisposable
     {
