@@ -1,15 +1,16 @@
 <Project>
   <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-	<PropertyGroup>
-		<Authors>artiso solutions GmbH</Authors>
-	</PropertyGroup>
-	<PropertyGroup>
-		<Nuget-NServiceBus-Version>7.4.4</Nuget-NServiceBus-Version>
-		<Nuget-NServiceBus-NewtonSoft-Version>2.2.0</Nuget-NServiceBus-NewtonSoft-Version>
-		<Nuget-NServiceBus-RabbitMQ-Version>6.0.0</Nuget-NServiceBus-RabbitMQ-Version>
-		<Nuget-NServiceBus-Callbacks-Version>3.0.0</Nuget-NServiceBus-Callbacks-Version>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Authors>artiso solutions GmbH</Authors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Nuget-NServiceBus-Version>7.4.4</Nuget-NServiceBus-Version>
+    <Nuget-NServiceBus-NewtonSoft-Version>2.2.0</Nuget-NServiceBus-NewtonSoft-Version>
+    <Nuget-NServiceBus-RabbitMQ-Version>6.0.0</Nuget-NServiceBus-RabbitMQ-Version>
+    <Nuget-NServiceBus-Callbacks-Version>3.0.0</Nuget-NServiceBus-Callbacks-Version>
+  </PropertyGroup>
 </Project>
