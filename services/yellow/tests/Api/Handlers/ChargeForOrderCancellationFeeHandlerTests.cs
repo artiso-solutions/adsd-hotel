@@ -230,6 +230,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         private static IEnumerable<TestCaseData> InvalidOperationTestCaseSources()
         {
             var orderService = new Mock<IOrderService>();
+            var invalidPaymentOrderService = new Mock<IOrderService>();
             var paymentService = new Mock<ICreditCardPaymentService>();
 
             var order = new Order("orderId", new Price(10, 100))
@@ -240,9 +241,21 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 }
             };
             
+            var invalidOrder = new Order("orderId", new Price(10, 100))
+            {
+                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                {
+                    new(AMEX1.GetOrderCreditCard(null!))
+                }
+            };
+            
             orderService
                 .Setup(s => s.FindOneById(It.IsAny<string>()))
                 .ReturnsAsync(order);
+            
+            invalidPaymentOrderService
+                .Setup(s => s.FindOneById(It.IsAny<string>()))
+                .ReturnsAsync(invalidOrder);
             
             paymentService
                 .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
@@ -264,6 +277,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 {
                     new ChargeForOrderCancellationFeeRequest("_WHATEVER_ID"), 
                     orderService,
+                    paymentService
+                });
+            
+            yield return TestUtility.GetCaseData("NoSuitablePaymentToken",
+                new object[]
+                {
+                    new ChargeForOrderCancellationFeeRequest("_WHATEVER_ID"), 
+                    invalidPaymentOrderService,
                     paymentService
                 });
         }

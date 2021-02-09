@@ -34,17 +34,26 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
             return new OrderCancellationFeeCharged(message.OrderId);
         }
+        
+        protected override ValidationModelResult<ChargeForOrderCancellationFeeRequest> ValidateRequest(
+            ChargeForOrderCancellationFeeRequest message)
+        {
+            return message.Validate()
+                .HasData(m => m.OrderId, $"{nameof(ChargeForOrderCancellationFeeRequest.OrderId)} is empty");
+        }
 
         private async Task ChargeOrder(Order order, decimal amount)
         {
             var paymentMethods = Ensure(order, o => o.OrderPaymentMethods);
             var paymentMethod = paymentMethods!.LastOrDefault();
             var payToken = paymentMethod!.CreditCard.ProviderPaymentToken;
-            
-            var paymentResult = await _paymentService.Charge(amount, payToken!);
-            
-            if (paymentResult.IsSuccess != true)
-                throw paymentResult.Exception ?? new InvalidOperationException($"{nameof(paymentResult)}");
+
+            if (payToken is null)
+                throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
+
+            var chargeResult = await _paymentService.Charge(amount, payToken!);
+            if (chargeResult.IsSuccess != true)
+                throw chargeResult.Exception ?? new InvalidOperationException($"{nameof(chargeResult)}");
         }
 
         private async Task ChargeOrder(Order order, decimal amount, PaymentMethod alternativePaymentMethod)
@@ -61,13 +70,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 throw chargeResult.Exception ?? new InvalidOperationException($"ChargeOperation failed for order {order.Id}");
             
             await AddPaymentMethodToOrder(_orderService, order, alternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
-        }
-
-        protected override ValidationModelResult<ChargeForOrderCancellationFeeRequest> ValidateRequest(
-            ChargeForOrderCancellationFeeRequest message)
-        {
-            return message.Validate()
-                .HasData(m => m.OrderId, $"{nameof(ChargeForOrderCancellationFeeRequest.OrderId)} is empty");
         }
     }
 }
