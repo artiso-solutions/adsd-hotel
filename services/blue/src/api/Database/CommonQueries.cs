@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Contracts;
+using artiso.AdsdHotel.ITOps.Database.Sql;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
@@ -61,7 +62,7 @@ WHERE OrderId = @orderId";
                 End: reader.GetDateTime(i++),
                 CreatedAt: reader.GetDateTime(i++))
             {
-                RoomId = reader.GetString(i++)
+                RoomId = reader.IsDBNull(i) ? null : reader.GetString(i++)
             };
 
             return reservation;
@@ -101,7 +102,7 @@ WHERE vrt.Id = @roomTypeId";
 
             var roomTypes = await ReadRoomTypesAsync(reader);
 
-            return roomTypes.FirstOrDefault();
+            return roomTypes[0];
         }
 
         public static async Task<IReadOnlyList<RoomType>> FindAvailableRoomTypesInPeriodAsync(
@@ -132,10 +133,10 @@ WHERE vrt.Id NOT IN (
                 var (_, bedTypes) = ReadRoomTypeIfNew();
 
                 var bedType = new BedType(
-                    Id: reader.GetString(4),
-                    InternalName: reader.GetString(5),
-                    Width: reader.GetDouble(6),
-                    Length: reader.GetDouble(7));
+                    Id: reader.GetString(3),
+                    InternalName: reader.GetString(4),
+                    Width: reader.GetDouble(5),
+                    Length: reader.GetDouble(6));
 
                 bedTypes.Add(bedType);
             }

@@ -1,7 +1,7 @@
 ﻿using FluentMigrator;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
-namespace artiso.AdsdHotel.Blue.Api.DatabaseAccess.Migrations
+namespace artiso.AdsdHotel.Blue.Api
 {
     [Migration(3, TransactionBehavior.Default, "Populate catalog-like tables")]
     public class Catalogs : Migration

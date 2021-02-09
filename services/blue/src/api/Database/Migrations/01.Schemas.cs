@@ -44,7 +44,7 @@ namespace artiso.AdsdHotel.Blue.Api
                 .WithColumn("Id").AsString(_smallSize).NotNullable().PrimaryKey()
                 .WithColumn("OrderId").AsString(_normalSize).NotNullable()
                 .WithColumn("RoomTypeId").AsString(_smallSize).NotNullable()
-                .WithColumn("RoomId").AsString(_smallSize).NotNullable()
+                .WithColumn("RoomId").AsString(_smallSize).Nullable()
                 .WithColumn("Start").AsDateTime().NotNullable()
                 .WithColumn("End").AsDateTime().NotNullable()
                 .WithColumn("CreatedAt").AsDateTime().NotNullable();
