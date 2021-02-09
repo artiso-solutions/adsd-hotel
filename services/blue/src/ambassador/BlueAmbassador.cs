@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Validation;
+using artiso.AdsdHotel.ITOps.Abstraction;
+using artiso.AdsdHotel.ITOps.Communication;
 
 namespace artiso.AdsdHotel.Blue.Ambassador
 {

@@ -1,4 +1,4 @@
-﻿using artiso.AdsdHotel.Blue.Ambassador;
+﻿using artiso.AdsdHotel.ITOps.Abstraction.NServiceBus;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 

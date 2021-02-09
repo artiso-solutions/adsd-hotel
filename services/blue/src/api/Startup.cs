@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Database.Sql;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,11 +15,11 @@ namespace artiso.AdsdHotel.Blue.Api
             IServiceCollection services)
         {
             var dbConfig = new DatabaseConfiguration(
-                host: "localhost",
-                port: 3306,
-                database: "adsd-blue",
-                username: "root",
-                password: null);
+                Host: "localhost",
+                Port: 3306,
+                Database: "adsd-blue",
+                Username: "root",
+                Password: null);
 
             var cs = dbConfig.ToMySqlConnectionString();
 
@@ -35,7 +36,7 @@ namespace artiso.AdsdHotel.Blue.Api
                 .ConfigureRunner(rb => rb
                     .AddMySql4()
                     .WithGlobalConnectionString(cs)
-                    .ScanIn(typeof(MySqlConnectionFactory).Assembly).For.Migrations())
+                    .ScanIn(typeof(Startup).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
         }
 

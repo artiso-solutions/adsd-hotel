@@ -1,4 +1,6 @@
-﻿namespace artiso.AdsdHotel.Blue.Ambassador
+﻿using artiso.AdsdHotel.ITOps.Abstraction.NServiceBus;
+
+namespace artiso.AdsdHotel.Blue.Ambassador
 {
     public class BlueAmbassadorFactory
     {

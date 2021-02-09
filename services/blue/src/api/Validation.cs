@@ -7,7 +7,7 @@ namespace artiso.AdsdHotel.Blue.Validation
     {
         public static void Valid(string s, string? variableName = null)
         {
-            if (!string.IsNullOrWhiteSpace(s))
+            if (string.IsNullOrWhiteSpace(s))
                 throw new ValidationException($"{(variableName ?? "String variable")} must not be null or white space.");
         }
 
