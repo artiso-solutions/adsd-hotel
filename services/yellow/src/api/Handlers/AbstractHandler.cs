@@ -40,7 +40,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             var result = await func(m);
 
             if (result is null)
-                throw new ValidationException($"{nameof(TResult)} should not be null");
+                throw new ValidationException($"{typeof(TResult).Name} should not be null");
 
             return result;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Handlers;
@@ -34,7 +35,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var rm = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
             Assert.True(rm?.IsSuccessful, $"{rm?.Exception?.Message} \n {rm?.Exception?.StackTrace}");
         }
-
+        
         #region ValidRequestTestSource
 
         private static IEnumerable<TestCaseData> ValidRequestTestSource()
@@ -53,14 +54,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             yield return TestUtility.GetCaseData("BasicScenario",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest("orderId", new PaymentMethod(AMEX1)), 
+                    new AuthorizeOrderCancellationFeeRequest("orderId", new PaymentMethod(MASTERCARD1)), 
                     orderService,
                     paymentService
                 });
         }
 
         #endregion
-
+        
         [Test]
         [TestCaseSource(nameof(InvalidRequestTestCaseSources))]
         public async Task InvalidRequestTest(AuthorizeOrderCancellationFeeRequest request,
@@ -79,18 +80,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
             var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
 
-            if (r?.Exception is null)
-            {
-                Assert.Fail("Expected exception");
-                return;
-            }
-
-            Assert.NotNull(r.Exception);
+            Assert.NotNull(r!.Exception);
             Assert.False(r.IsSuccessful);
-            Assert.IsNotEmpty(r.Exception.Message, "Expected exception message");
+            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
             Assert.IsInstanceOf<ValidationException>(r.Exception);
 
-            await TestContext.Out.WriteLineAsync($"Exception {r.Exception.GetType().Name}, message {r.Exception.Message}");
+            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
         }
 
         #region InvalidRequestTestCaseSources
@@ -108,10 +103,68 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Setup(s => s.Authorize(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
                 .ReturnsAsync(new AuthorizeResult("AuthToken", null));
             
-            yield return TestUtility.GetCaseData("OrderIdNotValid",
+            yield return TestUtility.GetCaseData("OrderIdMissing",
                 new object[]
                 {
                     new AuthorizeOrderCancellationFeeRequest(string.Empty, new PaymentMethod(AMEX1)), 
+                    orderService,
+                    paymentService
+                });
+            yield return TestUtility.GetCaseData("OrderIdNotFound",
+                new object[]
+                {
+                    new AuthorizeOrderCancellationFeeRequest("_MISSING_ID", new PaymentMethod(AMEX1)), 
+                    orderService,
+                    paymentService
+                });
+        }
+
+        #endregion
+
+        [Test]
+        [TestCaseSource(nameof(InvalidOperationTestCaseSources))]
+        public async Task InvalidOperationTest(AuthorizeOrderCancellationFeeRequest request,
+            Mock<IOrderService> orderService,
+            Mock<ICreditCardPaymentService> paymentService)
+        {
+            var handler = new AuthorizeOrderCancellationFeeHandler(orderService.Object, paymentService.Object);
+            var context = new TestableMessageHandlerContext();
+
+            await handler.Handle(request, context)
+                .ConfigureAwait(false);
+
+            Assert.AreEqual(1, context.PublishedMessages.Length);
+            var responseMessage = context.PublishedMessages[0].Message;
+            Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
+
+            var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
+
+            Assert.NotNull(r!.Exception);
+            Assert.False(r.IsSuccessful);
+            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            
+            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+        }
+
+        #region InvalidOperationTestCaseSources
+
+        private static IEnumerable<TestCaseData> InvalidOperationTestCaseSources()
+        {
+            var orderService = new Mock<IOrderService>();
+            var paymentService = new Mock<ICreditCardPaymentService>();
+
+            orderService
+                .Setup(s => s.FindOneById(It.IsAny<string>()))
+                .ReturnsAsync(new Order("o.Id", new Price(10, 100)));
+            
+            paymentService
+                .Setup(s => s.Authorize(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
+                .ReturnsAsync(new AuthorizeResult(string.Empty, new Exception("Customer cannot pay the requested amount"))); // not the same exception of the test
+            
+            yield return TestUtility.GetCaseData("PaymentFails",
+                new object[]
+                {
+                    new AuthorizeOrderCancellationFeeRequest("_WHATEVER_ID", new PaymentMethod(MASTERCARD1)), 
                     orderService,
                     paymentService
                 });
