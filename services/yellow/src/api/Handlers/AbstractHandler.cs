@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
+using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
+using artiso.AdsdHotel.Yellow.Contracts.Models;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
@@ -43,6 +46,26 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 throw new ValidationException($"{typeof(TResult).Name} should not be null");
 
             return result;
+        }
+        
+        protected static TResult Ensure<TMessage, TResult>(TMessage m, Func<TMessage, TResult> func)
+        {
+            var result = func(m);
+
+            if (result is null)
+                throw new ValidationException($"{typeof(TResult).Name} should not be null");
+
+            return result;
+        }
+
+        protected async Task AddPaymentMethodToOrder(IOrderService orderService, Order order, CreditCard creditCard, string? authorizePaymentToken)
+        {
+            if (string.IsNullOrWhiteSpace(authorizePaymentToken))
+                throw new InvalidOperationException($"ChargeResult must contain {nameof(ChargeResult.AuthorizePaymentToken)}");
+            
+            var orderCreditCard = creditCard.GetOrderCreditCard(authorizePaymentToken);
+
+            await orderService.AddPaymentMethod(order, new OrderPaymentMethod(orderCreditCard));
         }
     }
 }

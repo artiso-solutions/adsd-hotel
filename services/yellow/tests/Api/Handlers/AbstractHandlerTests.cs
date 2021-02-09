@@ -44,7 +44,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
     public class MockRequest
     {
-        public string message { get; set; }
+        public string? message { get; set; }
     }
 
     public class MockResponse
