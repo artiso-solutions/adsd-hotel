@@ -2,6 +2,10 @@ name: adsd-blue
 services:
   - name: blueservice
     project: src\api\artiso.AdsdHotel.Blue.Api.csproj
+    tags:
+      - host
+      - api
+      - app
   - name: mysql
     image: mysql
     tags:

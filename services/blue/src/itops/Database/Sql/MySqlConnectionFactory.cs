@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Common;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using RepoDb;
 
-namespace artiso.AdsdHotel.Blue.Api
+namespace artiso.AdsdHotel.ITOps.Database.Sql
 {
-    internal class MySqlConnectionFactory : IDbConnectionFactory
+    public class MySqlConnectionFactory : IDbConnectionFactory
     {
         private readonly DatabaseConfiguration _dbConfig;
 
@@ -13,16 +13,14 @@ namespace artiso.AdsdHotel.Blue.Api
             _dbConfig = dbConfig;
         }
 
-        public async Task<IDbConnectionHolder> CreateAsync()
+        public async Task<DbConnection> CreateAsync()
         {
             var connectionString = _dbConfig.ToMySqlConnectionString();
 
             var mySqlConnection = new MySqlConnection(connectionString);
-            var holder = new DbConnectionHolder(mySqlConnection);
+            await mySqlConnection.EnsureOpenAsync();
 
-            await holder.EnsureOpenAsync();
-
-            return holder;
+            return mySqlConnection;
         }
     }
 }

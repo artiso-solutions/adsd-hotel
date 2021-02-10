@@ -5,6 +5,8 @@ using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Events;
 using artiso.AdsdHotel.Blue.Validation;
+using artiso.AdsdHotel.ITOps.Communication;
+using artiso.AdsdHotel.ITOps.Database.Sql;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 using RepoDb;
@@ -36,6 +38,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             {
                 var err = validationEx.Message;
                 await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
+                await context.Reply(new Response<bool>(validationEx));
                 _logger.LogWarning(err);
                 return;
             }
@@ -50,6 +53,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             {
                 var err = $"Could not find a pending reservation for {nameof(message.OrderId)} {message.OrderId}";
                 await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
+                await context.Reply(new Response<bool>(new Exception(err)));
                 _logger.LogWarning(err);
                 return;
             }
@@ -60,6 +64,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             {
                 var err = "Pending reservation is not valid";
                 await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
+                await context.Reply(new Response<bool>(new Exception(err)));
                 _logger.LogWarning(err);
                 return;
             }
@@ -71,6 +76,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             await transaction.CommitAsync();
 
             await context.Publish(new SelectedRooomTypeReserved(message.OrderId));
+            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<bool> IsPendingReservationValidAsync(
@@ -116,7 +122,7 @@ WHERE Id = @RoomTypeId AND Id NOT IN (
             var query = $@"
 UPDATE {PendingReservations}
 SET Confirmed = True
-WHERE PendingReservationId = @pendingReservationId";
+WHERE Id = @pendingReservationId";
 
             await connection.ExecuteNonQueryAsync(query, new { pendingReservationId });
         }
