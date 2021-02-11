@@ -59,11 +59,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         private async Task ChargeOrder(Order order, decimal amount, PaymentMethod alternativePaymentMethod)
         {
             if (alternativePaymentMethod.CreditCard is null)
-                throw new ValidationException($"Alternative {nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a CreditCard");
+                throw new ValidationException($"{nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a CreditCard");
 
             if (!alternativePaymentMethod.Validate().PaymentMethodIsValid(p => p).IsValid())
                 throw new ValidationException(
-                    $"Alternative {nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a valid CreditCard");
+                    $"{nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a valid CreditCard");
 
             var chargeResult = await _paymentService.Charge(amount, alternativePaymentMethod.CreditCard);
             if (!chargeResult.IsSuccess)
