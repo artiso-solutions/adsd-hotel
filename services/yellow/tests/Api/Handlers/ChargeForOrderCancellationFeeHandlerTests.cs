@@ -73,7 +73,9 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var orderService = new Mock<IOrderService>();
             var paymentService = new Mock<ICreditCardPaymentService>();
 
-            var order = new Order("orderId", new Price(10, 100))
+            decimal orderCancellationFee = 10;
+            decimal orderCancellationFullAmount = 100;
+            var order = new Order("orderId", new Price(orderCancellationFee, orderCancellationFullAmount))
             {
                 OrderPaymentMethods = new List<OrderPaymentMethod>()
                 {
@@ -89,11 +91,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Verifiable();
 
             paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
+                .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<string>()))
                 .ReturnsAsync(new ChargeResult())
                 .Verifiable();
             paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
+                .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<CreditCard>()))
                 .ReturnsAsync(new ChargeResult() {AuthorizePaymentToken = "__AUTH_TOKEN__"})
                 .Verifiable();
 
