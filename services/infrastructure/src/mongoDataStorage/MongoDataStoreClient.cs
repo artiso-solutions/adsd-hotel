@@ -60,20 +60,18 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         private FilterDefinition<T> CombineFilters<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
         {
             var builder = new FilterDefinitionBuilder<T>();
-            var filter = builder.Empty;
-            if (filters is { Length: 1 })
+            //var filter = builder.Empty;
+            var filter = filters switch
             {
-                filter = filters.First();
-            }
-            else
-            {
-                filter = combinator switch
+                { Length: 1 } => filters.First(),
+                { Length: > 1 } => combinator switch
                 {
                     ExpressionCombinationOperator.And => builder.And(filters.Select(f => builder.Where(f))),
                     ExpressionCombinationOperator.Or => builder.Or(filters.Select(f => builder.Where(f))),
                     _ => filters.First(),
-                };
-            }
+                },
+                _ => builder.Empty
+            };
             return filter;
         }
     }

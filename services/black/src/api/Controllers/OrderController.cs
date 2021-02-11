@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace artiso.AdsdHotel.Black.Api.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class OrderController : ControllerBase
     {
         private readonly IDataStoreClient _dataStoreClient;

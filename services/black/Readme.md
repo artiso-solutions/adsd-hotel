@@ -5,7 +5,7 @@ The black service is responsible for managing the guest information linked to a 
 
 ## Connectivity
 
-The black service is reachable via a NServiceBus endpoint called `Black.Api` and supports callbacks.
+The black service is reachable via a NServiceBus endpoint called `Black.Api` and via REST Endpoint with paths `order` and `guestInformation`.
 
 ## Data
 
@@ -17,11 +17,15 @@ Contains information about the guest, i.e. name and contact information.
 - `artiso.AdsdHotel.Black.Commands.SetGuestInformation`<br>
 Used to add or update guest information for a specific order.
 - `artiso.AdsdHotel.Black.Commands.RequestGuestInformation`<br>
-Used to get guest information for a specific order.
+This shape is used to make a `GET` request on the `guestInformation` endpoint to retrieve the guest information for a specific order.
 - `artiso.AdsdHotel.Black.Commands.GuestInformationReponse`<br>
-The response containing the requested guest information.
+This shape is used to make a `GET` request on the `order` endpoint to retrieve all identifiers of orders which match the specified critera.
 
 ## Events
 
 - `artiso.AdsdHotel.Black.Events.GuestInformationSet`<br>
 Is published when new guest information for a specific order was set.
+
+## Ambassador
+
+This ambassador encapsulates the usage of the black service, i.e. providing support for request/response and command patterns via REST and NServiceBus.
