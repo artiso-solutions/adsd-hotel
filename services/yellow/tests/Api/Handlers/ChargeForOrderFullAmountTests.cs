@@ -201,5 +201,96 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         }
 
         #endregion
+        
+        
+        [Test]
+        [TestCaseSource(nameof(InvalidOperationTestCaseSources))]
+        public async Task InvalidOperationTest(ChargeForOrderFullAmountRequest request,
+            Mock<IOrderService> orderService,
+            Mock<ICreditCardPaymentService> paymentService)
+        {
+            var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentService.Object);
+            var context = new TestableMessageHandlerContext();
+
+            await handler.Handle(request, context)
+                .ConfigureAwait(false);
+
+            var r = context.PublishedMessages[0].Message as Response<OrderFullAmountCharged>;
+
+            Assert.NotNull(r!.Exception, "Exception not thrown");
+            Assert.False(r.IsSuccessful);
+            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            Assert.IsInstanceOf<InvalidOperationException>(r.Exception);
+            
+            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+        }
+        
+        
+        #region InvalidOperationTestCaseSources
+
+        private static IEnumerable<TestCaseData> InvalidOperationTestCaseSources()
+        {
+            var orderService = new Mock<IOrderService>();
+            var invalidPaymentOrderService = new Mock<IOrderService>();
+            var paymentService = new Mock<ICreditCardPaymentService>();
+
+            var order = new Order("orderId", new Price(10, 100))
+            {
+                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                {
+                    new(AMEX1.GetOrderCreditCard("__AUTH_TOKEN__"))
+                }
+            };
+            
+            var invalidOrder = new Order("orderId", new Price(10, 100))
+            {
+                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                {
+                    new(AMEX1.GetOrderCreditCard(null!))
+                }
+            };
+            
+            orderService
+                .Setup(s => s.FindOneById(It.IsAny<string>()))
+                .ReturnsAsync(order);
+            
+            invalidPaymentOrderService
+                .Setup(s => s.FindOneById(It.IsAny<string>()))
+                .ReturnsAsync(invalidOrder);
+            
+            paymentService
+                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Exception = new Exception("Payment failed")
+                })
+                .Verifiable();
+            
+            paymentService
+                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Exception = new Exception("Payment failed")
+                })
+                .Verifiable();
+            
+            yield return TestUtility.GetCaseData("PaymentFails",
+                new object[]
+                {
+                    new ChargeForOrderFullAmountRequest("_WHATEVER_ID"), 
+                    orderService,
+                    paymentService
+                });
+            
+            yield return TestUtility.GetCaseData("NoSuitablePaymentToken",
+                new object[]
+                {
+                    new ChargeForOrderFullAmountRequest("_WHATEVER_ID"), 
+                    invalidPaymentOrderService,
+                    paymentService
+                });
+        }
+
+        #endregion
     }
 }

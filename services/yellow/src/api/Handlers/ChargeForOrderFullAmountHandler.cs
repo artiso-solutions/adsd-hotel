@@ -31,6 +31,10 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             {
                 var creditCard = message.AlternativePaymentMethod.CreditCard;
                 var chargeResult = await _creditCardPaymentService.Charge(order.Price.Amount, creditCard!);
+
+                if (!chargeResult.IsSuccess)
+                    throw new InvalidOperationException(chargeResult.Exception?.Message);
+
                 if (chargeResult.AuthorizePaymentToken is null)
                     throw new InvalidOperationException("Charge result does not contain token");
 
@@ -43,7 +47,10 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
             var creditCardProviderPaymentToken = activePaymentMethod?.CreditCard.ProviderPaymentToken;
             
-            await _creditCardPaymentService.Charge(order.Price.Amount, creditCardProviderPaymentToken!);
+            var r = await _creditCardPaymentService.Charge(order.Price.Amount, creditCardProviderPaymentToken!);
+            
+            if (!r.IsSuccess)
+                throw new InvalidOperationException(r.Exception?.Message);
             
             return new OrderFullAmountCharged(message.OrderId);
         }
