@@ -35,12 +35,12 @@ namespace artiso.AdsdHotel.Red.Service.Service
                 Price = rate.Price
             });
 
-            return await Task.FromResult(new GetRoomRatesByRoomTypeReply
+            return new GetRoomRatesByRoomTypeReply()
             {
                 RoomRates = {roomRates},
                 ConfirmationDetails = new ConfirmationDetails(),
                 TotalPrice = roomRates.Select(rate => rate.Price).Sum()
-            });
+            };
         }
 
         public override Task<InputRoomRatesReply> InputRoomRates(InputRoomRatesRequest request,
