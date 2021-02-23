@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Contracts;
 using artiso.AdsdHotel.Black.Contracts.Validation;
 using artiso.AdsdHotel.Infrastructure.NServiceBus;
+using Flurl;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Black.Ambassador
@@ -25,28 +29,32 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// await using ( var blackClient = new BlackClient ( "host=localhost" ) )<br/>
     /// {<br/>
     ///     await blackClient.StartAsync();<br/>
+    /// 
     /// }
     /// </code>
     /// </remarks>
     public class BlackClient : IAsyncDisposable, IDisposable
     {
         private readonly EndpointConfiguration _senderConfiguration;
+        private readonly IHttpClientFactory _httpClientFactory;
         private bool _disposedValue;
         private IEndpointInstance? _senderEndpoint;
+        private HttpClient? _httpClient;
 
         /// <summary>
         /// Creates an object of type <see cref="BlackClient"/>.
         /// </summary>
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
-        public BlackClient(string rabbitMqConnectionString)
+        /// <param name="httpClientFactory">HttpClientFactory to provide a HttpClient in StartAsync calls.</param>
+        public BlackClient(string rabbitMqConnectionString, IHttpClientFactory httpClientFactory)
         {
-            _senderConfiguration = new ("Black.Ambassador");
+            _senderConfiguration = new($"Black.Ambassador.{Guid.NewGuid()}");
             _senderConfiguration
                 .ConfigureDefaults(
                     rabbitMqConnectionString,
                 "Black.Api",
-                    typeof(SetGuestInformation), typeof(GuestInformationRequest))
-                .WithClientCallbacks($"Black.Ambassador.{Guid.NewGuid()}");
+                    typeof(SetGuestInformation));
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -56,6 +64,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task StartAsync()
         {
             _senderEndpoint = await Endpoint.Start(_senderConfiguration).ConfigureAwait(false);
+            _httpClient = _httpClientFactory.CreateClient();
         }
 
         /// <summary>
@@ -71,7 +80,7 @@ namespace artiso.AdsdHotel.Black.Ambassador
             if (!GuestInformationValidator.IsValid(guestInformation))
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
-            SetGuestInformation sgi = new (orderId, guestInformation);
+            SetGuestInformation sgi = new(orderId, guestInformation);
             await _senderEndpoint.Send(sgi).ConfigureAwait(false);
         }
 
@@ -84,8 +93,38 @@ namespace artiso.AdsdHotel.Black.Ambassador
         public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
         {
             ThrowIfNotInitialized();
-            var response = await _senderEndpoint.Request<GuestInformationResponse>(new GuestInformationRequest(orderId)).ConfigureAwait(false);
-            return response.GuestInformation;
+            var query = _httpClient!.BaseAddress
+                .AppendPathSegment("guestInformation")
+                .SetQueryParams(new { orderId }, NullValueHandling.Ignore);
+            var response = await _httpClient!.GetAsync(query).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+            {
+                var r = await response.Content.ReadFromJsonAsync<GuestInformationResponse>().ConfigureAwait(false);
+                return r?.GuestInformation;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for all orders where the guest information contains either the parameters.
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="eMail"></param>
+        /// <returns>All order ids where the guest information of the order contains any of the parametes.</returns>
+        public async Task<List<Guid>?> GetOrdersAsync(string? firstName, string? lastName, string? eMail)
+        {
+            ThrowIfNotInitialized();
+            var query = _httpClient!.BaseAddress
+                .AppendPathSegment("order")
+                .SetQueryParams(new { firstName, lastName, eMail }, NullValueHandling.Ignore);
+            var response = await _httpClient!.GetAsync(query).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+            {
+                var r = await response.Content.ReadFromJsonAsync<OrderIdRespone>().ConfigureAwait(false);
+                return r?.OrderIds;
+            }
+            return null;
         }
 
         /// <summary>
@@ -99,8 +138,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
                 if (disposing)
                 {
                     _senderEndpoint?.Stop().GetAwaiter().GetResult();
+                    _httpClient?.Dispose();
                 }
                 _senderEndpoint = null;
+                _httpClient = null;
 
                 _disposedValue = true;
             }
@@ -118,10 +159,11 @@ namespace artiso.AdsdHotel.Black.Ambassador
 
         private void ThrowIfNotInitialized()
         {
-            if (_senderEndpoint is null)
+            if (_senderEndpoint is null || _httpClient is null)
             {
                 throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
             }
+
         }
 
         /// <summary>
@@ -134,7 +176,9 @@ namespace artiso.AdsdHotel.Black.Ambassador
             await DisposeAsyncCore();
 
             Dispose(false);
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
             GC.SuppressFinalize(this);
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         }
 
         /// <summary>
@@ -148,6 +192,8 @@ namespace artiso.AdsdHotel.Black.Ambassador
                 await _senderEndpoint.Stop().ConfigureAwait(false);
             }
             _senderEndpoint = null;
+            _httpClient?.Dispose();
+            _httpClient = null;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Infrastructure.DataStorage;
@@ -27,20 +29,50 @@ namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
         }
 
         /// <inheritdoc/>
-        public async Task AddOrUpdate<T>(T entity, Expression<Func<T, bool>> filter)
+        public async Task AddOrUpdateAsync<T>(T entity, Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
-            // ToDo should we return a generated id here?
             await col.ReplaceOneAsync(filter, entity, new ReplaceOptions { IsUpsert = true }).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task<T> Get<T>(Expression<Func<T, bool>> filter)
+        public async Task<T> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
         {
             var col = _db.GetCollection<T>(_collection);
+            var filter = CombineFilters(combinator, filters);
             var resultCollection = await col.FindAsync<T>(filter).ConfigureAwait(false);
             var result = await resultCollection.FirstOrDefaultAsync().ConfigureAwait(false);
             return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> GetAllAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
+        {
+            // combinator is a workaround until we figure out how combined expressions work correctly
+
+            var col = _db.GetCollection<T>(_collection);
+            var filter = CombineFilters(combinator, filters);
+            var result = await col.FindAsync(filter).ConfigureAwait(false);
+            var list = await result.ToListAsync().ConfigureAwait(false);
+            return list;
+        }
+
+        private FilterDefinition<T> CombineFilters<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
+        {
+            var builder = new FilterDefinitionBuilder<T>();
+            //var filter = builder.Empty;
+            var filter = filters switch
+            {
+                { Length: 1 } => filters.First(),
+                { Length: > 1 } => combinator switch
+                {
+                    ExpressionCombinationOperator.And => builder.And(filters.Select(f => builder.Where(f))),
+                    ExpressionCombinationOperator.Or => builder.Or(filters.Select(f => builder.Where(f))),
+                    _ => filters.First(),
+                },
+                _ => builder.Empty
+            };
+            return filter;
         }
     }
 }

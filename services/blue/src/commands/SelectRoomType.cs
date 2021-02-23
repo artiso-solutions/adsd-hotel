@@ -4,7 +4,7 @@ namespace artiso.AdsdHotel.Blue.Commands
 {
     public record SelectRoomType(
         string OrderId,
+        string RoomTypeId,
         DateTime Start,
-        DateTime End,
-        string RoomTypeId);
+        DateTime End);
 }

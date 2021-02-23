@@ -2,10 +2,15 @@ name: adsd-blue
 services:
   - name: blueservice
     project: src\api\artiso.AdsdHotel.Blue.Api.csproj
+    tags:
+      - host
+      - api
+      - app
   - name: mysql
     image: mysql
     tags:
       - inf
+      - db
     bindings:
       - name: mysql
         port: 3306
@@ -17,6 +22,7 @@ services:
     image: rabbitmq:management-alpine
     tags:
       - inf
+      - mq
     bindings:
       - name: rabbit
         port: 5672

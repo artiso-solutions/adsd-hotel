@@ -6,5 +6,5 @@ namespace artiso.AdsdHotel.Blue.Commands
 {
     public record AvailableRoomTypesRequest(DateTime Start, DateTime End);
 
-    public record AvailableRoomTypesResponse(IReadOnlyCollection<RoomType> RoomTypes);
+    public record AvailableRoomTypesResponse(IReadOnlyList<RoomType> RoomTypes);
 }

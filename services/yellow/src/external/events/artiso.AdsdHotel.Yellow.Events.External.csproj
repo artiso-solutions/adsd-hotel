@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

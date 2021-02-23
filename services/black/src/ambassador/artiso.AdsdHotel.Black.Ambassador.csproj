@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl" Version="3.0.1" />
     <PackageReference Include="NServiceBus" Version="$(Nuget-NServiceBus-Version)" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
     <PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
