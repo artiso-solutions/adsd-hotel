@@ -1,6 +1,5 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
@@ -9,7 +8,7 @@ using artiso.AdsdHotel.Yellow.Events;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class ChargeForOrderCancellationFeeHandler : AbstractHandler<ChargeForOrderCancellationFeeRequest, OrderCancellationFeeCharged>
+    public class ChargeForOrderCancellationFeeHandler : AbstractChargeHandler<ChargeForOrderCancellationFeeRequest, OrderCancellationFeeCharged>
     {
         private readonly IOrderService _orderService;
         private readonly ICreditCardPaymentService _paymentService;
@@ -38,38 +37,30 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         protected override ValidationModelResult<ChargeForOrderCancellationFeeRequest> ValidateRequest(
             ChargeForOrderCancellationFeeRequest message)
         {
-            return message.Validate()
+            var v = message.Validate()
                 .HasData(m => m.OrderId, $"{nameof(ChargeForOrderCancellationFeeRequest.OrderId)} is empty");
-        }
-
-        private async Task ChargeOrder(Order order, decimal amount)
-        {
-            var paymentMethods = Ensure(order, o => o.OrderPaymentMethods);
-            var paymentMethod = paymentMethods!.LastOrDefault();
-            var payToken = paymentMethod!.CreditCard.ProviderPaymentToken;
-
-            if (payToken is null)
-                throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
-
-            var chargeResult = await _paymentService.Charge(amount, payToken!);
-            if (chargeResult.IsSuccess != true)
-                throw chargeResult.Exception ?? new InvalidOperationException($"{nameof(chargeResult)}");
-        }
-
-        private async Task ChargeOrder(Order order, decimal amount, PaymentMethod alternativePaymentMethod)
-        {
-            if (alternativePaymentMethod.CreditCard is null)
-                throw new ValidationException($"{nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a CreditCard");
-
-            if (!alternativePaymentMethod.Validate().PaymentMethodIsValid(p => p).IsValid())
-                throw new ValidationException(
-                    $"{nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a valid CreditCard");
-
-            var chargeResult = await _paymentService.Charge(amount, alternativePaymentMethod.CreditCard);
-            if (!chargeResult.IsSuccess)
-                throw chargeResult.Exception ?? new InvalidOperationException($"ChargeOperation failed for order {order.Id}");
             
-            await AddPaymentMethodToOrder(_orderService, order, alternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+            if (message.AlternativePaymentMethod is not null)
+                return v.That(m => m.AlternativePaymentMethod.Validate()
+                        .PaymentMethodIsValid(p => p!).IsValid(),
+                    $"{nameof(ChargeForOrderFullAmountRequest.AlternativePaymentMethod)} must have a valid creditcard");
+
+            return v;
+        }
+        
+        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod)
+        {
+            return _orderService.AddPaymentMethod(order, paymentMethod);
+        }
+
+        protected override Task<ChargeResult> Charge(decimal amount, string paymentToken)
+        {
+            return _paymentService.Charge(amount, paymentToken);
+        }
+
+        protected override Task<ChargeResult> Charge(decimal amount, CreditCard creditCard)
+        {
+            return _paymentService.Charge(amount, creditCard);
         }
     }
 }

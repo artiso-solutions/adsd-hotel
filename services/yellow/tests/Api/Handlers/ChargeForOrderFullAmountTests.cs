@@ -262,7 +262,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
                 .ReturnsAsync(new ChargeResult()
                 {
-                    Exception = new Exception("Payment failed")
+                    Exception = new InvalidOperationException("Payment failed")
                 })
                 .Verifiable();
             
@@ -270,7 +270,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
                 .ReturnsAsync(new ChargeResult()
                 {
-                    Exception = new Exception("Payment failed")
+                    Exception = new InvalidOperationException("Payment failed")
                 })
                 .Verifiable();
             

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Yellow.Api.Handlers;
+using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
+using artiso.AdsdHotel.Yellow.Contracts.Models;
 using NServiceBus.Testing;
 using NUnit.Framework;
 
@@ -38,7 +39,10 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 Success = true
             });
         }
-        
+
+        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod) => 
+            throw new System.NotImplementedException();
+
         // Do not implement ValidateRequest
     }
 
