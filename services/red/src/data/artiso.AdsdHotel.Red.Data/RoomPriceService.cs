@@ -1,10 +1,10 @@
 ﻿using System;
-using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Red.Data.Entities;
+using artiso.AdsdHotel.Red.Persistence.Entities;
+using MongoDB.Driver;
 
-namespace artiso.AdsdHotel.Red.Data
+namespace artiso.AdsdHotel.Red.Persistence
 {
     public class RoomPriceService : IRoomPriceService
     {

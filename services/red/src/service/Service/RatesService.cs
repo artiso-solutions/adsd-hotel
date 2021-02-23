@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Api;
-using artiso.AdsdHotel.Red.Data;
-using artiso.AdsdHotel.Red.Data.Entities;
+using artiso.AdsdHotel.Red.Persistence;
 using Grpc.Core;
+using Rate = artiso.AdsdHotel.Red.Persistence.Entities.Rate;
 using RoomRate = artiso.AdsdHotel.Red.Api.RoomRate;
 
 namespace artiso.AdsdHotel.Red.Service.Service
@@ -51,6 +51,7 @@ namespace artiso.AdsdHotel.Red.Service.Service
                 _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
                     request.RoomRates.Select(rate => new Rate(new Guid(rate.Id), rate.Price)));
+                
                 return Task.FromResult(new InputRoomRatesReply
                 {
                     Success = true

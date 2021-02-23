@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace artiso.AdsdHotel.Red.Data.Entities
+namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
     public class RoomType
     {

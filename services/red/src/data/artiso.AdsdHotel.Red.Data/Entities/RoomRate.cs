@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace artiso.AdsdHotel.Red.Data.Entities
+namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
     public class RoomRate
     {

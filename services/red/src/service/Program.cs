@@ -16,7 +16,7 @@ namespace artiso.AdsdHotel.Red.Service
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<GrpcStartup>();
                 });
     }
 }

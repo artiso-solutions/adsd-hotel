@@ -17,7 +17,7 @@ namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
             Configure(config);
 
             if (rabbitMqConnectionString is not null)
-                ConfigureRabbitMQ(config, rabbitMqConnectionString);
+                ConfigureRabbitMq(config, rabbitMqConnectionString);
 
             return config;
         }
@@ -57,7 +57,7 @@ namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
                 t.Namespace.EndsWith(".Events");
         }
 
-        private static void ConfigureRabbitMQ(EndpointConfiguration config, string rabbitMqConnectionString)
+        private static void ConfigureRabbitMq(EndpointConfiguration config, string rabbitMqConnectionString)
         {
             config.UseTransport<RabbitMQTransport>()
                 .UseConventionalRoutingTopology()

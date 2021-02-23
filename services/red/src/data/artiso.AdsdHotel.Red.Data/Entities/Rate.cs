@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace artiso.AdsdHotel.Red.Data.Entities
+namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
     public class Rate
     {

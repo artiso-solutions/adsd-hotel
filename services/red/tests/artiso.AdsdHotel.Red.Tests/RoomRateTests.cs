@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Api;
-using artiso.AdsdHotel.Red.Data;
-using artiso.AdsdHotel.Red.Data.Entities;
+using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Service.Service;
 using Grpc.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Rate = artiso.AdsdHotel.Red.Persistence.Entities.Rate;
 
 namespace artiso.AdsdHotel.Red.Tests
 {

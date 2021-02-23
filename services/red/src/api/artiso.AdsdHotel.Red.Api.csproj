@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Data.csproj" />
+    <ProjectReference Include="..\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

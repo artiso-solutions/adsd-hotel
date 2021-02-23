@@ -11,10 +11,14 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.33.1" />
+    <PackageReference Include="NServiceBus" Version="7.4.4" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\blue\src\itops\artiso.AdsdHotel.ITOps.csproj" />
     <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Api.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Red.Events.csproj" />
   </ItemGroup>
 
 </Project>

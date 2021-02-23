@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Api.csproj" />
+  </ItemGroup>
+</Project>
