@@ -22,8 +22,4 @@
     <Protobuf Update="Protos\rates.proto" GrpcServices="Both" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Persistence.csproj" />
-  </ItemGroup>
-
 </Project>

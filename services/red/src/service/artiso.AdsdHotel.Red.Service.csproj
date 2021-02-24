@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="artiso.AdsdHotel.Red.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.33.1" />
     <PackageReference Include="NServiceBus" Version="7.4.4" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
@@ -19,6 +23,7 @@
     <ProjectReference Include="..\..\..\blue\src\itops\artiso.AdsdHotel.ITOps.csproj" />
     <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Api.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Red.Events.csproj" />
+    <ProjectReference Include="..\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Service", "src\service\artiso.AdsdHotel.Red.Service.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Persistence", "src\data\artiso.AdsdHotel.Red.Data\artiso.AdsdHotel.Red.Persistence.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Persistence", "src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Tests", "tests\artiso.AdsdHotel.Red.Tests\artiso.AdsdHotel.Red.Tests.csproj", "{B9D21CF3-00A6-426F-AA7E-B045552D18BC}"
 EndProject
