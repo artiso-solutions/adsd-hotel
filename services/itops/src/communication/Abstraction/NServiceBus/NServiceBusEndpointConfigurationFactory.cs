@@ -7,16 +7,18 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
     {
         public static EndpointConfiguration Create(
             string endpointName,
-            string? rabbitMqConnectionString = null)
+            string? rabbitMqConnectionString = null,
+            bool useCallbacks = false)
         {
             var config = new EndpointConfiguration(endpointName);
-
-            config.MakeInstanceUniquelyAddressable($"{endpointName}.{Guid.NewGuid()}");
 
             Configure(config);
 
             if (rabbitMqConnectionString is not null)
                 ConfigureRabbitMQ(config, rabbitMqConnectionString);
+
+            if (useCallbacks)
+                ConfigureCallbacks(config, endpointName);
 
             return config;
         }
@@ -31,6 +33,12 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 
             config.Conventions()
                 .Add(new AdsdHotelMessageConventions());
+        }
+
+        private static void ConfigureCallbacks(EndpointConfiguration config, string endpointName)
+        {
+            config.EnableCallbacks();
+            config.MakeInstanceUniquelyAddressable($"{endpointName}.{Guid.NewGuid()}");
         }
 
         private static void ConfigureRabbitMQ(EndpointConfiguration config, string rabbitMqConnectionString)
