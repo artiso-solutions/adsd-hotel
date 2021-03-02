@@ -85,9 +85,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Validation
         }
         
         [Test]
-        public void CreditCardNumberMustHaveValidLength()
+        [TestCase(IssuingNetwork.AmericanExpress, "John Doe", "0", "1234")]
+        [TestCase(IssuingNetwork.MasterCard, "John Doe", "0", "333")]
+        public void CreditCardNumberMustHaveValidLength(IssuingNetwork network, string cardHolder, string pan, string cvv)
         {
-            var creditCard = new CreditCard(IssuingNetwork.AmericanExpress, "John Doe", "0", "1243", DateTime.MaxValue);
+            var creditCard = new CreditCard(network, cardHolder, pan, cvv, DateTime.MaxValue);
             
             var paymentMethod = new PaymentMethod(creditCard);
             
@@ -101,9 +103,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Validation
         }
         
         [Test]
-        public void CreditCvvMustHaveValidLength()
+        [TestCase(IssuingNetwork.AmericanExpress, "John Doe", "349621197422556", "0")]
+        [TestCase(IssuingNetwork.MasterCard, "John Doe", "5215265659358633", "0")]
+        public void CreditCvvMustHaveValidLength(IssuingNetwork network, string cardHolder, string pan, string cvv)
         {
-            var creditCard = new CreditCard(IssuingNetwork.AmericanExpress, "John Doe", "349621197422556", "0", DateTime.MaxValue);
+            var creditCard = new CreditCard(network, cardHolder, pan, cvv, DateTime.MaxValue);
             
             var paymentMethod = new PaymentMethod(creditCard);
             

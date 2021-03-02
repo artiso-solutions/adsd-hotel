@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
-using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
@@ -29,7 +29,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
-            _orderService.AddPaymentMethod(order, new OrderPaymentMethod(message.PaymentMethod.CreditCard.GetOrderCreditCard(authorizeResult.AuthorizePaymentToken)));
+            await AddPaymentMethodToOrder(order, message.PaymentMethod.CreditCard, authorizeResult.AuthorizePaymentToken);
 
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }
@@ -45,6 +45,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                     $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod.CreditCard)} should not be null")
                 .PaymentMethodIsValid(r => r.PaymentMethod);
             
+        }
+
+        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod)
+        {
+            return _orderService.AddPaymentMethod(order, paymentMethod);
         }
     }
 }
