@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api.Handlers;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Events;
-using artiso.AdsdHotel.Infrastructure.DataStorage;
+using artiso.AdsdHotel.ITOps.NoSql;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NServiceBus.Testing;

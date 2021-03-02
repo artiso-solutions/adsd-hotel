@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.ITOps.Database.Sql;
+using artiso.AdsdHotel.ITOps.Sql;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

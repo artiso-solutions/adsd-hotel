@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Contracts;
-using artiso.AdsdHotel.ITOps.Database.Sql;
+using artiso.AdsdHotel.ITOps.Sql;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 

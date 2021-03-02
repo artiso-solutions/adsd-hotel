@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api.DatabaseModel;
 using artiso.AdsdHotel.Black.Commands;
-using artiso.AdsdHotel.Infrastructure.DataStorage;
+using artiso.AdsdHotel.ITOps.NoSql;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

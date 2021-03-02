@@ -1,4 +1,4 @@
-﻿using artiso.AdsdHotel.ITOps.Abstraction.NServiceBus;
+﻿using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 
 namespace artiso.AdsdHotel.Blue.Ambassador
 {

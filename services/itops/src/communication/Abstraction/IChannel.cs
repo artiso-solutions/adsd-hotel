@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace artiso.AdsdHotel.ITOps.Abstraction
+namespace artiso.AdsdHotel.ITOps.Communication.Abstraction
 {
     public interface IChannel : IAsyncDisposable
     {

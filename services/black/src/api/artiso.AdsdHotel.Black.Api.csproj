@@ -17,12 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\blue\src\itops\artiso.AdsdHotel.ITOps.csproj" />
-    <ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
-    <ProjectReference Include="..\..\..\infrastructure\src\nservicebus\artiso.AdsdHotel.Infrastructure.NServiceBus.csproj" />
+    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
+    <ProjectReference Include="..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Black.Commands.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Black.Events.csproj" />
-    <ProjectReference Include="..\..\..\infrastructure\src\mongoDataStorage\artiso.AdsdHotel.Infrastructure.MongoDataStorage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Blue.Commands.csproj" />
-    <ProjectReference Include="..\itops\artiso.AdsdHotel.ITOps.csproj" />
+    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
   </ItemGroup>
 
   <ItemGroup>

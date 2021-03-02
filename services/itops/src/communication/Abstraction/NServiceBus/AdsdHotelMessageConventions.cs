@@ -1,8 +1,7 @@
 ﻿using System;
-using artiso.AdsdHotel.ITOps.Communication;
 using NServiceBus;
 
-namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
+namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 {
     internal class AdsdHotelMessageConventions : IMessageConvention
     {

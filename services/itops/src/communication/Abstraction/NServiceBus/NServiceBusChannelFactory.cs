@@ -1,6 +1,6 @@
 ﻿using NServiceBus;
 
-namespace artiso.AdsdHotel.ITOps.Abstraction.NServiceBus
+namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 {
     public class NServiceBusChannelFactory
     {

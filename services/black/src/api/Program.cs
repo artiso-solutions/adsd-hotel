@@ -1,8 +1,7 @@
 using System;
 using artiso.AdsdHotel.Black.Api;
-using artiso.AdsdHotel.Infrastructure.DataStorage;
-using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
-using artiso.AdsdHotel.ITOps.Abstraction.NServiceBus;
+using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
+using artiso.AdsdHotel.ITOps.NoSql;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
