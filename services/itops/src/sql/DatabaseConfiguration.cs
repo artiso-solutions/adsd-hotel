@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 
-namespace artiso.AdsdHotel.ITOps.Database.Sql
+namespace artiso.AdsdHotel.ITOps.Sql
 {
     public record DatabaseConfiguration(
         string Host,

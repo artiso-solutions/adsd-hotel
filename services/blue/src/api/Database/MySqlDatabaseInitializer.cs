@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using artiso.AdsdHotel.ITOps.Database.Sql;
+using artiso.AdsdHotel.ITOps.Sql;
 using MySql.Data.MySqlClient;
 
 namespace artiso.AdsdHotel.Blue.Api

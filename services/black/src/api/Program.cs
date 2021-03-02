@@ -1,17 +1,12 @@
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Api;
-using artiso.AdsdHotel.Infrastructure.DataStorage;
-using artiso.AdsdHotel.Infrastructure.MongoDataStorage;
-using artiso.AdsdHotel.Infrastructure.NServiceBus;
+using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
+using artiso.AdsdHotel.ITOps.NoSql;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
-
-
 
 await CreateHostBuilder(args).Build().RunAsync();
 
@@ -39,16 +34,16 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
     builder.UseNServiceBus(ctx =>
     {
-        EndpointConfiguration endpointConfiguration = new ("Black.Api");
         var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
         var connectionString = CreateRabbitMqConnectionString(rabbitUri);
-        endpointConfiguration
-            .ConfigureDefaults(connectionString)
-            .WithServerCallbacks();
 
+        var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
+            endpointName: "Black.Api",
+            connectionString);
 
         return endpointConfiguration;
     });
+
     builder.ConfigureWebHostDefaults(webBuilder =>
     {
         webBuilder.UseStartup<Startup>();

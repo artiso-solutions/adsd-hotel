@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace artiso.AdsdHotel.Infrastructure.DataStorage
+namespace artiso.AdsdHotel.ITOps.NoSql
 {
     /// <summary>
     /// Interface for accessing data storage.

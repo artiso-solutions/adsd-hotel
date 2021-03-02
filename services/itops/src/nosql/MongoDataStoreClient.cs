@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Infrastructure.DataStorage;
 using MongoDB.Driver;
 
-namespace artiso.AdsdHotel.Infrastructure.MongoDataStorage
+namespace artiso.AdsdHotel.ITOps.NoSql
 {
     public class MongoDataStoreClient : IDataStoreClient
     {

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Black.Commands;
 using artiso.AdsdHotel.Black.Contracts;
 using artiso.AdsdHotel.Black.Contracts.Validation;
-using artiso.AdsdHotel.Infrastructure.NServiceBus;
 using Flurl;
 using NServiceBus;
 
@@ -35,8 +34,6 @@ namespace artiso.AdsdHotel.Black.Ambassador
     /// </remarks>
     public class BlackClient : IAsyncDisposable, IDisposable
     {
-        private readonly EndpointConfiguration _senderConfiguration;
-        private readonly IHttpClientFactory _httpClientFactory;
         private bool _disposedValue;
         private IEndpointInstance? _senderEndpoint;
         private HttpClient? _httpClient;
@@ -46,25 +43,10 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// </summary>
         /// <param name="rabbitMqConnectionString">Connection string for a RabbitMQ instance.</param>
         /// <param name="httpClientFactory">HttpClientFactory to provide a HttpClient in StartAsync calls.</param>
-        public BlackClient(string rabbitMqConnectionString, IHttpClientFactory httpClientFactory)
+        internal BlackClient(IEndpointInstance endpoint, HttpClient httpClient)
         {
-            _senderConfiguration = new($"Black.Ambassador.{Guid.NewGuid()}");
-            _senderConfiguration
-                .ConfigureDefaults(
-                    rabbitMqConnectionString,
-                "Black.Api",
-                    typeof(SetGuestInformation));
-            _httpClientFactory = httpClientFactory;
-        }
-
-        /// <summary>
-        /// Starts the NServiceBus endpoint to send commands and make requests.
-        /// </summary>
-        /// <returns>A task that can be awaited.</returns>
-        public async Task StartAsync()
-        {
-            _senderEndpoint = await Endpoint.Start(_senderConfiguration).ConfigureAwait(false);
-            _httpClient = _httpClientFactory.CreateClient();
+            _senderEndpoint = endpoint;
+            _httpClient = httpClient;
         }
 
         /// <summary>
@@ -76,7 +58,6 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <exception cref="InvalidOperationException"/>
         public async Task SetGuestInformationAsync(Guid orderId, GuestInformation guestInformation)
         {
-            ThrowIfNotInitialized();
             if (!GuestInformationValidator.IsValid(guestInformation))
                 throw new InvalidOperationException($"{typeof(GuestInformation).Name} is invalid.");
 
@@ -92,7 +73,6 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <exception cref="InvalidOperationException"/>
         public async Task<GuestInformation?> GetGuestInformationAsync(Guid orderId)
         {
-            ThrowIfNotInitialized();
             var query = _httpClient!.BaseAddress
                 .AppendPathSegment("guestInformation")
                 .SetQueryParams(new { orderId }, NullValueHandling.Ignore);
@@ -114,7 +94,6 @@ namespace artiso.AdsdHotel.Black.Ambassador
         /// <returns>All order ids where the guest information of the order contains any of the parametes.</returns>
         public async Task<List<Guid>?> GetOrdersAsync(string? firstName, string? lastName, string? eMail)
         {
-            ThrowIfNotInitialized();
             var query = _httpClient!.BaseAddress
                 .AppendPathSegment("order")
                 .SetQueryParams(new { firstName, lastName, eMail }, NullValueHandling.Ignore);
@@ -155,15 +134,6 @@ namespace artiso.AdsdHotel.Black.Ambassador
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        private void ThrowIfNotInitialized()
-        {
-            if (_senderEndpoint is null || _httpClient is null)
-            {
-                throw new InvalidOperationException($"Client not initialized. Call {nameof(StartAsync)} first.");
-            }
-
         }
 
         /// <summary>

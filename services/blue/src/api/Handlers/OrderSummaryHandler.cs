@@ -4,7 +4,7 @@ using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Validation;
 using artiso.AdsdHotel.ITOps.Communication;
-using artiso.AdsdHotel.ITOps.Database.Sql;
+using artiso.AdsdHotel.ITOps.Sql;
 using NServiceBus;
 using static artiso.AdsdHotel.Blue.Api.CommonQueries;
 

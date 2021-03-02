@@ -1,4 +1,4 @@
-﻿namespace artiso.AdsdHotel.Infrastructure.DataStorage
+﻿namespace artiso.AdsdHotel.ITOps.NoSql
 {
     public enum ExpressionCombinationOperator
     {
