@@ -9,6 +9,11 @@
     <PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    
+    <ProjectReference Include="..\..\..\infrastructure\src\dataStorage\artiso.AdsdHotel.Infrastructure.DataStorage.csproj" />
+    
+    <ProjectReference Include="..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
+    
     <ProjectReference Include="..\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Yellow.Events.csproj" />
   </ItemGroup>

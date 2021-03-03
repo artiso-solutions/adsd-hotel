@@ -28,6 +28,13 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         }
 
         /// <inheritdoc/>
+        public async Task InsertOneAsync<T>(T entity)
+        {
+            var col = _db.GetCollection<T>(_collection);
+            await col.InsertOneAsync(entity).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
         public async Task AddOrUpdateAsync<T>(T entity, Expression<Func<T, bool>> filter)
         {
             var col = _db.GetCollection<T>(_collection);
@@ -35,7 +42,7 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
+        public async Task<T?> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters)
         {
             var col = _db.GetCollection<T>(_collection);
             var filter = CombineFilters(combinator, filters);
