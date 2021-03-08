@@ -40,7 +40,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 
         protected virtual ValidationModelResult<TRequestMessage> ValidateRequest(TRequestMessage message) => message.Validate();
 
-        protected static async Task<TResult> Ensure<TMessage, TResult>(TMessage m, Func<TMessage, Task<TResult>> func)
+        protected static async Task<TResult> Ensure<TMessage, TResult>(TMessage m, Func<TMessage, Task<TResult?>> func)
         {
             var result = await func(m);
 

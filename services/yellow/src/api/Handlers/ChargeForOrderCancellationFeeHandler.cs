@@ -22,7 +22,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
         protected override async Task<OrderCancellationFeeCharged> Handle(ChargeForOrderCancellationFeeRequest message)
         {
-            var order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
+            Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
 
             var amountToPay = order.Price.CancellationFee;
 

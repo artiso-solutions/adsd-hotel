@@ -29,7 +29,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
-            await AddPaymentMethodToOrder(order, message.PaymentMethod.CreditCard, authorizeResult.AuthorizePaymentToken);
+            await AddPaymentMethodToOrder(order, message.PaymentMethod.CreditCard!, authorizeResult.AuthorizePaymentToken);
 
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }

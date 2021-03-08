@@ -5,9 +5,9 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
 {
     public record ChargeResult
     {
-        public Transaction transaction { get; init; }
+        public Transaction? transaction { get; init; }
         
-        public string AuthorizePaymentToken { get; init; }
+        public string? AuthorizePaymentToken { get; init; }
         
         public Exception? Exception { get; init; }
         

@@ -10,7 +10,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Order> FindOneById(string id);
+        Task<Order?> FindOneById(string id);
         
         /// <summary>
         /// Adds a Payment Method to an order
