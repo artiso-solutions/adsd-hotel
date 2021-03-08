@@ -101,7 +101,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
                 });
             }
             
-            if (t.ExpirationDate.HasValue && t.ExpirationDate.Value <= DateTime.Now)
+            if (t.ExpirationDate <= DateTime.Now)
             {
                 return (false, new ChargeResult
                 {
