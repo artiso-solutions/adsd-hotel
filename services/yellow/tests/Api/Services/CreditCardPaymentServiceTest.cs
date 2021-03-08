@@ -52,19 +52,17 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
         {
             ChargeResult? result = null;
             var amount = 10;
-            var token = Guid.NewGuid();
+            var paymentAuthToken = new PaymentAuthorizationToken(TimeSpan.FromDays(1)) {Active = false};
+            var token = paymentAuthToken.Token;
             
             _dataStoreClient!.Setup(d => d.GetAsync(ExpressionCombinationOperator.And, 
                     It.IsAny<Expression<Func<PaymentAuthorizationToken,bool>>>()))
                 .Returns<ExpressionCombinationOperator,Expression<Func<PaymentAuthorizationToken,bool>>[]>(
-                    (_, _) => Task.FromResult(new PaymentAuthorizationToken(token)
-                    {
-                        Active = false
-                    })!);
+                    (_, _) => Task.FromResult(paymentAuthToken)!);
             
             Assert.DoesNotThrowAsync(async () =>
             {
-                result = await _service!.Charge(amount, token.ToString());
+                result = await _service!.Charge(amount, token);
             });
             
             _dataStoreClient!

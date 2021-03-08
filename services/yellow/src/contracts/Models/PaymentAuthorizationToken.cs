@@ -4,11 +4,6 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
 {
     public class PaymentAuthorizationToken
     {
-        public PaymentAuthorizationToken(Guid token)
-        {
-            Token = token.ToString();
-        }
-
         public PaymentAuthorizationToken(TimeSpan duration)
         {
             Token = Guid.NewGuid().ToString();
@@ -17,7 +12,7 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
             Active = true;
         }
 
-        public string? Token { get; init; }
+        public string Token { get; }
         
         public DateTime CreatedAt { get; }
         
