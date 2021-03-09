@@ -32,6 +32,7 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 
         public static bool IsAnEvent(Type t) =>
             t.Namespace is not null &&
-            t.Namespace.EndsWith(".Events");
+            (t.Namespace.EndsWith(".Events") || 
+             t.Namespace.EndsWith(".Events.External"));
     }
 }
