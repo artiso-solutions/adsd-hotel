@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Yellow.Api.Configuration;
-using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services

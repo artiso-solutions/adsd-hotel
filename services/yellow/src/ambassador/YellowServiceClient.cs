@@ -6,7 +6,6 @@ using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
-using OrderRateSelectedCreated = artiso.AdsdHotel.Yellow.Events.OrderRateSelectedCreated;
 
 namespace artiso.AdsdHotel.Yellow.Ambassador
 {
@@ -17,22 +16,6 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
         public YellowServiceClient(IChannel channel)
         {
             _channel = channel;
-        }
-
-        public async Task OrderRateSelectedCommand(string orderId, 
-            decimal cancellationFee, 
-            decimal totalAmount,
-            CancellationToken cancellationToken = default)
-        {
-            var request = new OrderRateSelectedRequest(orderId, new Contracts.Models.Price(cancellationFee, totalAmount));
-            var (response, exception) =
-                await _channel.Request<Response<OrderRateSelectedCreated>>(request, cancellationToken);
-
-            if (exception is not null)
-                throw exception;
-
-            if (response is null)
-                throw new Exception("Service not available");
         }
 
         public async Task AuthorizeOrderCancellationFee(string orderId,

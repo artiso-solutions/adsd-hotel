@@ -21,7 +21,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 
                 Response<TResponseMessage> responseMessage = new(result);
 
-                //await context.Publish(responseMessage);
+                // TODO : Returns only a dumb response (publish the important one)
+                await context.Publish(responseMessage);
                 await context.Reply(responseMessage);
             }
             catch (Exception e)
