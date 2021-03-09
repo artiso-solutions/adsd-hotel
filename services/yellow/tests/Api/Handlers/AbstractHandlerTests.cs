@@ -30,7 +30,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         
     }
 
-    public class MockHandler : AbstractHandler<MockRequest, MockResponse>
+    public class MockHandler : AbstractPaymentHandler<MockRequest, MockResponse>
     {
         protected override Task<MockResponse> Handle(MockRequest message)
         {

@@ -1,24 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
+using artiso.AdsdHotel.Yellow.Api.Configuration;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
 {
     public class CreditCardPaymentService : ICreditCardPaymentService
     {
-        private readonly IDataStoreClient _dataStoreClient;
         private readonly bool _failAllPayments;
-        
-        public CreditCardPaymentService(IDataStoreClient dataStoreClient, bool failAllPayments)
+        private readonly IDataStoreClient _transactionClient;
+        private readonly IDataStoreClient _paymentAuthorizationTokenDataClient;
+
+        public CreditCardPaymentService(MongoDBClientFactory factory, bool failAllPayments)
         {
-            _dataStoreClient = dataStoreClient;
+            _transactionClient = factory.GetClient(typeof(Transaction));
+            _paymentAuthorizationTokenDataClient = factory.GetClient(typeof(PaymentAuthorizationToken));
             _failAllPayments = failAllPayments;
         }
         
-        public CreditCardPaymentService(IDataStoreClient dataStoreClient)
+        public CreditCardPaymentService(MongoDBClientFactory factory)
         {
-            _dataStoreClient = dataStoreClient;
+            _transactionClient = factory.GetClient(typeof(Transaction));
+            _paymentAuthorizationTokenDataClient = factory.GetClient(typeof(PaymentAuthorizationToken));
         }
         
         /// <inheritdoc/>
@@ -27,7 +31,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             if (!CreditCardHasTheRequiredAmount(amount, creditCard))
                 return new AuthorizeResult(null, new InvalidOperationException("The given credit card has not the required amount"));
 
-            var paymentAuthorizationToken = await GetPaymentAuthorizationToken();
+            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
 
             return new AuthorizeResult(paymentAuthorizationToken.Token, null);
         }
@@ -43,7 +47,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
                 };
             }
             
-            var paymentAuthorizationToken = await GetPaymentAuthorizationToken();
+            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
 
             return await Charge(amount, paymentAuthorizationToken.Token!);
         }
@@ -62,7 +66,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
                 
                 var transaction = new Transaction(Guid.NewGuid().ToString(), paymentCode, amount, DateTime.Now);
 
-                await _dataStoreClient.InsertOneAsync(transaction);
+                await _transactionClient.InsertOneAsync(transaction);
 
                 return new ChargeResult
                 {
@@ -81,7 +85,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
 
         private async Task<(bool isValid, ChargeResult chargeResult)> ValidateToken(string authorizePaymentToken)
         {
-            var t = await _dataStoreClient
+            var t = await _paymentAuthorizationTokenDataClient
                 .GetAsync<PaymentAuthorizationToken>(ExpressionCombinationOperator.And,
                     token => token.Token == authorizePaymentToken);
             
@@ -112,10 +116,10 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             return (true, null!);
         }
 
-        private async Task<PaymentAuthorizationToken> GetPaymentAuthorizationToken()
+        private async Task<PaymentAuthorizationToken> CreatePaymentAuthorizationToken()
         {
             var paymentAuthorizationToken = new PaymentAuthorizationToken(TimeSpan.FromDays(30));
-            await _dataStoreClient.InsertOneAsync(paymentAuthorizationToken);
+            await _paymentAuthorizationTokenDataClient.InsertOneAsync(paymentAuthorizationToken);
             return paymentAuthorizationToken;
         }
         

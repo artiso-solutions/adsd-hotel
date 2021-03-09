@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
+using artiso.AdsdHotel.Yellow.Api.Configuration;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using Moq;
@@ -19,7 +20,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
         public void Setup()
         {
             _dataStoreClient = new Mock<IDataStoreClient>();
-            _service = new CreditCardPaymentService(_dataStoreClient.Object);
+            MongoDbConfig config = new();
+            var factory = new Mock<MongoDBClientFactory>(config);
+            factory
+                .Setup(clientFactory => clientFactory.GetClient(It.IsAny<Type>()))
+                .Returns(() => _dataStoreClient.Object);
+            _service = new CreditCardPaymentService(factory.Object);
         }
         
         [Test]
@@ -226,7 +232,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
                 .Returns<ExpressionCombinationOperator,Expression<Func<PaymentAuthorizationToken,bool>>[]>(
                     (_, _) => Task.FromResult(new PaymentAuthorizationToken(TimeSpan.FromDays(30)))!);
             
-            var failAbleService = new CreditCardPaymentService(new Mock<IDataStoreClient>().Object, true);
+            var failAbleService = new CreditCardPaymentService(new Mock<MongoDBClientFactory>(new MongoDbConfig()).Object, true);
             
             Assert.DoesNotThrowAsync(async () =>
             {
@@ -268,7 +274,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
         {
             AuthorizeResult? result = null;
 
-            var service = new CreditCardPaymentService(new Mock<IDataStoreClient>().Object, true);
+            MongoDbConfig mongoDbConfig = new();
+            var service = new CreditCardPaymentService(new Mock<MongoDBClientFactory>(mongoDbConfig).Object, true);
             
             Assert.DoesNotThrowAsync(async () =>
             {

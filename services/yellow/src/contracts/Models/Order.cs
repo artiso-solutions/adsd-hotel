@@ -7,7 +7,7 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Models
         /// <summary>
         /// Payment methods previously used
         /// </summary>
-        public List<OrderPaymentMethod> OrderPaymentMethods { get; set; }
+        public List<OrderPaymentMethod> OrderPaymentMethods { get; init; }
     }
     
     public record Price(decimal CancellationFee, decimal Amount);

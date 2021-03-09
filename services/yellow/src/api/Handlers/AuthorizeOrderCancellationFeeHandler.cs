@@ -9,7 +9,7 @@ using artiso.AdsdHotel.Yellow.Events;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class AuthorizeOrderCancellationFeeHandler : AbstractHandler<AuthorizeOrderCancellationFeeRequest, OrderCancellationFeeAuthorizationAcquired>
+    public class AuthorizeOrderCancellationFeeHandler : AbstractPaymentHandler<AuthorizeOrderCancellationFeeRequest, OrderCancellationFeeAuthorizationAcquired>
     {
         private readonly IOrderService _orderService;
         private readonly ICreditCardPaymentService _paymentService;
@@ -24,7 +24,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         protected override async Task<OrderCancellationFeeAuthorizationAcquired> Handle(AuthorizeOrderCancellationFeeRequest message)
         {
             Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
-
+            
             var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, message.PaymentMethod.CreditCard!);
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");

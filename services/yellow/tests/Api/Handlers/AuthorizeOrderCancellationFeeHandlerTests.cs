@@ -113,7 +113,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             yield return TestUtility.GetCaseData("OrderIdNotFound",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest("_MISSING_ID", new PaymentMethod(AMEX1)), 
+                    new AuthorizeOrderCancellationFeeRequest("_MISSING_ID",  new PaymentMethod(AMEX1)), 
                     orderService,
                     paymentService
                 });

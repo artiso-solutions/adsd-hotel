@@ -8,6 +8,7 @@ namespace artiso.AdsdHotel.Yellow.Api
         public static void Main(string[] args)
         {
             CreateHostBuilder(args)
+                .ConfigureApp()
                 .Build()
                 .Run();
         }
@@ -19,4 +20,6 @@ namespace artiso.AdsdHotel.Yellow.Api
                     webBuilder.UseStartup<Startup>();
                 });
     }
+    
+    
 }
