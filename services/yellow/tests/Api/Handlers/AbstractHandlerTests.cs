@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
@@ -18,8 +19,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             
             await mockHandler.Handle(null!, context);
             
-            Assert.AreEqual(1, context.PublishedMessages.Length);
-            var responseMessage = context.PublishedMessages[0].Message;
+            Assert.AreEqual(1, context.RepliedMessages.Length);
+            var responseMessage = context.RepliedMessages[0].Message;
             
             var r = responseMessage as Response<MockResponse>;
             
@@ -40,7 +41,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             });
         }
 
-        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod) => 
+        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod) => 
             throw new System.NotImplementedException();
 
         // Do not implement ValidateRequest

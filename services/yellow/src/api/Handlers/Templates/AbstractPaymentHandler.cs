@@ -9,16 +9,19 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
     public abstract class AbstractPaymentHandler<TRequestMessage, TResponseMessage> :
         AbstractHandler<TRequestMessage, TResponseMessage>
     {
-        protected async Task AddPaymentMethodToOrder(Order order, CreditCard creditCard, string? authorizePaymentToken)
+        protected async Task AddPaymentMethodToOrder(Order order, CreditCard? creditCard, string? authorizePaymentToken)
         {
+            if (creditCard is null)
+                throw new InvalidOperationException("Payment method must have a credit card");
+
             if (string.IsNullOrWhiteSpace(authorizePaymentToken))
                 throw new InvalidOperationException($"ChargeResult must contain {nameof(ChargeResult.AuthorizePaymentToken)}");
             
             var orderCreditCard = creditCard.GetOrderCreditCard(authorizePaymentToken);
 
-            await AddPaymentMethod(order, new OrderPaymentMethod(orderCreditCard));
+            await AddPaymentMethod(order, new StoredPaymentMethod(orderCreditCard));
         }
         
-        protected abstract Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod);
+        protected abstract Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod);
     }
 }

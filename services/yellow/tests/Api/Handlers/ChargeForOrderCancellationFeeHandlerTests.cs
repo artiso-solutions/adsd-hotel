@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Handlers;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
@@ -32,13 +33,13 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            Assert.AreEqual(1, context.PublishedMessages.Length);
-            var responseMessage = context.PublishedMessages[0].Message;
+            Assert.AreEqual(1, context.RepliedMessages.Length);
+            var responseMessage = context.RepliedMessages[0].Message;
             Assert.IsInstanceOf<Response<OrderCancellationFeeCharged>>(responseMessage);
             var rm = responseMessage as Response<OrderCancellationFeeCharged>;
             Assert.True(rm?.IsSuccessful, $"{rm?.Exception?.Message} \n {rm?.Exception?.StackTrace}");
 
-            var activePaymentMethod = order.OrderPaymentMethods.LastOrDefault();
+            var activePaymentMethod = order.PaymentMethods!.LastOrDefault();
 
             Assert.NotNull(activePaymentMethod, "activePaymentMethod != null");
 
@@ -50,12 +51,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                         It.IsAny<CreditCard>()), Times.Once);
 
                 orderService
-                    .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<OrderPaymentMethod>()),
+                    .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()),
                         Times.Once);
             }
             else
             {
-                var payToken = activePaymentMethod!.CreditCard.ProviderPaymentToken;
+                var payToken = activePaymentMethod!.CreditCard.PaymentAuthorizationTokenId;
 
                 Assert.NotNull(payToken, "payToken != null");
 
@@ -77,7 +78,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             decimal orderCancellationFullAmount = 100;
             var order = new Order("orderId", new Price(orderCancellationFee, orderCancellationFullAmount))
             {
-                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                PaymentMethods = new List<StoredPaymentMethod>()
                 {
                     new(AMEX1.GetOrderCreditCard("__AUTH_TOKEN__"))
                 }
@@ -87,16 +88,23 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Setup(s => s.FindOneById(It.Is<string>(s1 => s1 == "orderId")))
                 .ReturnsAsync(order);
             orderService
-                .Setup(s => s.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<OrderPaymentMethod>()))
+                .Setup(s => s.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()))
                 .Verifiable();
 
             paymentService
                 .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<string>()))
-                .ReturnsAsync(new ChargeResult())
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now)
+                })
                 .Verifiable();
             paymentService
                 .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<CreditCard>()))
-                .ReturnsAsync(new ChargeResult() {AuthorizePaymentToken = "__AUTH_TOKEN__"})
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now),
+                    AuthorizePaymentToken = "__AUTH_TOKEN__"
+                })
                 .Verifiable();
 
             yield return TestUtility.GetCaseData("BasicScenario.PayWithAlreadyStoredMethod",
@@ -150,7 +158,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
             var order = new Order("orderId", new Price(10, 100))
             {
-                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                PaymentMethods = new List<StoredPaymentMethod>()
                 {
                     new(AMEX1.GetOrderCreditCard("__AUTH_TOKEN__"))
                 }
@@ -237,7 +245,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
             var order = new Order("orderId", new Price(10, 100))
             {
-                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                PaymentMethods = new List<StoredPaymentMethod>()
                 {
                     new(AMEX1.GetOrderCreditCard("__AUTH_TOKEN__"))
                 }
@@ -245,7 +253,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             
             var invalidOrder = new Order("orderId", new Price(10, 100))
             {
-                OrderPaymentMethods = new List<OrderPaymentMethod>()
+                PaymentMethods = new List<StoredPaymentMethod>()
                 {
                     new(AMEX1.GetOrderCreditCard(null!))
                 }

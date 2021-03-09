@@ -15,11 +15,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
         
         protected abstract Task<ChargeResult> Charge(decimal amount, CreditCard creditCard);
         
-        protected async Task ChargeOrder(Order order, decimal amount)
+        protected async Task<ChargeResult> ChargeOrder(Order order, decimal amount)
         {
-            var paymentMethods = Ensure(order, o => o.OrderPaymentMethods);
+            var paymentMethods = Ensure(order, o => o.PaymentMethods);
             var paymentMethod = paymentMethods!.LastOrDefault();
-            var payToken = paymentMethod!.CreditCard.ProviderPaymentToken;
+            var payToken = paymentMethod!.CreditCard.PaymentAuthorizationTokenId;
 
             if (payToken is null)
                 throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
@@ -27,9 +27,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
             var chargeResult = await Charge(amount, payToken!);
             if (chargeResult.IsSuccess != true)
                 throw chargeResult.Exception ?? new InvalidOperationException($"{nameof(chargeResult)}");
+
+            return chargeResult;
         }
 
-        protected async Task ChargeOrder(Order order, decimal amount, PaymentMethod alternativePaymentMethod)
+        protected async Task<ChargeResult> ChargeOrder(Order order, decimal amount, PaymentMethod alternativePaymentMethod)
         {
             if (alternativePaymentMethod.CreditCard is null)
                 throw new ValidationException($"{nameof(ChargeForOrderCancellationFeeRequest.AlternativePaymentMethod)} must have a CreditCard");
@@ -41,8 +43,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
             var chargeResult = await Charge(amount, alternativePaymentMethod.CreditCard);
             if (!chargeResult.IsSuccess)
                 throw chargeResult.Exception ?? new InvalidOperationException($"ChargeOperation failed for order {order.Id}");
-            
-            await AddPaymentMethodToOrder(order, alternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+
+            return chargeResult;
         }
     }
 }

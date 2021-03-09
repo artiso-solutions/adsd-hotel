@@ -21,7 +21,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
             
             Assert.DoesNotThrow(() =>
             {
-                orderService.AddPaymentMethod(order, new OrderPaymentMethod(orderCreditCard));
+                orderService.AddPaymentMethod(order, new StoredPaymentMethod(orderCreditCard));
             });
         }
     }

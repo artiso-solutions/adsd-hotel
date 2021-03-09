@@ -43,7 +43,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
             _dataStoreClient
                 .Verify(d => d.InsertOneAsync(
                     It.Is<PaymentAuthorizationToken>(p => 
-                        !string.IsNullOrEmpty(p.Token) &&
+                        !string.IsNullOrEmpty(p.Id) &&
                         p.CreatedAt < p.ExpirationDate &&
                         p.Active)), 
                     Times.AtMostOnce);
@@ -59,7 +59,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
             ChargeResult? result = null;
             var amount = 10;
             var paymentAuthToken = new PaymentAuthorizationToken(TimeSpan.FromDays(1)) {Active = false};
-            var token = paymentAuthToken.Token;
+            var token = paymentAuthToken.Id;
             
             _dataStoreClient!.Setup(d => d.GetAsync(ExpressionCombinationOperator.And, 
                     It.IsAny<Expression<Func<PaymentAuthorizationToken,bool>>>()))
@@ -193,7 +193,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
             _dataStoreClient
                 .Verify(d => d.InsertOneAsync(
                         It.Is<PaymentAuthorizationToken>(p => 
-                            !string.IsNullOrEmpty(p.Token) &&
+                            !string.IsNullOrEmpty(p.Id) &&
                             p.CreatedAt < p.ExpirationDate &&
                             p.Active)), 
                     Times.Once);
@@ -243,7 +243,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Services
             _dataStoreClient
                 .Verify(d => d.InsertOneAsync(
                         It.Is<PaymentAuthorizationToken>(p => 
-                            !string.IsNullOrEmpty(p.Token) &&
+                            !string.IsNullOrEmpty(p.Id) &&
                             p.CreatedAt < p.ExpirationDate &&
                             p.Active)), 
                     Times.Never);

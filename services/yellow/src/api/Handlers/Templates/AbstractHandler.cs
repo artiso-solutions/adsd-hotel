@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Validation;
-using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
@@ -21,13 +21,15 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 
                 Response<TResponseMessage> responseMessage = new(result);
 
-                await context.Publish(responseMessage);
+                //await context.Publish(responseMessage);
+                await context.Reply(responseMessage);
             }
             catch (Exception e)
             {
                 var failedResponseMessage = new Response<TResponseMessage>(e);
                 
                 await context.Publish(failedResponseMessage);
+                await context.Reply(failedResponseMessage);
             }
         }
 

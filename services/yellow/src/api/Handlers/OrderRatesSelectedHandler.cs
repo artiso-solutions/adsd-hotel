@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
+using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Events;
-using artiso.AdsdHotel.Yellow.Events.External;
 using Price = artiso.AdsdHotel.Yellow.Contracts.Models.Price;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class OrderRatesSelectedHandler : AbstractHandler<OrderRateSelected, OrderRateSelectedCreated>
+    public class OrderRatesSelectedHandler : AbstractHandler<OrderRateSelectedRequest, OrderRateSelectedCreated>
     {
         private readonly IOrderService _orderService;
 
@@ -17,20 +17,20 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             _orderService = orderService;
         }
 
-        protected async override Task<OrderRateSelectedCreated> Handle(OrderRateSelected message)
+        protected async override Task<OrderRateSelectedCreated> Handle(OrderRateSelectedRequest message)
         {
             await _orderService.Create(message.OrderId, new Price(message.Price.CancellationFee, message.Price.Amount));
 
             return new OrderRateSelectedCreated(message.OrderId);
         }
 
-        protected override ValidationModelResult<OrderRateSelected> ValidateRequest(OrderRateSelected message)
+        protected override ValidationModelResult<OrderRateSelectedRequest> ValidateRequest(OrderRateSelectedRequest message)
         {
             return message.Validate()
                 .HasData(r => r.OrderId, 
-                    $"{nameof(OrderRateSelected.OrderId)} should contain data")
+                    $"{nameof(OrderRateSelectedRequest.OrderId)} should contain data")
                 .NotNull(r => r.Price, 
-                    $"{nameof(OrderRateSelected.Price)} should not be null");
+                    $"{nameof(OrderRateSelectedRequest.Price)} should not be null");
             
         }
     }

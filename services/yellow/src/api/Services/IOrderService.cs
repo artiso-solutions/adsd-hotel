@@ -23,7 +23,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// </summary>
         /// <param name="order"></param>
         /// <param name="orderPaymentMethod"></param>
-        Task AddPaymentMethod(Order order, OrderPaymentMethod orderPaymentMethod);
+        Task AddPaymentMethod(Order order, StoredPaymentMethod orderPaymentMethod);
 
         /// <summary>
         /// Create a new Order
@@ -32,5 +32,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// <param name="price"></param>
         /// <returns></returns>
         Task Create(string orderId, Price price);
+
+        /// <summary>
+        /// Stores a new Transaction on the Order
+        /// </summary>
+        /// <returns></returns>
+        Task AddTransaction(Order order, OrderTransaction transaction);
     }
 }

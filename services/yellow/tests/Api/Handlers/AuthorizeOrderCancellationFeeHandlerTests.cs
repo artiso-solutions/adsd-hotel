@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Handlers;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
@@ -29,8 +30,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            Assert.AreEqual(1, context.PublishedMessages.Length);
-            var responseMessage = context.PublishedMessages[0].Message;
+            Assert.AreEqual(1, context.RepliedMessages.Length);
+            var responseMessage = context.RepliedMessages[0].Message;
             Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
             var rm = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
             Assert.True(rm?.IsSuccessful, $"{rm?.Exception?.Message} \n {rm?.Exception?.StackTrace}");

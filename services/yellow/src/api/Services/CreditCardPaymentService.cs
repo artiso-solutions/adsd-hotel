@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Yellow.Api.Configuration;
+using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
@@ -33,7 +34,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
 
             var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
 
-            return new AuthorizeResult(paymentAuthorizationToken.Token, null);
+            return new AuthorizeResult(paymentAuthorizationToken.Id, null);
         }
 
         /// <inheritdoc/>
@@ -49,7 +50,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             
             var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
 
-            return await Charge(amount, paymentAuthorizationToken.Token!);
+            return await Charge(amount, paymentAuthorizationToken.Id!);
         }
 
         /// <inheritdoc/>
@@ -70,7 +71,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
 
                 return new ChargeResult
                 {
-                    transaction = transaction,
+                    Transaction = transaction,
                     AuthorizePaymentToken = authorizePaymentToken
                 };
             }
@@ -87,7 +88,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         {
             var t = await _paymentAuthorizationTokenDataClient
                 .GetAsync<PaymentAuthorizationToken>(ExpressionCombinationOperator.And,
-                    token => token.Token == authorizePaymentToken);
+                    token => token.Id == authorizePaymentToken);
             
             if (t is null)
             {

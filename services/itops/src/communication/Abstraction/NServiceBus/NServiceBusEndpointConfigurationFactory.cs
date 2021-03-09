@@ -27,7 +27,7 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
         {
             config.EnableCallbacks();
             config.EnableInstallers();
-
+            
             config.UseSerialization<NewtonsoftSerializer>();
             config.UsePersistence<InMemoryPersistence>();
 

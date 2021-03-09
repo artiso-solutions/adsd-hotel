@@ -1,7 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
+using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
@@ -24,11 +26,17 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             var order = await Ensure(message, r => _orderService.FindOneById(r.OrderId));
 
             var amountToPay = order.Price.Amount;
-
+            
+            var chargeResult = (message.AlternativePaymentMethod is not null)
+                ? await ChargeOrder(order, amountToPay, message.AlternativePaymentMethod)
+                : await ChargeOrder(order, amountToPay);
+            
             if (message.AlternativePaymentMethod is not null)
-                await ChargeOrder(order, amountToPay, message.AlternativePaymentMethod);
-            else
-                await ChargeOrder(order, amountToPay);
+                await AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+
+            // TODO : Should go in a separate handler (and should retrieve it from the used payment token)
+            var lastPaymentMethod = order.PaymentMethods!.Last();
+            await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
             
             return new OrderFullAmountCharged(message.OrderId);
         }
@@ -47,7 +55,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             return v;
         }
 
-        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod)
+        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
         {
             return _orderService.AddPaymentMethod(order, paymentMethod);
         }

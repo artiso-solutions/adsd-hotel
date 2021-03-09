@@ -47,7 +47,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
         }
 
-        protected override Task AddPaymentMethod(Order order, OrderPaymentMethod paymentMethod)
+        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
         {
             return _orderService.AddPaymentMethod(order, paymentMethod);
         }

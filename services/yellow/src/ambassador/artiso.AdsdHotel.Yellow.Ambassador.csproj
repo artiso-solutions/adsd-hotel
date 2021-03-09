@@ -5,4 +5,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
+      <ProjectReference Include="..\events\artiso.AdsdHotel.Yellow.Events.csproj" />
+      <ProjectReference Include="..\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj" />
+    </ItemGroup>
+    
 </Project>
