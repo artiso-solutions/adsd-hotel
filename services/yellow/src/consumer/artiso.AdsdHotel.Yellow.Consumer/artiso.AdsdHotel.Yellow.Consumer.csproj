@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\ambassador\artiso.AdsdHotel.Yellow.Ambassador.csproj" />
+    </ItemGroup>
+
+</Project>

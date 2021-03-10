@@ -2,12 +2,12 @@ using System;
 
 namespace artiso.AdsdHotel.Yellow.Contracts.Models
 {
-    public record OrderCreditCard(
+    public record StoredCreditCard(
         IssuingNetwork IssuingNetwork,
         string CardHolder,
         DateTime ExpirationDate,
         string CardNumber,
-        string? ProviderPaymentToken);
+        string? PaymentAuthorizationTokenId);
     
     public record CreditCard(
         IssuingNetwork IssuingNetwork,

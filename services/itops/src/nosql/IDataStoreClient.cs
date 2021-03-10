@@ -11,7 +11,15 @@ namespace artiso.AdsdHotel.ITOps.NoSql
     public interface IDataStoreClient
     {
         /// <summary>
-        /// Adds or upates an entity matching the given filter.
+        /// Adds a new document.
+        /// </summary>
+        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <param name="entity">The entity.</param>
+        /// <returns>A task that can be awaited.</returns>
+        Task InsertOneAsync<T>(T entity);
+        
+        /// <summary>
+        /// Adds or updates an entity matching the given filter.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="entity">The entity.</param>
@@ -19,7 +27,7 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         /// <returns>A task that can be awaited.</returns>
         Task AddOrUpdateAsync<T>(T entity, Expression<Func<T, bool>> filter);
 
-        // <summary>
+        /// <summary>
         /// Retrieves all entities from the data store given a filter.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
@@ -35,6 +43,6 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         /// <param name="combinator">How to combine the filters. and/or </param>
         /// <param name="filters">The filters to search for the entity.</param>
         /// <returns>A task that can be awaited with the found entity if it was found.</returns>
-        Task<T> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters);
+        Task<T?> GetAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters);
     }
 }

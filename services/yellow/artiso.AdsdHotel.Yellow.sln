@@ -15,6 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Eve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Api", "src\api\artiso.AdsdHotel.Yellow.Api.csproj", "{F51C14F4-9378-49FB-96A5-CAB13450B6F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.ITOps.NoSql", "..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj", "{F834C010-5027-4783-8667-B9255E93687F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Consumer", "src\consumer\artiso.AdsdHotel.Yellow.Consumer\artiso.AdsdHotel.Yellow.Consumer.csproj", "{968AA8C5-B992-4FDD-8ED3-314153DB87C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.ITOps.Communication", "..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj", "{0F3AF7C5-1BED-45CB-9EA3-40154F323BDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +51,18 @@ Global
 		{F51C14F4-9378-49FB-96A5-CAB13450B6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F51C14F4-9378-49FB-96A5-CAB13450B6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F51C14F4-9378-49FB-96A5-CAB13450B6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F834C010-5027-4783-8667-B9255E93687F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F834C010-5027-4783-8667-B9255E93687F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F834C010-5027-4783-8667-B9255E93687F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F834C010-5027-4783-8667-B9255E93687F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{968AA8C5-B992-4FDD-8ED3-314153DB87C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968AA8C5-B992-4FDD-8ED3-314153DB87C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968AA8C5-B992-4FDD-8ED3-314153DB87C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968AA8C5-B992-4FDD-8ED3-314153DB87C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F3AF7C5-1BED-45CB-9EA3-40154F323BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F3AF7C5-1BED-45CB-9EA3-40154F323BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F3AF7C5-1BED-45CB-9EA3-40154F323BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F3AF7C5-1BED-45CB-9EA3-40154F323BDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

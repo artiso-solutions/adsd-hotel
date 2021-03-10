@@ -15,7 +15,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Contracts
             
             Assert.AreEqual(cc.CardNumber.Length, TestUtility.CreditCardStore.AMEX1.CardNumber.Length);
             Assert.AreEqual(cc.CardNumber.Count(c => c != '*'), 4);
-            Assert.AreEqual(authToken, cc.ProviderPaymentToken);
+            Assert.AreEqual(authToken, cc.PaymentAuthorizationTokenId);
             
             TestContext.WriteLine(cc.CardNumber);
         }

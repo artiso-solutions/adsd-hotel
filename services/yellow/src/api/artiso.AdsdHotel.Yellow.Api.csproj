@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="7.4.3" />
+    <PackageReference Include="CaseExtensions" Version="1.1.0" />
+    <PackageReference Include="NServiceBus" Version="7.4.4" />
     <PackageReference Include="NServiceBus.Callbacks" Version="3.0.0" />
     <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
@@ -9,7 +10,10 @@
     <PackageReference Include="NServiceBus.RabbitMQ" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
+    <ProjectReference Include="..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
     <ProjectReference Include="..\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Yellow.Events.csproj" />
+    <ProjectReference Include="..\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj" />
   </ItemGroup>
 </Project>

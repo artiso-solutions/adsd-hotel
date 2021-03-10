@@ -1,9 +1,12 @@
 using System;
+using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
 {
-    public record ChargeResult()
+    public record ChargeResult
     {
+        public Transaction Transaction { get; init; }
+        
         public string? AuthorizePaymentToken { get; init; }
         
         public Exception? Exception { get; init; }
