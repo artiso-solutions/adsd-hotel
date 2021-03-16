@@ -18,11 +18,24 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
             _channel = channel;
         }
 
-        public async Task AuthorizeOrderCancellationFee(string orderId,
-            CreditCard creditCard,
+        public async Task AddPaymentMethodToOrderRequest(string orderId, CreditCard creditCard, 
             CancellationToken cancellationToken = default)
         {
-            var request = new AuthorizeOrderCancellationFeeRequest(orderId, new PaymentMethod(creditCard));
+            var request = new AddPaymentMethodToOrderRequest(orderId, new PaymentMethod(creditCard));
+            var (response, exception) =
+                await _channel.Request<Response<OrderCancellationFeeAuthorizationAcquired>>(request, cancellationToken);
+
+            if (exception is not null)
+                throw exception;
+
+            if (response is null)
+                throw new Exception("Service not available");
+        }
+        
+        public async Task AuthorizeOrderCancellationFee(string orderId,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new AuthorizeOrderCancellationFeeRequest(orderId);
             var (response, exception) =
                 await _channel.Request<Response<OrderCancellationFeeAuthorizationAcquired>>(request, cancellationToken);
 

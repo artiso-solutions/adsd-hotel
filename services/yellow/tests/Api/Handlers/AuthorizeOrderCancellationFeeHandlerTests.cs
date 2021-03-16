@@ -5,6 +5,7 @@ using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Handlers;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
+using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
@@ -43,19 +44,28 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         {
             var orderService = new Mock<IOrderService>();
             var paymentService = new Mock<ICreditCardPaymentService>();
-
+            var authResult = new AuthorizeResult("AuthToken", null);
+            var orderStoredPaymentMethod = new StoredPaymentMethod(MASTERCARD1.GetOrderCreditCard(authResult.AuthorizePaymentToken!));
+            
             orderService
                 .Setup(s => s.FindOneById(It.Is<string>(s1 => s1 == "orderId")))
-                .ReturnsAsync(new Order("orderId", new Price(0, 0)));
+                .ReturnsAsync(new Order("orderId", new Price(0, 0))
+                {
+                    PaymentMethods = new List<StoredPaymentMethod>()
+                    {
+                        orderStoredPaymentMethod
+                    }
+                });
 
             paymentService
-                .Setup(s => s.Authorize(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
-                .ReturnsAsync(new AuthorizeResult("AuthToken", null));
-
+                .Setup(s => s.Authorize(It.IsAny<decimal>(), It.IsAny<string>()))
+                .ReturnsAsync(authResult);
+            
             yield return TestUtility.GetCaseData("BasicScenario",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest("orderId", new PaymentMethod(MASTERCARD1)), 
+                    // TODO : set on the order new PaymentMethod(MASTERCARD1)
+                    new AuthorizeOrderCancellationFeeRequest("orderId"), 
                     orderService,
                     paymentService
                 });
@@ -107,14 +117,16 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             yield return TestUtility.GetCaseData("OrderIdMissing",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest(string.Empty, new PaymentMethod(AMEX1)), 
+                    // TODO : Set on the order new PaymentMethod(AMEX1)
+                    new AuthorizeOrderCancellationFeeRequest(string.Empty), 
                     orderService,
                     paymentService
                 });
             yield return TestUtility.GetCaseData("OrderIdNotFound",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest("_MISSING_ID",  new PaymentMethod(AMEX1)), 
+                    // TODO : Set on the order new PaymentMethod(AMEX1)
+                    new AuthorizeOrderCancellationFeeRequest("_MISSING_ID"), 
                     orderService,
                     paymentService
                 });
@@ -165,7 +177,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             yield return TestUtility.GetCaseData("PaymentFails",
                 new object[]
                 {
-                    new AuthorizeOrderCancellationFeeRequest("_WHATEVER_ID", new PaymentMethod(MASTERCARD1)), 
+                    // todo set on the order new PaymentMethod(MASTERCARD1)
+                    new AuthorizeOrderCancellationFeeRequest("_WHATEVER_ID"), 
                     orderService,
                     paymentService
                 });

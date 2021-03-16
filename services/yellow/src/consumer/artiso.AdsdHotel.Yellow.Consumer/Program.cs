@@ -19,15 +19,24 @@ namespace artiso.AdsdHotel.Yellow.Consumer
             await Task.Delay(1000);
             
             var ambassador = YellowServiceClientFactory.Create();
+
+            var creditCard = new CreditCard(
+                IssuingNetwork.AmericanExpress,
+                "John Doe",
+                "349621197422556",
+                "0000",
+                DateTime.MaxValue);
+
+
+            await ambassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
+            
+            Console.WriteLine($"Add created: {orderId}");
+            
+            await ambassador.AuthorizeOrderCancellationFee(orderId);
             
             Console.WriteLine($"Order created: {orderId}");
             
-            await ambassador.AuthorizeOrderCancellationFee(orderId, new CreditCard(
-                IssuingNetwork.AmericanExpress,
-                "John Doe", 
-                "349621197422556", 
-                "0000", 
-                DateTime.MaxValue));
+            await ambassador.AuthorizeOrderCancellationFee(orderId);
             
             Console.WriteLine("CancellationFeeAuthorized");
 

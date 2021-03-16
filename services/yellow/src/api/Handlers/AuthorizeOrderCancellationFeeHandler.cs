@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
 using artiso.AdsdHotel.Yellow.Api.Services;
@@ -25,13 +26,17 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         {
             Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
             
-            var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, message.PaymentMethod.CreditCard!);
+            var paymentMethods = order.PaymentMethods;
+            var paymentMethod = paymentMethods?.LastOrDefault();
+            var payToken = paymentMethod?.CreditCard.PaymentAuthorizationTokenId;
+            
+            if (payToken is null)
+                throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
+            
+            var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, payToken!);
             if (authorizeResult.IsSuccess != true)
                 throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
-            // TODO OrderCancellationFeeAuthorizationAcquired
-            await AddPaymentMethodToOrder(order, message.PaymentMethod.CreditCard!, authorizeResult.AuthorizePaymentToken);
-
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }
 
@@ -39,12 +44,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
         {
             return message.Validate()
                 .HasData(r => r.OrderId, 
-                    $"{nameof(AuthorizeOrderCancellationFeeRequest.OrderId)} should contain data")
-                .NotNull(r => r.PaymentMethod, 
-                    $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod)} should not be null")
-                .NotNull(r => r.PaymentMethod.CreditCard, 
-                    $"{nameof(AuthorizeOrderCancellationFeeRequest.PaymentMethod.CreditCard)} should not be null")
-                .PaymentMethodIsValid(r => r.PaymentMethod);
+                    $"{nameof(AuthorizeOrderCancellationFeeRequest.OrderId)} should contain data");
             
         }
 

@@ -24,7 +24,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// <param name="order"></param>
         /// <param name="orderPaymentMethod"></param>
         Task AddPaymentMethod(Order order, StoredPaymentMethod orderPaymentMethod);
-
+        
         /// <summary>
         /// Create a new Order
         /// </summary>

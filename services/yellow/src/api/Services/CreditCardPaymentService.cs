@@ -24,16 +24,38 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             _transactionClient = factory.GetClient(typeof(Transaction));
             _paymentAuthorizationTokenDataClient = factory.GetClient(typeof(PaymentAuthorizationToken));
         }
-        
+
+        /// <inheritdoc/>
+        public async Task<AuthorizeResult> Authorize(decimal amount, string authToken)
+        {
+            var (isValid, chargeResult) = await ValidateToken(authToken);
+
+            if (!isValid)
+                return new AuthorizeResult(authToken, chargeResult.Exception);
+            
+            if (!CreditCardHasTheRequiredAmount(amount, authToken))
+                return new AuthorizeResult(null, new InvalidOperationException("The given credit card has not the required amount"));
+
+            return new AuthorizeResult(authToken, null);
+        }
+
         /// <inheritdoc/>
         public async Task<AuthorizeResult> Authorize(decimal amount, CreditCard creditCard)
         {
             if (!CreditCardHasTheRequiredAmount(amount, creditCard))
                 return new AuthorizeResult(null, new InvalidOperationException("The given credit card has not the required amount"));
 
-            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
+            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken(creditCard);
 
             return new AuthorizeResult(paymentAuthorizationToken.Id, null);
+        }
+        
+        /// <inheritdoc/>
+        public async Task<string> GetPaymentToken(CreditCard creditCard)
+        {
+            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken(creditCard);
+
+            return paymentAuthorizationToken.Id;
         }
 
         /// <inheritdoc/>
@@ -47,7 +69,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
                 };
             }
             
-            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken();
+            var paymentAuthorizationToken = await CreatePaymentAuthorizationToken(creditCard);
 
             return await Charge(amount, paymentAuthorizationToken.Id!);
         }
@@ -116,8 +138,9 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             return (true, null!);
         }
 
-        private async Task<PaymentAuthorizationToken> CreatePaymentAuthorizationToken()
+        private async Task<PaymentAuthorizationToken> CreatePaymentAuthorizationToken(CreditCard creditCard)
         {
+            // TODO : Make something with the creditcard
             var paymentAuthorizationToken = new PaymentAuthorizationToken(TimeSpan.FromDays(30));
             await _paymentAuthorizationTokenDataClient.InsertOneAsync(paymentAuthorizationToken);
             return paymentAuthorizationToken;
@@ -128,6 +151,15 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
             // args not used in this mock implementation:
             _ = amount;
             _ = creditCard;
+            
+            return !MustPaymentFail();
+        }
+        
+        private bool CreditCardHasTheRequiredAmount(decimal amount, string authToken)
+        {
+            // args not used in this mock implementation:
+            _ = amount;
+            _ = authToken;
             
             return !MustPaymentFail();
         }
