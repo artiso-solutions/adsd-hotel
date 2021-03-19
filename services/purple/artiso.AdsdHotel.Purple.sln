@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Communication", "..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj", "{035E0C33-C8E7-48EC-9A90-50670975D9F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Contracts", "..\yellow\src\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj", "{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.services", "00.services", "{E52DA317-4589-4BA3-A54B-ADFE8C954F4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events", "..\yellow\src\events\artiso.AdsdHotel.Yellow.Events.csproj", "{64F36D5C-052E-4E25-A834-1498FBFC7C5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Commands", "..\blue\src\commands\artiso.AdsdHotel.Blue.Commands.csproj", "{56C31103-8C17-4B4A-BA1D-770176FB3870}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Events", "..\blue\src\events\artiso.AdsdHotel.Blue.Events.csproj", "{971E44E5-23EB-46AE-9497-BDE9EF66E2E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "itops", "itops", "{CAF0E54D-34A7-4DE3-9D4C-80A256507A5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "yellow", "yellow", "{1A24501C-8E89-4B94-BD1C-5B2104E70521}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blue", "blue", "{ABFEBE55-91F6-4656-991B-82975C2F807F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.dto", "01.dto", "{8F369BD0-E215-43BC-B0BE-B1A11F72DE76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Commands", "src\commands\artiso.AdsdHotel.Purple.Commands.csproj", "{8DFBB334-15AA-4340-89F6-9B478B69A15C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Events", "src\events\artiso.AdsdHotel.Purple.Events.csproj", "{5011F0DB-6438-4CCC-9190-AD4B85D50572}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.api", "02.api", "{81A9DD67-8B27-420B-9042-5A051E096EBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Api", "src\api\artiso.AdsdHotel.Purple.Api.csproj", "{969D2B5C-4C70-4294-B710-6C64592AB47A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{035E0C33-C8E7-48EC-9A90-50670975D9F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{035E0C33-C8E7-48EC-9A90-50670975D9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{035E0C33-C8E7-48EC-9A90-50670975D9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{035E0C33-C8E7-48EC-9A90-50670975D9F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F36D5C-052E-4E25-A834-1498FBFC7C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F36D5C-052E-4E25-A834-1498FBFC7C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F36D5C-052E-4E25-A834-1498FBFC7C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F36D5C-052E-4E25-A834-1498FBFC7C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C31103-8C17-4B4A-BA1D-770176FB3870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C31103-8C17-4B4A-BA1D-770176FB3870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C31103-8C17-4B4A-BA1D-770176FB3870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C31103-8C17-4B4A-BA1D-770176FB3870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{971E44E5-23EB-46AE-9497-BDE9EF66E2E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{971E44E5-23EB-46AE-9497-BDE9EF66E2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{971E44E5-23EB-46AE-9497-BDE9EF66E2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{971E44E5-23EB-46AE-9497-BDE9EF66E2E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DFBB334-15AA-4340-89F6-9B478B69A15C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFBB334-15AA-4340-89F6-9B478B69A15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFBB334-15AA-4340-89F6-9B478B69A15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFBB334-15AA-4340-89F6-9B478B69A15C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5011F0DB-6438-4CCC-9190-AD4B85D50572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5011F0DB-6438-4CCC-9190-AD4B85D50572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5011F0DB-6438-4CCC-9190-AD4B85D50572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5011F0DB-6438-4CCC-9190-AD4B85D50572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{969D2B5C-4C70-4294-B710-6C64592AB47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969D2B5C-4C70-4294-B710-6C64592AB47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969D2B5C-4C70-4294-B710-6C64592AB47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969D2B5C-4C70-4294-B710-6C64592AB47A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{035E0C33-C8E7-48EC-9A90-50670975D9F5} = {CAF0E54D-34A7-4DE3-9D4C-80A256507A5E}
+		{7C77A1F4-BC1F-4D54-BC19-26FEE1393C4F} = {1A24501C-8E89-4B94-BD1C-5B2104E70521}
+		{64F36D5C-052E-4E25-A834-1498FBFC7C5D} = {1A24501C-8E89-4B94-BD1C-5B2104E70521}
+		{56C31103-8C17-4B4A-BA1D-770176FB3870} = {ABFEBE55-91F6-4656-991B-82975C2F807F}
+		{971E44E5-23EB-46AE-9497-BDE9EF66E2E5} = {ABFEBE55-91F6-4656-991B-82975C2F807F}
+		{CAF0E54D-34A7-4DE3-9D4C-80A256507A5E} = {E52DA317-4589-4BA3-A54B-ADFE8C954F4C}
+		{1A24501C-8E89-4B94-BD1C-5B2104E70521} = {E52DA317-4589-4BA3-A54B-ADFE8C954F4C}
+		{ABFEBE55-91F6-4656-991B-82975C2F807F} = {E52DA317-4589-4BA3-A54B-ADFE8C954F4C}
+		{8DFBB334-15AA-4340-89F6-9B478B69A15C} = {8F369BD0-E215-43BC-B0BE-B1A11F72DE76}
+		{5011F0DB-6438-4CCC-9190-AD4B85D50572} = {8F369BD0-E215-43BC-B0BE-B1A11F72DE76}
+		{969D2B5C-4C70-4294-B710-6C64592AB47A} = {81A9DD67-8B27-420B-9042-5A051E096EBD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BAFC04E8-C35C-4197-B4A9-DC6C5F9197EB}
+	EndGlobalSection
+EndGlobal
