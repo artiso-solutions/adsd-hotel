@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
+    <ProjectReference Include="..\commands\artiso.AdsdHotel.Purple.Commands.csproj" />
+  </ItemGroup>
+
+</Project>
