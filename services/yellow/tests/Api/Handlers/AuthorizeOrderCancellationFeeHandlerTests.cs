@@ -87,16 +87,16 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
             Assert.AreEqual(1, context.PublishedMessages.Length);
             var responseMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
+            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(responseMessage);
 
-            var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
+            // var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
+            //
+            // Assert.NotNull(r!.Exception);
+            // Assert.False(r.IsSuccessful);
+            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            // Assert.IsInstanceOf<ValidationException>(r.Exception);
 
-            Assert.NotNull(r!.Exception);
-            Assert.False(r.IsSuccessful);
-            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            Assert.IsInstanceOf<ValidationException>(r.Exception);
-
-            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
         }
 
         #region InvalidRequestTestCaseSources
@@ -148,15 +148,15 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
             Assert.AreEqual(1, context.PublishedMessages.Length);
             var responseMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
+            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(responseMessage);
 
-            var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
-
-            Assert.NotNull(r!.Exception);
-            Assert.False(r.IsSuccessful);
-            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            // var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
+            //
+            // Assert.NotNull(r!.Exception);
+            // Assert.False(r.IsSuccessful);
+            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
             
-            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
         }
 
         #region InvalidOperationTestCaseSources

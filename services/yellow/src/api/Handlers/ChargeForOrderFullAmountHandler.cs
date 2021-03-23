@@ -40,6 +40,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
             return new OrderFullAmountCharged(message.OrderId);
         }
+        
+        protected override object Fail(ChargeForOrderFullAmountRequest requestMessage)
+        {
+            return new ChargeForOrderFullAmountFailed(requestMessage.OrderId);
+        }
 
         protected override ValidationModelResult<ChargeForOrderFullAmountRequest> ValidateRequest(
             ChargeForOrderFullAmountRequest message)
