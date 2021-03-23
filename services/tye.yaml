@@ -10,8 +10,6 @@ name: adsdhotel # application name
 
 # define multiple services here
 services:
-- name: blackservice
-  project: black\src\api\artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
 - name: rabbit
   image: rabbitmq:management-alpine
   bindings:
@@ -23,6 +21,46 @@ services:
       port: 15672  
       containerPort: 15672
       protocol: http
+
+#- name: blackservice
+#  project: black\src\api\artiso.AdsdHotel.Black.Api.csproj # msbuild project path (relative to this file)
+#  env:
+#  - name: BLACK_API_DBNAME
+#    value: blackDatabase
+#  - name: BLACK_API_COLLECTIONNAME
+#    value: GuestInformation
+
+- name: mongodb
+  image: mongo
+  bindings:
+    - name: mongodb
+      port: 27016
+      protocol: mongodb
+
+- name: blueservice
+  project: blue\src\api\artiso.AdsdHotel.Blue.Api.csproj
+  tags:
+    - host
+    - api
+    - app
+- name: mysql
+  image: mysql
+  tags:
+    - inf
+    - db
+  bindings:
+    - name: mysql
+      port: 3306
+      containerPort: 3306
+  env:
+    - name: MYSQL_ALLOW_EMPTY_PASSWORD
+      value: true
+
+- name: yelloservice
+  project: yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj # msbuild project path (relative to this file)
+
+- name: purpleservice
+  project: purple\src\api\artiso.AdsdHotel.Purple.Api.csproj # msbuild project path (relative to this file)
 
   # executable: app.exe # path to an executable (relative to this file)
   # args: --arg1=3 # arguments to pass to the process

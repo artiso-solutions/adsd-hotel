@@ -20,7 +20,8 @@ internal static class HostBuilderConfigurationExtensions
         {
             var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                 endpointName: "Purple.Api",
-                rabbitMqConnectionString: "host=localhost");
+                rabbitMqConnectionString: "host=localhost",
+                true);
 
             return endpointConfiguration;
         });

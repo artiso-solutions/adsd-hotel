@@ -16,7 +16,8 @@ namespace artiso.AdsdHotel.Blue.Api
             {
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Blue.Api",
-                    rabbitMqConnectionString: "host=localhost");
+                    rabbitMqConnectionString: "host=localhost",
+                    true);
 
                 return endpointConfiguration;
             });
