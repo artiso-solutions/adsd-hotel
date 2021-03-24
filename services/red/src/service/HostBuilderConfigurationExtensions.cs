@@ -2,6 +2,7 @@
 using artiso.AdsdHotel.Red.Api.Configuration;
 using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -17,9 +18,16 @@ namespace artiso.AdsdHotel.Red.Api
         {
             ConfigureStorage(builder);
             ConfigureServiceBus(builder);
+            ConfigureGrpc(builder);
             ConfigureCustomServices(builder);
 
             return builder;
+        }
+
+
+        private static void ConfigureGrpc(this IHostBuilder builder)
+        {
+            builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<GrpcStartup>(); });
         }
 
         private static void ConfigureServiceBus(this IHostBuilder builder)
