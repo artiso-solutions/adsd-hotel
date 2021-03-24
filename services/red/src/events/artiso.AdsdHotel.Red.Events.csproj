@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Api.csproj" />
+    <PackageReference Include="NServiceBus" Version="7.4.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Contracts.csproj" />
   </ItemGroup>
 </Project>

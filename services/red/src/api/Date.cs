@@ -1,6 +1,6 @@
 using System;
 
-namespace artiso.AdsdHotel.Red.Api
+namespace artiso.AdsdHotel.Red.Contracts
 {
     public sealed partial class Date
     {

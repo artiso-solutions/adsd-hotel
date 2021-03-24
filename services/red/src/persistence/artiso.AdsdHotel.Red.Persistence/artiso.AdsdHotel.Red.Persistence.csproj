@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
+    <PackageReference Include="CaseExtensions" Version="1.1.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.11.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
   </ItemGroup>
 
 </Project>

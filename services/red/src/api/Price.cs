@@ -1,4 +1,4 @@
-﻿namespace artiso.AdsdHotel.Red.Api
+﻿namespace artiso.AdsdHotel.Red.Contracts
 {
     public class Price
     {

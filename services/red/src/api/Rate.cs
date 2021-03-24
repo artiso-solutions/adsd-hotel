@@ -1,4 +1,4 @@
-﻿namespace artiso.AdsdHotel.Red.Api
+﻿namespace artiso.AdsdHotel.Red.Contracts
 {
     public class Rate
     {
@@ -7,6 +7,6 @@
             Price = price;
         }
 
-        public Price Price { get; set; }
+        public Price Price { get; }
     }
 }

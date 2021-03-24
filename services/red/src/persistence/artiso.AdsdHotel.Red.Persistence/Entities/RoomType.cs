@@ -11,15 +11,18 @@ namespace artiso.AdsdHotel.Red.Persistence.Entities
         public Guid Id { get; internal set; }
 
         [BsonElement]
-        public List<Rate> Rates { get; internal set; }
+        public List<RateItem> Rates { get; internal set; }
 
         [BsonElement]
         public string Type { get; internal set; }
 
-        public RoomType(Guid id, string type, IEnumerable<Rate> rates)
+        public ConfirmationDetails ConfirmationDetails { get; internal set; }
+
+        public RoomType(Guid id, string type, IEnumerable<RateItem> rates, ConfirmationDetails confirmationDetails)
         {
             Id = id;
             Type = type;
+            ConfirmationDetails = confirmationDetails;
             Rates = rates.ToList();
         }
 

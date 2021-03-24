@@ -1,11 +1,11 @@
-﻿using artiso.AdsdHotel.Red.Service.Service;
+﻿using artiso.AdsdHotel.Red.Api.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace artiso.AdsdHotel.Red.Service
+namespace artiso.AdsdHotel.Red.Api
 {
     public class GrpcStartup
     {

@@ -1,53 +1,67 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.NoSql;
+using artiso.AdsdHotel.Red.Persistence.Configuration;
 using artiso.AdsdHotel.Red.Persistence.Entities;
-using MongoDB.Driver;
 
 namespace artiso.AdsdHotel.Red.Persistence
 {
     public class RoomPriceService : IRoomPriceService
     {
-        private static readonly MongoClient DbClient = new MongoClient("mongodb://root:example@127.0.0.1:27017");
-        private readonly IMongoCollection<RoomType>? _roomTypesCollection;
-        private readonly IMongoCollection<RoomRate>? _roomRatesCollection;
+        private readonly IDataStoreClient _dataStoreClientRoomType;
+        private readonly IDataStoreClient _dataStoreClientRoomRate;
 
-        public RoomPriceService(bool repopulate = true)
+        public RoomPriceService(MongoDBClientFactory mongoDbClientFactory)
         {
-            IMongoDatabase mongoDatabase = DbClient.GetDatabase("red");
-            _roomTypesCollection = mongoDatabase.GetCollection<RoomType>("roomtypes");
-            _roomRatesCollection = mongoDatabase.GetCollection<RoomRate>("roomrates");
+            _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomType));
+            _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRate));
+
+            var repopulate = true;
             if (repopulate)
             {
-                _roomTypesCollection.DeleteMany(type => true);
-                _roomTypesCollection.InsertMany(new[]
+                _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "BedNBreakfast", new[]
                 {
-                    new RoomType(Guid.NewGuid(), "BedNBreakfast", new[]
+                    new RateItem(Guid.NewGuid(), 50),
+                    new RateItem(Guid.NewGuid(), 15)
+                }, new ConfirmationDetails()
+                {
+                    CancellationFee = new CancellationFee
                     {
-                        new Rate(Guid.NewGuid(), 50),
-                        new Rate(Guid.NewGuid(), 15)
-                    }),
-                    new RoomType(Guid.NewGuid(), "Honeymoon" , new[]
+                        DeadLine = DateTime.Now,
+                        FeeInPercentage = 5
+                    }
+                }));
+                _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "Honeymoon", new[]
+                {
+                    new RateItem(Guid.NewGuid(), 500),
+                    new RateItem(Guid.NewGuid(), 35),
+                    new RateItem(Guid.NewGuid(), 50)
+                }, new ConfirmationDetails()
+                {
+                    CancellationFee = new CancellationFee
                     {
-                        new Rate(Guid.NewGuid(), 500),
-                        new Rate(Guid.NewGuid(), 35),
-                        new Rate(Guid.NewGuid(), 50)
-                    })
-                });
+                        DeadLine = DateTime.Now,
+                        FeeInPercentage = 3
+                    }
+                }));
             }
         }
 
-        public async Task<List<Rate>> GetRoomRatesByRoomType(string roomType)
+        public async Task<List<RateItem>> GetRoomRatesByRoomType(string roomType)
         {
             if (string.IsNullOrEmpty(roomType)) throw new ArgumentException(nameof(roomType));
 
-            var find = await _roomTypesCollection.FindAsync(type => type.Type.Equals(roomType));
-            return find?.Single().Rates ?? new List<Rate>();
+            var find = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
+            return find?.Rates ?? new List<RateItem>();
         }
 
-        public async void InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<Rate> enumerable)
+        public async Task<RoomRate> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<RateItem> enumerable)
         {
-            await _roomRatesCollection?.InsertOneAsync(new RoomRate(orderId, startDate, endDate, enumerable))!;
+            var roomRate = new RoomRate(orderId, startDate, endDate, enumerable);
+            await _dataStoreClientRoomRate.InsertOneAsync(roomRate)!;
+            return roomRate;
         }
     }
 }

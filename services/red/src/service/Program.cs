@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace artiso.AdsdHotel.Red.Service
+namespace artiso.AdsdHotel.Red.Api
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Host.CreateDefaultBuilder(args)
+                .ConfigureApp()
+                .Build()
+                .Run();
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.

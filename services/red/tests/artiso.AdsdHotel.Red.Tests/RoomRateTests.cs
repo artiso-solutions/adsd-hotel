@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Red.Api;
 using artiso.AdsdHotel.Red.Persistence;
-using artiso.AdsdHotel.Red.Service.Service;
+using artiso.AdsdHotel.Red.Persistence.Entities;
+using artiso.AdsdHotel.Red.Api.Service;
+using artiso.AdsdHotel.Red.Contracts;
 using Grpc.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Rate = artiso.AdsdHotel.Red.Persistence.Entities.Rate;
 
 namespace artiso.AdsdHotel.Red.Tests
 {
@@ -18,9 +18,9 @@ namespace artiso.AdsdHotel.Red.Tests
         public async Task TotalPriceSumTest()
         {
             var dbMock = new Mock<IRoomPriceService>();
-            dbMock.Setup(priceService => priceService.GetRoomRatesByRoomType(It.IsAny<string>())).Returns(() => Task.FromResult(new List<Rate>(){
-                new Rate(Guid.NewGuid(), 50),
-                new Rate(Guid.NewGuid(), 15)
+            dbMock.Setup(priceService => priceService.GetRoomRatesByRoomType(It.IsAny<string>())).Returns(() => Task.FromResult(new List<RateItem>(){
+                new RateItem(Guid.NewGuid(), 50),
+                new RateItem(Guid.NewGuid(), 15)
             }));
             var contextMock = new Mock<ServerCallContext>();
             var service = new RatesService(dbMock.Object);

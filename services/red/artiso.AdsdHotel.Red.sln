@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "src\api\artiso.AdsdHotel.Red.Api.csproj", "{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Contracts", "src\api\artiso.AdsdHotel.Red.Contracts.csproj", "{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambassador", "src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{01BF02A7-F72D-42D6-8FD2-9D6BED942248}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Service", "src\service\artiso.AdsdHotel.Red.Service.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "src\service\artiso.AdsdHotel.Red.Api.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Persistence", "src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
 EndProject
@@ -15,7 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Events", "src\events\artiso.AdsdHotel.Red.Events.csproj", "{B04F3342-DBF1-47C8-A5DA-089A04F1E4D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps", "..\blue\src\itops\artiso.AdsdHotel.ITOps.csproj", "{5537118F-71E9-43FE-BECA-EF084E5F1F2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Communication", "..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj", "{54D42AA0-28BE-49B9-871F-585F6F0639F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.NoSql", "..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj", "{77AF48D4-1238-4273-8EBD-FBAE2630926C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Sql", "..\itops\src\sql\artiso.AdsdHotel.ITOps.Sql.csproj", "{290CCAAA-70F7-4959-9BDC-B020CA62B71C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artiso.AdsdHotel.ITOps", "artiso.AdsdHotel.ITOps", "{C691E6FE-EE79-4346-B7AA-C2076771C5D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,13 +53,26 @@ Global
 		{B04F3342-DBF1-47C8-A5DA-089A04F1E4D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B04F3342-DBF1-47C8-A5DA-089A04F1E4D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B04F3342-DBF1-47C8-A5DA-089A04F1E4D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5537118F-71E9-43FE-BECA-EF084E5F1F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5537118F-71E9-43FE-BECA-EF084E5F1F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5537118F-71E9-43FE-BECA-EF084E5F1F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5537118F-71E9-43FE-BECA-EF084E5F1F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54D42AA0-28BE-49B9-871F-585F6F0639F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54D42AA0-28BE-49B9-871F-585F6F0639F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54D42AA0-28BE-49B9-871F-585F6F0639F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54D42AA0-28BE-49B9-871F-585F6F0639F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77AF48D4-1238-4273-8EBD-FBAE2630926C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77AF48D4-1238-4273-8EBD-FBAE2630926C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77AF48D4-1238-4273-8EBD-FBAE2630926C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77AF48D4-1238-4273-8EBD-FBAE2630926C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54D42AA0-28BE-49B9-871F-585F6F0639F9} = {C691E6FE-EE79-4346-B7AA-C2076771C5D9}
+		{77AF48D4-1238-4273-8EBD-FBAE2630926C} = {C691E6FE-EE79-4346-B7AA-C2076771C5D9}
+		{290CCAAA-70F7-4959-9BDC-B020CA62B71C} = {C691E6FE-EE79-4346-B7AA-C2076771C5D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4F7F215-E1BA-4C67-8BB7-5954AE40ED98}

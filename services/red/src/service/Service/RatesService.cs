@@ -1,44 +1,45 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Red.Api;
+using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Persistence;
+using artiso.AdsdHotel.Red.Persistence.Entities;
 using Grpc.Core;
-using Rate = artiso.AdsdHotel.Red.Persistence.Entities.Rate;
-using RoomRate = artiso.AdsdHotel.Red.Api.RoomRate;
+using ConfirmationDetails = artiso.AdsdHotel.Red.Contracts.ConfirmationDetails;
 
-namespace artiso.AdsdHotel.Red.Service.Service
+namespace artiso.AdsdHotel.Red.Api.Service
 {
     public sealed class RatesService : Rates.RatesBase
     {
 
         private readonly IRoomPriceService _roomPriceService;
 
-        public RatesService()
-        {
-            _roomPriceService = new RoomPriceService();
-        }
-
         public RatesService(IRoomPriceService roomPriceService)
         {
-            _roomPriceService = roomPriceService;
+            _roomPriceService = roomPriceService ?? throw new ArgumentNullException(nameof(roomPriceService));
         }
 
-        public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(
-            GetRoomRatesByRoomTypeRequest request,
-            ServerCallContext context)
+        public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request, ServerCallContext context)
         {
             var roomRatesByRoomType = await _roomPriceService.GetRoomRatesByRoomType(request.RoomType);
-            var roomRates = roomRatesByRoomType.ConvertAll(rate => new RoomRate()
+            var roomRates = roomRatesByRoomType.ConvertAll(rate => new RoomItem()
             {
                 Id = rate.Id.ToString(),
                 Price = rate.Price
             });
+            var confirmationDetails = new ConfirmationDetails()
+            {
+                CancellationFee = new Contracts.CancellationFee()
+                {
+                    DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0,0,0)),
+                    FeeInPercentage = 5
+                }
+            };
 
             return new GetRoomRatesByRoomTypeReply()
             {
-                RoomRates = {roomRates},
-                ConfirmationDetails = new ConfirmationDetails(),
+                RateItems = {roomRates},
+                ConfirmationDetails = confirmationDetails,
                 TotalPrice = roomRates.Select(rate => rate.Price).Sum()
             };
         }
@@ -50,7 +51,7 @@ namespace artiso.AdsdHotel.Red.Service.Service
             {
                 _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
-                    request.RoomRates.Select(rate => new Rate(new Guid(rate.Id), rate.Price)));
+                    request.RateItems.Select(rate => new RateItem(new Guid(rate.Id), rate.Price)));
                 
                 return Task.FromResult(new InputRoomRatesReply
                 {

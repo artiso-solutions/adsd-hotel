@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\service\artiso.AdsdHotel.Red.Service.csproj" />
+    <ProjectReference Include="..\..\src\service\artiso.AdsdHotel.Red.Api.csproj" />
   </ItemGroup>
 
 </Project>

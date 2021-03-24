@@ -1,7 +1,6 @@
-﻿using System;
-using artiso.AdsdHotel.Red.Api;
+﻿using artiso.AdsdHotel.Red.Contracts;
 
 namespace artiso.AdsdHotel.Red.Events
 {
-    public record OrderRateSelected(Guid OrderId, Rate GuestInformation);
+    public record OrderRateSelected(string OrderId, Rate GuestInformation);
 }

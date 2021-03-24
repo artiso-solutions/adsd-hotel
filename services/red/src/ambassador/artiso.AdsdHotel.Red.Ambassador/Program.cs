@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Red.Api;
+using artiso.AdsdHotel.Red.Contracts;
 using Grpc.Net.Client;
+using Date = artiso.AdsdHotel.Red.Contracts.Date;
 
 namespace artiso.AdsdHotel.Red.Ambassador
 {
@@ -23,7 +24,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
                 });
 
                 Console.WriteLine($"Test response for {s}:");
-                foreach (var replyRoomRate in reply.RoomRates)
+                foreach (var replyRoomRate in reply.RateItems)
                 {
                     Console.WriteLine($"{replyRoomRate.Id} - {replyRoomRate.Price} Euro");
                 }
@@ -36,7 +37,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
                     StartDate = new Date(DateTime.Now),
                     EndDate = new Date(DateTime.Now + new TimeSpan(7))
                 };
-                inputRoomRatesRequest.RoomRates.AddRange(reply.RoomRates);
+                inputRoomRatesRequest.RateItems.AddRange(reply.RateItems);
                 var inputRoomRatesResponse = await client.InputRoomRatesAsync(inputRoomRatesRequest);
                 if (inputRoomRatesResponse.Success)
                 {

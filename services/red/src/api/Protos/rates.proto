@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "artiso.AdsdHotel.Red.Api";
+option csharp_namespace = "artiso.AdsdHotel.Red.Contracts";
 
 package rates;
 
@@ -15,12 +15,12 @@ message GetRoomRatesByRoomTypeRequest {
 }
 
 message GetRoomRatesByRoomTypeReply {
-	repeated RoomRate room_rates  = 1;
+	repeated RoomItem rate_items  = 1;
 	ConfirmationDetails confirmation_details = 2;
 	float total_price = 3;
 }
 
-message RoomRate {
+message RoomItem {
   string id = 1;
   float price = 2;
 }
@@ -29,7 +29,7 @@ message InputRoomRatesRequest {
   string order_id = 1;
   Date start_date = 2;
   Date end_date = 3; 
-  repeated RoomRate room_rates = 4;
+  repeated RoomItem rate_items = 4;
 }
 
 message InputRoomRatesReply {
@@ -38,7 +38,7 @@ message InputRoomRatesReply {
 }
 
 message ConfirmationDetails {
-	repeated CancellationFee cancellation_fees = 1;
+	CancellationFee cancellation_fee = 1;
 }
 
 message Date {
