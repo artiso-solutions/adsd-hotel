@@ -1,18 +1,10 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "artiso.AdsdHotel.Yellow.Api": {
+    "API_DEV": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "SERVICE__rabbit__rabbit__protocol": "amqp",
-        "SERVICE__rabbit__rabbit__host": "localhost",
-        "SERVICE__rabbit__rabbit__port": "5672",
-        "SERVICE__mongodb__mongodb__protocol": "mongodb",
-        "SERVICE__mongodb__mongodb__host": "localhost",
-        "SERVICE__mongodb__mongodb__port": "27017",
-        "YELLOW_API_DBNAME": "blackDatabase"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

@@ -1,4 +1,4 @@
-﻿using artiso.AdsdHotel.ITOps.Abstraction.NServiceBus;
+﻿using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 
 namespace artiso.AdsdHotel.Blue.Ambassador
 {
@@ -9,7 +9,9 @@ namespace artiso.AdsdHotel.Blue.Ambassador
             var channel = NServiceBusChannelFactory.Create(
                 channelName: "Blue.Ambassador",
                 endpointDestination: "Blue.Api",
-                "host=localhost");
+                "host=localhost", 
+                useCallbacks: true
+                );
 
             var ambassador = new BlueAmbassador(channel);
             return ambassador;
