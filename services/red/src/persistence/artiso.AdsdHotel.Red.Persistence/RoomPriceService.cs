@@ -53,8 +53,8 @@ namespace artiso.AdsdHotel.Red.Persistence
         {
             if (string.IsNullOrEmpty(roomType)) throw new ArgumentException(nameof(roomType));
 
-            var find = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
-            return find?.Rates ?? new List<RateItem>();
+            var rateItem = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
+            return rateItem?.Rates ?? new List<RateItem>();
         }
 
         public async Task<RoomRate> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<RateItem> enumerable)
@@ -62,6 +62,14 @@ namespace artiso.AdsdHotel.Red.Persistence
             var roomRate = new RoomRate(orderId, startDate, endDate, enumerable);
             await _dataStoreClientRoomRate.InsertOneAsync(roomRate)!;
             return roomRate;
+        }
+
+        public async Task<RoomType?> GetRoomTypeById<TResult>(string rateId)
+        {
+            if (string.IsNullOrEmpty(rateId)) throw new ArgumentException(nameof(rateId));
+
+            var roomType = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Id.ToString().Equals(rateId));
+            return roomType;
         }
     }
 }

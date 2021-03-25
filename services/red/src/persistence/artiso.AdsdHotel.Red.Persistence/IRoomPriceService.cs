@@ -11,5 +11,7 @@ namespace artiso.AdsdHotel.Red.Persistence
 
         Task<RoomRate> InputRoomRates(string orderId, DateTime startDate, DateTime endDate,
             IEnumerable<RateItem> enumerable);
+
+        Task<RoomType?> GetRoomTypeById<TResult>(string rateId);
     }
 }

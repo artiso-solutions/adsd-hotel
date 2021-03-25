@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Contracts;
+using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Entities;
 using Grpc.Core;
@@ -48,28 +49,54 @@ namespace artiso.AdsdHotel.Red.Api.Service
             };
         }
 
-        public override Task<InputRoomRatesReply> InputRoomRates(InputRoomRatesRequest request,
+        public override async Task<InputRoomRatesReply> InputRoomRates(InputRoomRatesRequest request,
             ServerCallContext context)
         {
             try
             {
-                _roomPriceService.InputRoomRates(request.OrderId,
+                var rates = await GetRatesForRequest(request);
+
+                var inputRoomRates = _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
                     request.RateItems.Select(rate => new RateItem(new Guid(rate.Id), rate.Price)));
-                _channel.Publish(new )
-                return Task.FromResult(new InputRoomRatesReply
+
+                await _channel.Publish(new OrderRateSelected(request.OrderId, rates));
+
+                return new InputRoomRatesReply
                 {
                     Success = true
-                });
+                };
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new InputRoomRatesReply
+                return new InputRoomRatesReply
                 {
                     Success = false,
                     ErrorMessage = ex.Message
-                });
+                };
             }
+        }
+
+        private async Task<Rate> GetRatesForRequest(InputRoomRatesRequest request)
+        {
+            decimal price = 0;
+            decimal cancellationFee = 0;
+            foreach (var task in request.RateItems.Select(async rate => await _roomPriceService.GetRoomTypeById<RoomType>(rate.Id)))
+            {
+                var roomType = (await task);
+                price += (decimal) roomType.Price;
+                cancellationFee += (decimal) ((roomType.ConfirmationDetails.CancellationFee.FeeInPercentage/100f) * roomType.Price);
+            }
+
+            var days = (request.EndDate.ToDateTime() - request.StartDate.ToDateTime()).Days;
+            price *= days;
+            cancellationFee *= days;
+
+            return new Rate(new Price()
+            {
+                Amount = price,
+                CancellationFee = cancellationFee
+            });
         }
     }
 }
