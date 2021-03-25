@@ -21,7 +21,7 @@ namespace artiso.AdsdHotel.Red.Api.Service
         public RatesService(IRoomPriceService roomPriceService)
         {
             _roomPriceService = roomPriceService ?? throw new ArgumentNullException(nameof(roomPriceService));
-            _channel = NServiceBusChannelFactory.Create("Red.InputRoomRates", "");
+            _channel = NServiceBusChannelFactory.Create("Red.InputRoomRates", "test", "test");
         }
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request, ServerCallContext context)
@@ -56,7 +56,7 @@ namespace artiso.AdsdHotel.Red.Api.Service
             {
                 var rates = await GetRatesForRequest(request);
 
-                var inputRoomRates = _roomPriceService.InputRoomRates(request.OrderId,
+                await _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
                     request.RateItems.Select(rate => new RateItem(new Guid(rate.Id), rate.Price)));
 
@@ -81,11 +81,15 @@ namespace artiso.AdsdHotel.Red.Api.Service
         {
             decimal price = 0;
             decimal cancellationFee = 0;
-            foreach (var task in request.RateItems.Select(async rate => await _roomPriceService.GetRoomTypeById<RoomType>(rate.Id)))
+            foreach (var task in request.RateItems.Select(async rate =>
+                await _roomPriceService.GetRoomTypeById<RoomType>(rate.Id)))
             {
-                var roomType = (await task);
+                var roomType = await task;
+                if (roomType is null) continue;
+
                 price += (decimal) roomType.Price;
-                cancellationFee += (decimal) ((roomType.ConfirmationDetails.CancellationFee.FeeInPercentage/100f) * roomType.Price);
+                cancellationFee += (decimal) (roomType.ConfirmationDetails.CancellationFee.FeeInPercentage / 100f *
+                                              roomType.Price);
             }
 
             var days = (request.EndDate.ToDateTime() - request.StartDate.ToDateTime()).Days;
