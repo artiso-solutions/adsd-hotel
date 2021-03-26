@@ -28,7 +28,12 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
             await _orderService.AddPaymentMethod(order, orderPaymentMethod);
 
-            return new PaymentMethodToOrderAdded();
+            return new PaymentMethodToOrderAdded(message.OrderId);
+        }
+        
+        protected override object Fail(AddPaymentMethodToOrderRequest requestMessage)
+        {
+            return new AddPaymentMethodToOrderFailed(requestMessage.OrderId);
         }
 
         protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
