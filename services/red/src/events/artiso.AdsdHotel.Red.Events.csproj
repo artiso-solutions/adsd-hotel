@@ -3,6 +3,6 @@
     <PackageReference Include="NServiceBus" Version="7.4.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Contracts.csproj" />
+    <ProjectReference Include="..\contracts\artiso.AdsdHotel.Red.Contracts.csproj" />
   </ItemGroup>
 </Project>

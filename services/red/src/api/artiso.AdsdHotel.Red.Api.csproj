@@ -12,14 +12,14 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
+    <PackageReference Include="MongoDB.Bson" Version="2.11.6" />
     <PackageReference Include="NServiceBus" Version="7.4.4" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
-    <ProjectReference Include="..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
-    <ProjectReference Include="..\api\artiso.AdsdHotel.Red.Contracts.csproj" />
+    <ProjectReference Include="..\contracts\artiso.AdsdHotel.Red.Contracts.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Red.Events.csproj" />
     <ProjectReference Include="..\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj" />
   </ItemGroup>

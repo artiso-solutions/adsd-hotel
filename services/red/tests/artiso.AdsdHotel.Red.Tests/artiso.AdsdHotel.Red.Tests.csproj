@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Core.Api" Version="2.36.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Moq" Version="4.16.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
@@ -17,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\service\artiso.AdsdHotel.Red.Api.csproj" />
+    <ProjectReference Include="..\..\src\api\artiso.AdsdHotel.Red.Api.csproj" />
+    <ProjectReference Include="..\..\src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

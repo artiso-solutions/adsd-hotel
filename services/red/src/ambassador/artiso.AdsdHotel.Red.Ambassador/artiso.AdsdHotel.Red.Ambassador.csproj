@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\api\artiso.AdsdHotel.Red.Contracts.csproj" />
+      <ProjectReference Include="..\..\contracts\artiso.AdsdHotel.Red.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

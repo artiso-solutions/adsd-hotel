@@ -25,8 +25,10 @@ namespace artiso.AdsdHotel.Red.Persistence.Configuration
             var builder = new UriBuilder
             {
                 Scheme = _config.Scheme,
-                Host = $"{auth}{_config.Host}",
-                Port = _config.Port
+                Host = _config.Host,
+                Port = _config.Port,
+                UserName = _config.User,
+                Password = _config.Password
             };
                 
             var collectionName = type.NameForCollection();

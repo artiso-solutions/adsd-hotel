@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Contracts", "src\api\artiso.AdsdHotel.Red.Contracts.csproj", "{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambassador", "src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{01BF02A7-F72D-42D6-8FD2-9D6BED942248}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "src\service\artiso.AdsdHotel.Red.Api.csproj", "{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Persistence", "src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj", "{FC0426DA-A84B-4527-8B82-C493DDAAF58C}"
 EndProject
@@ -23,24 +19,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Sql"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artiso.AdsdHotel.ITOps", "artiso.AdsdHotel.ITOps", "{C691E6FE-EE79-4346-B7AA-C2076771C5D9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "src\api\artiso.AdsdHotel.Red.Api.csproj", "{4D07670E-C52A-40BB-BD20-67E1E669BE2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Contracts", "src\contracts\artiso.AdsdHotel.Red.Contracts.csproj", "{C6A2C628-E96F-4D96-9015-6B0D0D95877A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BF33C8A-ECAA-4550-8D7A-CF9CE73B9720}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01BF02A7-F72D-42D6-8FD2-9D6BED942248}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5939E9B4-7B15-4D1F-A5B9-92B0C6C02957}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC0426DA-A84B-4527-8B82-C493DDAAF58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +57,14 @@ Global
 		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{290CCAAA-70F7-4959-9BDC-B020CA62B71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D07670E-C52A-40BB-BD20-67E1E669BE2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D07670E-C52A-40BB-BD20-67E1E669BE2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D07670E-C52A-40BB-BD20-67E1E669BE2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D07670E-C52A-40BB-BD20-67E1E669BE2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
