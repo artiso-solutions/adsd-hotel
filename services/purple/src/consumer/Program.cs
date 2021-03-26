@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Ambassador;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
@@ -46,8 +47,10 @@ namespace artiso.AdsdHotel.Purple.Consumer
                 "0000",
                 DateTime.MaxValue);
 
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
 
-            await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
+            await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard, cts.Token);
 
             var purpleAmbassador = PurpleAmbassadorFactory.Create();
             await purpleAmbassador.CompleteReservationAsync(orderId);
@@ -59,7 +62,7 @@ namespace artiso.AdsdHotel.Purple.Consumer
             var channel = NServiceBusChannelFactory.Create(
                channelName: "Mock.Red.Ambassador",
                endpointDestination: "Yellow.Api",
-               "host=localhost;username=user;password=bitnami",
+               "host=localhost",
                useCallbacks: true
            );
             var orderId = Guid.NewGuid().ToString();
