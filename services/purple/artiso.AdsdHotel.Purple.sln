@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events.External", "..\yellow\src\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj", "{FD14AD03-FE94-4853-B62F-75521E9A9433}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Api", "..\yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj", "{946E44CD-ED65-406C-A4CB-0DE860A6E0F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{FD14AD03-FE94-4853-B62F-75521E9A9433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD14AD03-FE94-4853-B62F-75521E9A9433}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD14AD03-FE94-4853-B62F-75521E9A9433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{946E44CD-ED65-406C-A4CB-0DE860A6E0F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{946E44CD-ED65-406C-A4CB-0DE860A6E0F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{946E44CD-ED65-406C-A4CB-0DE860A6E0F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{946E44CD-ED65-406C-A4CB-0DE860A6E0F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{FDAFD6C5-D282-4FA2-98D8-7BFCDCD9715C} = {E52DA317-4589-4BA3-A54B-ADFE8C954F4C}
 		{039F729F-6771-4E84-9AFC-F97B2157EDDE} = {FDAFD6C5-D282-4FA2-98D8-7BFCDCD9715C}
 		{FD14AD03-FE94-4853-B62F-75521E9A9433} = {1A24501C-8E89-4B94-BD1C-5B2104E70521}
+		{946E44CD-ED65-406C-A4CB-0DE860A6E0F1} = {1A24501C-8E89-4B94-BD1C-5B2104E70521}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BAFC04E8-C35C-4197-B4A9-DC6C5F9197EB}
