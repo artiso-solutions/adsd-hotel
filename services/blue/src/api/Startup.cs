@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Sql;
 using FluentMigrator.Runner;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,15 +12,17 @@ namespace artiso.AdsdHotel.Blue.Api
     internal class Startup
     {
         public static void ConfigureServices(
-            HostBuilderContext _,
+            HostBuilderContext ctx,
             IServiceCollection services)
         {
+            var config = ctx.Configuration;
+
             var dbConfig = new DatabaseConfiguration(
-                Host: "localhost",
-                Port: 3306,
+                Host: config.GetValue("mysql:host", defaultValue: "localhost"),
+                Port: config.GetValue("mysql:port", defaultValue: 3306),
                 Database: "adsd-blue",
-                Username: "root",
-                Password: null);
+                Username: config.GetValue("mysql:db:user", defaultValue: "root"),
+                Password: config.GetValue("mysql:db:password", defaultValue: default(string?)));
 
             var cs = dbConfig.ToMySqlConnectionString();
 

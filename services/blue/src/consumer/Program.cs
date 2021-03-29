@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Ambassador;
+using Microsoft.Extensions.Configuration;
 
 namespace artiso.AdsdHotel.Blue.Consumer
 {
     public class Program
     {
-        public static async Task Main()
+        public static async Task Main(string[] args)
         {
-            var ambassador = BlueAmbassadorFactory.Create();
+            await Task.Delay(5000);
+
+            var config = GetConfiguration(args);
+
+            var rabbitMqConnectionString = config.GetValue("rabbitmq:cs", defaultValue: "host=localhost");
+            var ambassador = BlueAmbassadorFactory.Create(rabbitMqConnectionString);
 
             var start = DateTime.Today.AddDays(7);
             var end = start.AddDays(7);
@@ -40,6 +46,17 @@ namespace artiso.AdsdHotel.Blue.Consumer
             var orderSummary = await ambassador.GetOrderSummaryAsync(orderId);
 
             Console.WriteLine(orderSummary);
+        }
+
+        private static IConfiguration GetConfiguration(string[] args)
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
+            return configuration;
         }
     }
 }
