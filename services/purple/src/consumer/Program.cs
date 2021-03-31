@@ -35,7 +35,7 @@ namespace artiso.AdsdHotel.Purple.Consumer
                 end);
 
             //red
-            await EmulateSelectionOfRate();
+            await EmulateSelectionOfRate(orderId);
 
             // yellow
             var yelowAmbassador = YellowServiceClientFactory.Create();
@@ -50,14 +50,14 @@ namespace artiso.AdsdHotel.Purple.Consumer
             var cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(10));
 
-            await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard, cts.Token);
+            await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
 
             var purpleAmbassador = PurpleAmbassadorFactory.Create();
             await purpleAmbassador.CompleteReservationAsync(orderId);
 
         }
 
-        private static async Task<string> EmulateSelectionOfRate()
+        private static async Task<string> EmulateSelectionOfRate(string orderId)
         {
             var channel = NServiceBusChannelFactory.Create(
                channelName: "Mock.Red.Ambassador",
@@ -65,7 +65,6 @@ namespace artiso.AdsdHotel.Purple.Consumer
                "host=localhost",
                useCallbacks: true
            );
-            var orderId = Guid.NewGuid().ToString();
             await channel.Publish(new OrderRateSelected(orderId, new Yellow.Events.External.Price(10, 100)));
             return orderId;
         }
