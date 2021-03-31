@@ -14,7 +14,7 @@
         "SERVICE__rabbit__rabbit__port": "5672",
         "SERVICE__mongodb__mongodb__protocol": "mongodb",
         "SERVICE__mongodb__mongodb__host": "localhost",
-        "SERVICE__mongodb__mongodb__port": "27017",
+        "SERVICE__mongodb__mongodb__port": "27016",
         "BLACK_API_DBNAME": "blackDatabase",
         "BLACK_API_COLLECTIONNAME": "GuestInformation"
       }

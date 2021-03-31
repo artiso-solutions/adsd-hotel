@@ -12,6 +12,8 @@ name: adsdhotel # application name
 services:
 - name: rabbit
   image: rabbitmq:management-alpine
+  tags:
+    - inf
   bindings:
     - name: rabbit
       port: 5672
@@ -32,15 +34,19 @@ services:
 
 - name: mongodb
   image: mongo
+  tags:
+    - inf
+    - db
   bindings:
     - name: mongodb
       port: 27016
       protocol: mongodb
+      containerPort: 27017
 
 - name: blueservice
   project: blue\src\api\artiso.AdsdHotel.Blue.Api.csproj
   tags:
-    - host
+    - blue
     - api
     - app
 - name: mysql
@@ -57,9 +63,15 @@ services:
       value: true
 
 - name: yelloservice
+  tags:
+    - yellow
+    - api
   project: yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj # msbuild project path (relative to this file)
 
 - name: purpleservice
+  tags:
+    - purple
+    - api
   project: purple\src\api\artiso.AdsdHotel.Purple.Api.csproj # msbuild project path (relative to this file)
 
   # executable: app.exe # path to an executable (relative to this file)
