@@ -12,34 +12,37 @@ namespace artiso.AdsdHotel.Red.Consumer
         {
             var ambassador = RedAmbassadorFactory.Create();
 
-            List<string> cases = new() { "BedNBreakfast", "Honeymoon" };
-            foreach (string s in cases)
+            List<string> cases = new() { "RMTY-001", "RMTY-002" };
+
+            foreach (var roomType in cases)
             {
-                var reply = await ambassador.GetRoomRatesByRoomTypeAsync(new GetRoomRatesByRoomTypeRequest
-                {
-                    RoomType = s
-                });
+                var roomRates = await ambassador.GetRoomRatesByRoomTypeAsync(roomType, DateTime.Today, DateTime.Today.AddDays(7));
 
-                Console.WriteLine($"Test response for {s}:");
-                foreach (var replyRoomRate in reply.RateItems)
+                Console.WriteLine($"Test response for {roomType}:");
+
+                foreach (var roomRate in roomRates)
                 {
-                    Console.WriteLine($"{replyRoomRate.Id} - {replyRoomRate.Price} Euro");
+                    foreach (var replyRoomRate in roomRate.RateItems)
+                    {
+                        Console.WriteLine($"{replyRoomRate.Id} - {replyRoomRate.Price} Euro");
+                    }
+
+                    Console.WriteLine($"Total price - {roomRate.TotalPrice} Euro");
+                    Console.WriteLine();
                 }
 
-                Console.WriteLine($"Total price - {reply.TotalPrice} Euro");
-                Console.WriteLine();
-                var inputRoomRatesRequest = new InputRoomRatesRequest()
-                {
-                    OrderId = Guid.NewGuid().ToString(),
-                    StartDate = new Date(DateTime.Now),
-                    EndDate = new Date(DateTime.Now + new TimeSpan(7))
-                };
-                inputRoomRatesRequest.RateItems.AddRange(reply.RateItems);
-                var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(inputRoomRatesRequest);
-                if (inputRoomRatesResponse.Success)
-                {
-                    Console.WriteLine($"Order for {s} successfully written");
-                }
+                //var inputRoomRatesRequest = new InputRoomRatesRequest()
+                //{
+                //    OrderId = Guid.NewGuid().ToString(),
+                //    StartDate = new Date(DateTime.Now),
+                //    EndDate = new Date(DateTime.Now + new TimeSpan(7))
+                //};
+                //inputRoomRatesRequest.RateItems.AddRange(reply.RateItems);
+                //var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(inputRoomRatesRequest);
+                //if (inputRoomRatesResponse.Success)
+                //{
+                //    Console.WriteLine($"Order for {roomType} successfully written");
+                //}
             }
 
             Console.ReadKey();

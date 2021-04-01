@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Contracts;
+using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Entities;
 using Grpc.Core;
-using ConfirmationDetails = artiso.AdsdHotel.Red.Contracts.ConfirmationDetails;
 
 namespace artiso.AdsdHotel.Red.Api.Service
 {
@@ -26,26 +26,30 @@ namespace artiso.AdsdHotel.Red.Api.Service
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request, ServerCallContext context)
         {
-            var roomRatesByRoomType = await _roomPriceService.GetRoomRatesByRoomType(request.RoomType);
-            var roomRates = roomRatesByRoomType.ConvertAll(rate => new RoomItem()
-            {
-                Id = rate.Id.ToString(),
-                Price = rate.Price
-            });
-            var confirmationDetails = new ConfirmationDetails()
-            {
-                CancellationFee = new Contracts.CancellationFee()
-                {
-                    DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0,0,0)),
-                    FeeInPercentage = 5
-                }
-            };
+            var rateItems = await _roomPriceService.GetRoomRatesByRoomType(request.RoomType);
 
-            return new GetRoomRatesByRoomTypeReply()
+            var grpcRateItems = rateItems.Select(x => new RoomItem
             {
-                RateItems = {roomRates},
-                ConfirmationDetails = confirmationDetails,
-                TotalPrice = roomRates.Select(rate => rate.Price).Sum()
+                Id = x.Id.ToString(),
+                Price = x.Price,
+            });
+
+            return new GetRoomRatesByRoomTypeReply
+            {
+                RoomRates =
+                {
+                    new Contracts.Grpc.RoomRate
+                    {
+                        Id = "rate1",
+                        CancellationFee = new Contracts.Grpc.CancellationFee()
+                        {
+                            DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0,0,0)),
+                            FeeInPercentage = 5
+                        },
+                        RateItems = { grpcRateItems },
+                        TotalPrice = rateItems.Select(rate => rate.Price).Sum(),
+                    }
+                }
             };
         }
 
@@ -58,7 +62,7 @@ namespace artiso.AdsdHotel.Red.Api.Service
 
                 await _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
-                    request.RateItems.Select(rate => new RateItem(new Guid(rate.Id), rate.Price)));
+                    request.RateItems.Select(rate => new Persistence.Entities.RateItem(new Guid(rate.Id), rate.Price)));
                 
                 //Todo get channel
                 await _channel.Publish(new OrderRateSelected(request.OrderId, rates)); 

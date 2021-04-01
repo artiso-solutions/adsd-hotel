@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace artiso.AdsdHotel.Red.Contracts
+namespace artiso.AdsdHotel.Red.Contracts.Grpc
 {
     public static class Extensions
     {

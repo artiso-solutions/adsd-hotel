@@ -1,6 +1,6 @@
 using System;
 
-namespace artiso.AdsdHotel.Red.Contracts
+namespace artiso.AdsdHotel.Red.Contracts.Grpc
 {
     public sealed partial class Date
     {
@@ -17,5 +17,7 @@ namespace artiso.AdsdHotel.Red.Contracts
             Month = date.Month;
             Year = date.Year;
         }
+
+        public DateTime ToDateTime() => new(Year, Month, Day);
     }
 }
