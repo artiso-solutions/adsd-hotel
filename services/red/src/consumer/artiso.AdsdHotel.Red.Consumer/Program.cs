@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Red.Ambassador;
 using artiso.AdsdHotel.Red.Contracts;
-using Grpc.Net.Client;
-using Date = artiso.AdsdHotel.Red.Contracts.Date;
 
-namespace artiso.AdsdHotel.Red.Ambassador
+namespace artiso.AdsdHotel.Red.Consumer
 {
-    public class Program
+    public class RedConsumer
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
-        // ReSharper disable once UnusedParameter.Local
-        static async Task Main(string[] args)
+        public static async Task Main()
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var client = new Rates.RatesClient(channel);
-            List<string> cases = new List<string>(){"BedNBreakfast", "Honeymoon"};
+            var ambassador = RedAmbassadorFactory.Create();
+
+            List<string> cases = new() { "BedNBreakfast", "Honeymoon" };
             foreach (string s in cases)
             {
-                var reply = await client.GetRoomRatesByRoomTypeAsync(new GetRoomRatesByRoomTypeRequest
+                var reply = await ambassador.GetRoomRatesByRoomTypeAsync(new GetRoomRatesByRoomTypeRequest
                 {
                     RoomType = s
                 });
@@ -38,7 +35,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
                     EndDate = new Date(DateTime.Now + new TimeSpan(7))
                 };
                 inputRoomRatesRequest.RateItems.AddRange(reply.RateItems);
-                var inputRoomRatesResponse = await client.InputRoomRatesAsync(inputRoomRatesRequest);
+                var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(inputRoomRatesRequest);
                 if (inputRoomRatesResponse.Success)
                 {
                     Console.WriteLine($"Order for {s} successfully written");

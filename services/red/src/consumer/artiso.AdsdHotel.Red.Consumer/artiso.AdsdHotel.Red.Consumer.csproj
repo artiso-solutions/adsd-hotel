@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>artiso.AdsdHotel.Red.Consumer</RootNamespace>
+    <AssemblyName>artiso.AdsdHotel.Red.Consumer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
+</Project>

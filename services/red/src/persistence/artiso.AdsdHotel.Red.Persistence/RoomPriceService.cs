@@ -13,15 +13,21 @@ namespace artiso.AdsdHotel.Red.Persistence
         private readonly IDataStoreClient _dataStoreClientRoomType;
         private readonly IDataStoreClient _dataStoreClientRoomRate;
 
-        public RoomPriceService(MongoDBClientFactory mongoDbClientFactory)
+        public RoomPriceService(MongoDbClientFactory mongoDbClientFactory)
         {
             _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomType));
             _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRate));
 
-            var repopulate = true;
-            if (repopulate)
+            Repopulate();
+        }
+
+        private async void Repopulate()
+        {
+            var allRoomTypes =
+                await _dataStoreClientRoomType.GetAllAsync<RoomType>(ExpressionCombinationOperator.And, type => true);
+            if (allRoomTypes.Count == 0)
             {
-                _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "BedNBreakfast", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-001", new[]
                 {
                     new RateItem(Guid.NewGuid(), 50),
                     new RateItem(Guid.NewGuid(), 15)
@@ -29,11 +35,32 @@ namespace artiso.AdsdHotel.Red.Persistence
                 {
                     CancellationFee = new CancellationFee
                     {
-                        DeadLine = DateTime.Now,
                         FeeInPercentage = 5
                     }
                 }));
-                _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "Honeymoon", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-002", new[]
+                {
+                    new RateItem(Guid.NewGuid(), 50),
+                    new RateItem(Guid.NewGuid(), 35)
+                }, new ConfirmationDetails()
+                {
+                    CancellationFee = new CancellationFee
+                    {
+                        FeeInPercentage = 3
+                    }
+                }));
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-Q04", new[]
+                {
+                    new RateItem(Guid.NewGuid(), 100),
+                    new RateItem(Guid.NewGuid(), 35)
+                }, new ConfirmationDetails()
+                {
+                    CancellationFee = new CancellationFee
+                    {
+                        FeeInPercentage = 3
+                    }
+                }));
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-K02", new[]
                 {
                     new RateItem(Guid.NewGuid(), 500),
                     new RateItem(Guid.NewGuid(), 35),
@@ -42,7 +69,18 @@ namespace artiso.AdsdHotel.Red.Persistence
                 {
                     CancellationFee = new CancellationFee
                     {
-                        DeadLine = DateTime.Now,
+                        FeeInPercentage = 3
+                    }
+                }));
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-F05", new[]
+                {
+                    new RateItem(Guid.NewGuid(), 750),
+                    new RateItem(Guid.NewGuid(), 35),
+                    new RateItem(Guid.NewGuid(), 100)
+                }, new ConfirmationDetails()
+                {
+                    CancellationFee = new CancellationFee
+                    {
                         FeeInPercentage = 3
                     }
                 }));

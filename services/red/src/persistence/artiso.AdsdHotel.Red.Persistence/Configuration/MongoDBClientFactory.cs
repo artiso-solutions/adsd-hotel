@@ -4,11 +4,11 @@ using artiso.AdsdHotel.Red.Persistence.Extensions;
 
 namespace artiso.AdsdHotel.Red.Persistence.Configuration
 {
-    public class MongoDBClientFactory
+    public class MongoDbClientFactory
     {
         private readonly MongoDbConfig _config;
 
-        public MongoDBClientFactory(MongoDbConfig config)
+        public MongoDbClientFactory(MongoDbConfig config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
@@ -16,11 +16,6 @@ namespace artiso.AdsdHotel.Red.Persistence.Configuration
         public virtual IDataStoreClient GetClient(Type type)
         {
             if (_config.Database is null) throw new InvalidOperationException($"{nameof(_config)} must not be null!");
-
-            var auth = string.Empty;
-
-            if (_config.User.HasData() && _config.Password.HasData()) 
-                auth = $"{_config.User}:{_config.Password}@";
 
             var builder = new UriBuilder
             {

@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Contracts", "src\contracts\artiso.AdsdHotel.Red.Contracts.csproj", "{C6A2C628-E96F-4D96-9015-6B0D0D95877A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Consumer", "src\consumer\artiso.AdsdHotel.Red.Consumer\artiso.AdsdHotel.Red.Consumer.csproj", "{4D890210-6144-4B17-83FB-A251181A7CCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A2C628-E96F-4D96-9015-6B0D0D95877A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D890210-6144-4B17-83FB-A251181A7CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D890210-6144-4B17-83FB-A251181A7CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D890210-6144-4B17-83FB-A251181A7CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D890210-6144-4B17-83FB-A251181A7CCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

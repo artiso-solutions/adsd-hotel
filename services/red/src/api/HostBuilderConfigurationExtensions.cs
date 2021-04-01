@@ -57,7 +57,7 @@ namespace artiso.AdsdHotel.Red.Api
                 services.TryAddSingleton(sp =>
                 {
                     var config = AppSettingsHelper.GetSettings<MongoDbConfig>();
-                    return new MongoDBClientFactory(config);
+                    return new MongoDbClientFactory(config);
                 });
 
                 var conventions = new ConventionPack

@@ -2,6 +2,6 @@
 {
     public class ConfirmationDetails
     {
-        public CancellationFee CancellationFee = new CancellationFee();
+        public CancellationFee CancellationFee { get; init; } = new CancellationFee();
     }
 }

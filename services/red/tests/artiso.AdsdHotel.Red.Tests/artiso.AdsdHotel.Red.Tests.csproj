@@ -1,13 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Grpc.Core.Api" Version="2.36.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />

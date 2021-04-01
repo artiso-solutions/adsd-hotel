@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.ITOps.Communication.Abstraction;
-using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
@@ -16,12 +14,10 @@ namespace artiso.AdsdHotel.Red.Api.Service
     {
 
         private readonly IRoomPriceService _roomPriceService;
-        private readonly IChannel _channel;
 
         public RatesService(IRoomPriceService roomPriceService)
         {
             _roomPriceService = roomPriceService ?? throw new ArgumentNullException(nameof(roomPriceService));
-            _channel = NServiceBusChannelFactory.Create("Red.InputRoomRates", "test", "test");
         }
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request, ServerCallContext context)
@@ -59,8 +55,9 @@ namespace artiso.AdsdHotel.Red.Api.Service
                 await _roomPriceService.InputRoomRates(request.OrderId,
                     request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
                     request.RateItems.Select(rate => new RateItem(new Guid(rate.Id), rate.Price)));
-
-                await _channel.Publish(new OrderRateSelected(request.OrderId, rates));
+                
+                //Todo get channel
+//                await _channel.Publish(new OrderRateSelected(request.OrderId, rates)); 
 
                 return new InputRoomRatesReply
                 {
