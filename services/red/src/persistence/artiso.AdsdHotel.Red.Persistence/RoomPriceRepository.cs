@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
@@ -8,12 +7,12 @@ using artiso.AdsdHotel.Red.Persistence.Entities;
 
 namespace artiso.AdsdHotel.Red.Persistence
 {
-    public class RoomPriceService : IRoomPriceService
+    public class RoomPriceRepository : IRoomPriceRepository
     {
         private readonly IDataStoreClient _dataStoreClientRoomType;
         private readonly IDataStoreClient _dataStoreClientRoomRate;
 
-        public RoomPriceService(MongoDbClientFactory mongoDbClientFactory)
+        public RoomPriceRepository(MongoDbClientFactory mongoDbClientFactory)
         {
             _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomType));
             _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRate));
@@ -89,7 +88,7 @@ namespace artiso.AdsdHotel.Red.Persistence
 
         public async Task<List<RateItem>> GetRoomRatesByRoomType(string roomType)
         {
-            if (string.IsNullOrEmpty(roomType)) throw new ArgumentException(nameof(roomType));
+            if (string.IsNullOrEmpty(roomType)) throw new ArgumentNullException(nameof(roomType));
 
             var rateItem = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
             return rateItem?.Rates ?? new List<RateItem>();
@@ -104,7 +103,7 @@ namespace artiso.AdsdHotel.Red.Persistence
 
         public async Task<RoomType?> GetRoomTypeById<TResult>(string rateId)
         {
-            if (string.IsNullOrEmpty(rateId)) throw new ArgumentException(nameof(rateId));
+            if (string.IsNullOrEmpty(rateId)) throw new ArgumentNullException(nameof(rateId));
 
             var roomType = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Id.ToString().Equals(rateId));
             return roomType;

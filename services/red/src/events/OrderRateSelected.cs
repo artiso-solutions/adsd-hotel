@@ -2,5 +2,5 @@
 
 namespace artiso.AdsdHotel.Red.Events
 {
-    public record OrderRateSelected(string OrderId, Rate GuestInformation);
+    public record OrderRateSelected(string OrderId, Rate Rate);
 }

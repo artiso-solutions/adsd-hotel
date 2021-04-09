@@ -14,27 +14,27 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
     internal class RoomSelectedHandler
     {
         private readonly EndpointHolder _holder;
-        private readonly IRoomPriceService _roomPriceService;
+        private readonly IRoomPriceRepository _roomPriceRepository;
 
-        public static RoomSelectedHandler Create(IRoomPriceService roomPriceService)
+        public static RoomSelectedHandler Create(IRoomPriceRepository roomPriceRepository)
         {
             // TODO: read rabbitMqConnectionString from settings.
             var config = NServiceBusEndpointConfigurationFactory.Create("Red.Api", "host=localhost", useCallbacks: false);
             var holder = new EndpointHolder(Endpoint.Start(config));
-            return new RoomSelectedHandler(holder, roomPriceService);
+            return new RoomSelectedHandler(holder, roomPriceRepository);
         }
 
-        private RoomSelectedHandler(EndpointHolder holder, IRoomPriceService roomPriceService)
+        private RoomSelectedHandler(EndpointHolder holder, IRoomPriceRepository roomPriceRepository)
         {
             _holder = holder;
-            _roomPriceService = roomPriceService;
+            _roomPriceRepository = roomPriceRepository;
         }
 
         public async Task Handle(InputRoomRatesRequest request)
         {
             var rates = await GetRatesForRequest(request);
 
-            await _roomPriceService.InputRoomRates(request.OrderId,
+            await _roomPriceRepository.InputRoomRates(request.OrderId,
                 request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
                 request.RateItems.Select(rate => new Persistence.Entities.RateItem(new Guid(rate.Id), rate.Price)));
 
@@ -46,7 +46,7 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
             decimal price = 0;
             decimal cancellationFee = 0;
             foreach (var task in request.RateItems.Select(async rate =>
-                await _roomPriceService.GetRoomTypeById<RoomType>(rate.Id)))
+                await _roomPriceRepository.GetRoomTypeById<RoomType>(rate.Id)))
             {
                 var roomType = await task;
                 if (roomType is null) continue;

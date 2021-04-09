@@ -5,7 +5,7 @@ using artiso.AdsdHotel.Red.Persistence.Entities;
 
 namespace artiso.AdsdHotel.Red.Persistence
 {
-    public interface IRoomPriceService
+    public interface IRoomPriceRepository
     {
         Task<List<RateItem>> GetRoomRatesByRoomType(string roomType);
 

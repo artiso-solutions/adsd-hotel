@@ -17,7 +17,7 @@
 //        [TestMethod]
 //        public async Task TotalPriceSumTest()
 //        {
-//            var dbMock = new Mock<IRoomPriceService>();
+//            var dbMock = new Mock<IRoomPriceRepository>();
 //            dbMock.Setup(priceService => priceService.GetRoomRatesByRoomType(It.IsAny<string>())).Returns(() => Task.FromResult(new List<RateItem>(){
 //                new RateItem(Guid.NewGuid(), 50),
 //                new RateItem(Guid.NewGuid(), 15)
@@ -31,7 +31,7 @@
 //        [TestMethod]
 //        public void EmptyTypeTest()
 //        {
-//            var dbMock = new Mock<IRoomPriceService>();
+//            var dbMock = new Mock<IRoomPriceRepository>();
 //            var contextMock = new Mock<ServerCallContext>();
 //            var service = new RatesService(dbMock.Object);
 //            Assert.ThrowsExceptionAsync<ArgumentException>(() => service.GetRoomRatesByRoomType(new GetRoomRatesByRoomTypeRequest() {RoomType = ""},

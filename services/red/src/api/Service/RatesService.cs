@@ -10,18 +10,20 @@ namespace artiso.AdsdHotel.Red.Api.Service
 {
     public sealed class RatesService : Rates.RatesBase
     {
-        private readonly IRoomPriceService _roomPriceService;
+        private readonly IRoomPriceRepository _roomPriceRepository;
         private readonly RoomSelectedHandler _roomSelectedHandler;
 
-        public RatesService(IRoomPriceService roomPriceService)
+        public RatesService(IRoomPriceRepository roomPriceRepository)
         {
-            _roomPriceService = roomPriceService;
-            _roomSelectedHandler = RoomSelectedHandler.Create(roomPriceService);
+            _roomPriceRepository = roomPriceRepository;
+            _roomSelectedHandler = RoomSelectedHandler.Create(roomPriceRepository);
         }
 
-        public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(GetRoomRatesByRoomTypeRequest request, ServerCallContext context)
+        public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(
+            GetRoomRatesByRoomTypeRequest request,
+            ServerCallContext context)
         {
-            var rateItems = await _roomPriceService.GetRoomRatesByRoomType(request.RoomType);
+            var rateItems = await _roomPriceRepository.GetRoomRatesByRoomType(request.RoomType);
 
             var grpcRateItems = rateItems.Select(x => new RoomItem
             {
