@@ -1,6 +1,5 @@
 ﻿using System;
 using artiso.AdsdHotel.ITOps.NoSql;
-using artiso.AdsdHotel.Red.Persistence.Extensions;
 
 namespace artiso.AdsdHotel.Red.Persistence.Configuration
 {
@@ -12,7 +11,7 @@ namespace artiso.AdsdHotel.Red.Persistence.Configuration
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
-        
+
         public virtual IDataStoreClient GetClient(Type type)
         {
             if (_config.Database is null) throw new InvalidOperationException($"{nameof(_config)} must not be null!");
@@ -25,9 +24,8 @@ namespace artiso.AdsdHotel.Red.Persistence.Configuration
                 UserName = _config.User,
                 Password = _config.Password
             };
-                
+
             var collectionName = type.NameForCollection();
-            
             return new MongoDataStoreClient(builder.Uri, _config.Database, collectionName);
         }
     }
