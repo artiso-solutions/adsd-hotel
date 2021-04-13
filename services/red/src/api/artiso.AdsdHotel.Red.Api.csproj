@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>artiso.AdsdHotel.Red.Api.Program</StartupObject>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="**/*.proto" GrpcServices="Server" />
+    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
+    <ProjectReference Include="..\contracts\artiso.AdsdHotel.Red.Contracts.csproj" />
+    <ProjectReference Include="..\events\artiso.AdsdHotel.Red.Events.csproj" />
+    <ProjectReference Include="..\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,10 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
-    <ProjectReference Include="..\contracts\artiso.AdsdHotel.Red.Contracts.csproj" />
-    <ProjectReference Include="..\events\artiso.AdsdHotel.Red.Events.csproj" />
-    <ProjectReference Include="..\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj" />
+    <Protobuf Include="**/*.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>
