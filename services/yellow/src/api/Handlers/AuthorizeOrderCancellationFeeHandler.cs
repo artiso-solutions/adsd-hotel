@@ -39,6 +39,11 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
             return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
         }
+        
+        protected override object Fail(AuthorizeOrderCancellationFeeRequest requestMessage)
+        {
+            return new AuthorizeOrderCancellationFeeFailed(requestMessage.OrderId);
+        }
 
         protected override ValidationModelResult<AuthorizeOrderCancellationFeeRequest> ValidateRequest(AuthorizeOrderCancellationFeeRequest message)
         {

@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
-using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using NServiceBus.Testing;
 using NUnit.Framework;
@@ -33,6 +32,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
 
     public class MockHandler : AbstractPaymentHandler<MockRequest, MockResponse>
     {
+        protected override object Fail(MockRequest requestMessage)
+        {
+            return new();
+        }
+
         protected override Task<MockResponse> Handle(MockRequest message)
         {
             return Task.FromResult(new MockResponse()

@@ -135,15 +135,16 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            var r = context.PublishedMessages[0].Message as Response<OrderFullAmountCharged>;
-
-            Assert.NotNull(r!.Exception);
-            Assert.False(r.IsSuccessful);
-            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            Assert.IsInstanceOf<ValidationException>(r.Exception);
-
-            await TestContext.Out.WriteLineAsync(
-                $"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            var r = context.PublishedMessages[0].Message as ChargeForOrderFullAmountFailed;
+            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(r);
+            
+            // Assert.NotNull(r!.Exception);
+            // Assert.False(r.IsSuccessful);
+            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            // Assert.IsInstanceOf<ValidationException>(r.Exception);
+            //
+            // await TestContext.Out.WriteLineAsync(
+            //     $"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
         }
         
         #region InvalidRequestTestCaseSources
@@ -223,14 +224,15 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            var r = context.PublishedMessages[0].Message as Response<OrderFullAmountCharged>;
-
-            Assert.NotNull(r!.Exception, "Exception not thrown");
-            Assert.False(r.IsSuccessful);
-            Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            Assert.IsInstanceOf<InvalidOperationException>(r.Exception);
+            var r = context.PublishedMessages[0].Message as ChargeForOrderFullAmountFailed;
+            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(r);
             
-            await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            // Assert.NotNull(r!.Exception, "Exception not thrown");
+            // Assert.False(r.IsSuccessful);
+            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
+            // Assert.IsInstanceOf<InvalidOperationException>(r.Exception);
+            
+            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
         }
         
         

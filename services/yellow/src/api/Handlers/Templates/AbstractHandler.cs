@@ -6,7 +6,7 @@ using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 {
-    public abstract class AbstractHandler<TRequestMessage, TResponseMessage> : IHandleMessages<TRequestMessage>
+    public abstract class AbstractHandler<TRequestMessage, TResponseEvent> : IHandleMessages<TRequestMessage>
     {
         public async Task Handle(TRequestMessage message, IMessageHandlerContext context)
         {
@@ -17,24 +17,29 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
                 if (!validateResult.IsValid())
                     throw new ValidationException(validateResult);
 
-                var result = await Handle(message);
+                var eventMessage = await Handle(message);
+                
+                await context.Publish(eventMessage);
 
-                Response<TResponseMessage> responseMessage = new(result);
-
-                // TODO : Returns only a dumb response (publish the important one)
-                await context.Publish(responseMessage);
-                await context.Reply(responseMessage);
+                Response<TResponseEvent> response = new(eventMessage);
+                
+                await context.Reply(response);
             }
             catch (Exception e)
             {
-                var failedResponseMessage = new Response<TResponseMessage>(e);
+                var eventMessage = Fail(message);
                 
-                await context.Publish(failedResponseMessage);
+                await context.Publish(eventMessage);
+                
+                var failedResponseMessage = new Response<TResponseEvent>(e);
+                
                 await context.Reply(failedResponseMessage);
             }
         }
 
-        protected abstract Task<TResponseMessage> Handle(TRequestMessage message);
+        protected abstract object Fail(TRequestMessage requestMessage);
+
+        protected abstract Task<TResponseEvent> Handle(TRequestMessage message);
         
         protected virtual ValidationModelResult<TRequestMessage> ValidateRequest(TRequestMessage message) => message.Validate();
 

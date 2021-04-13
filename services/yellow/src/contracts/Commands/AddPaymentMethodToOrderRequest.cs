@@ -9,5 +9,7 @@ namespace artiso.AdsdHotel.Yellow.Contracts.Commands
         string OrderId,
         PaymentMethod PaymentMethod);
 
-    public record PaymentMethodToOrderAdded();
+    public record PaymentMethodToOrderAdded(string OrderId);
+    
+    public record AddPaymentMethodToOrderFailed(string OrderId);
 }
