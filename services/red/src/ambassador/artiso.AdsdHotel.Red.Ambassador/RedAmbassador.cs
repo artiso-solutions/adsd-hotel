@@ -13,7 +13,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
 
         internal RedAmbassador(string uri)
         {
-            using var channel = GrpcChannel.ForAddress(uri);
+            var channel = GrpcChannel.ForAddress(uri);
             _ratesClient = new Contracts.Grpc.Rates.RatesClient(channel);
         }
 
