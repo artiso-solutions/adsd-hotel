@@ -7,11 +7,11 @@ namespace artiso.AdsdHotel.Red.Persistence
 {
     public interface IRoomPriceRepository
     {
-        Task<List<RateItem>> GetRoomRatesByRoomType(string roomType);
+        Task<List<RateItemEntity>> GetRoomRatesByRoomType(string roomType);
 
-        Task<RoomRate> InputRoomRates(string orderId, DateTime startDate, DateTime endDate,
-            IEnumerable<RateItem> enumerable);
+        Task<RoomRateEntity> InputRoomRates(string orderId, DateTime startDate, DateTime endDate,
+            IEnumerable<RateItemEntity> enumerable);
 
-        Task<RoomType?> GetRoomTypeById<TResult>(string rateId);
+        Task<RoomTypeEntity?> GetRoomTypeById<TResult>(string rateId);
     }
 }

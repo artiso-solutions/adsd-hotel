@@ -5,24 +5,24 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
-    public class RoomType
+    public class RoomTypeEntity
     {
         [BsonId]
         public Guid Id { get; internal set; }
 
         [BsonElement]
-        public List<RateItem> Rates { get; internal set; }
+        public List<RateItemEntity> Rates { get; internal set; }
 
         [BsonElement]
         public string Type { get; internal set; }
 
-        public ConfirmationDetails ConfirmationDetails { get; internal set; }
+        public ConfirmationDetailsEntity ConfirmationDetailsEntity { get; internal set; }
 
-        public RoomType(Guid id, string type, IEnumerable<RateItem> rates, ConfirmationDetails confirmationDetails)
+        public RoomTypeEntity(Guid id, string type, IEnumerable<RateItemEntity> rates, ConfirmationDetailsEntity confirmationDetailsEntity)
         {
             Id = id;
             Type = type;
-            ConfirmationDetails = confirmationDetails;
+            ConfirmationDetailsEntity = confirmationDetailsEntity;
             Rates = rates.ToList();
         }
 

@@ -35,7 +35,7 @@ namespace artiso.AdsdHotel.Red.Api
             var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
 
             builder.UseConsoleLifetime();
-            builder.UseNServiceBus(ctx =>
+            builder.UseNServiceBus(_ =>
             {
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Red.Api",
@@ -54,7 +54,7 @@ namespace artiso.AdsdHotel.Red.Api
 
             static void Configure(IServiceCollection services)
             {
-                services.TryAddSingleton(sp =>
+                services.TryAddSingleton(_ =>
                 {
                     var config = AppSettingsHelper.GetSettings<MongoDbConfig>();
                     return new MongoDbClientFactory(config);
@@ -67,7 +67,7 @@ namespace artiso.AdsdHotel.Red.Api
                     new EnumRepresentationConvention(BsonType.String),
                 };
 
-                ConventionRegistry.Register("DefaultConventions", conventions, filter: type => true);
+                ConventionRegistry.Register("DefaultConventions", conventions, filter: _ => true);
             }
         }
 

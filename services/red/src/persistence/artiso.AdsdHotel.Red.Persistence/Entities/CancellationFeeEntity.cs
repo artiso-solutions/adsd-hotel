@@ -2,7 +2,7 @@
 
 namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
-    public class CancellationFee
+    public class CancellationFeeEntity
     {
         public DateTime DeadLine { get; set; }
 

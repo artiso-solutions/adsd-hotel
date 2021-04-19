@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <Protobuf Include="**/*.proto" GrpcServices="Server" />
-    <Protobuf Update="Protos\rates.proto" GrpcServices="Both" />
+    <Protobuf Update="grpc\rates.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

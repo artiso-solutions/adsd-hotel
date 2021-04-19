@@ -35,10 +35,10 @@ namespace artiso.AdsdHotel.Red.Api.Service
             {
                 RoomRates =
                 {
-                    new Contracts.Grpc.RoomRate
+                    new RoomRate
                     {
                         Id = "rate1",
-                        CancellationFee = new Contracts.Grpc.CancellationFee()
+                        CancellationFee = new CancellationFee()
                         {
                             DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0,0,0)),
                             FeeInPercentage = 5

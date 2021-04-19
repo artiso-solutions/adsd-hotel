@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
+using artiso.AdsdHotel.Red.Api.Configuration;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
@@ -18,8 +19,8 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
 
         public static RoomSelectedHandler Create(IRoomPriceRepository roomPriceRepository)
         {
-            // TODO: read rabbitMqConnectionString from settings.
-            var config = NServiceBusEndpointConfigurationFactory.Create("Red.Api", "host=localhost", useCallbacks: false);
+            var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
+            var config = NServiceBusEndpointConfigurationFactory.Create("Red.Api", busConfiguration.ToString(), useCallbacks: false);
             var holder = new EndpointHolder(Endpoint.Start(config));
             return new RoomSelectedHandler(holder, roomPriceRepository);
         }
@@ -36,7 +37,7 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
 
             await _roomPriceRepository.InputRoomRates(request.OrderId,
                 request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
-                request.RateItems.Select(rate => new Persistence.Entities.RateItem(new Guid(rate.Id), rate.Price)));
+                request.RateItems.Select(rate => new RateItemEntity(new Guid(rate.Id), rate.Price)));
 
             await NotifyOrderRateSelected(request.OrderId, rates);
         }
@@ -46,13 +47,13 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
             decimal price = 0;
             decimal cancellationFee = 0;
             foreach (var task in request.RateItems.Select(async rate =>
-                await _roomPriceRepository.GetRoomTypeById<RoomType>(rate.Id)))
+                await _roomPriceRepository.GetRoomTypeById<RoomTypeEntity>(rate.Id)))
             {
                 var roomType = await task;
                 if (roomType is null) continue;
 
                 price += (decimal)roomType.Price;
-                cancellationFee += (decimal)(roomType.ConfirmationDetails.CancellationFee.FeeInPercentage / 100f *
+                cancellationFee += (decimal)(roomType.ConfirmationDetailsEntity.CancellationFeeEntity.FeeInPercentage / 100f *
                                               roomType.Price);
             }
 

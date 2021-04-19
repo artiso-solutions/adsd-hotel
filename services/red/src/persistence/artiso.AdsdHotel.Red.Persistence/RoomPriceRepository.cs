@@ -14,8 +14,8 @@ namespace artiso.AdsdHotel.Red.Persistence
 
         public RoomPriceRepository(MongoDbClientFactory mongoDbClientFactory)
         {
-            _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomType));
-            _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRate));
+            _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomTypeEntity));
+            _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRateEntity));
 
             Repopulate();
         }
@@ -23,62 +23,62 @@ namespace artiso.AdsdHotel.Red.Persistence
         private async void Repopulate()
         {
             var allRoomTypes =
-                await _dataStoreClientRoomType.GetAllAsync<RoomType>(ExpressionCombinationOperator.And, type => true);
+                await _dataStoreClientRoomType.GetAllAsync<RoomTypeEntity>(ExpressionCombinationOperator.And, type => true);
             if (allRoomTypes.Count == 0)
             {
-                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-001", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomTypeEntity(Guid.NewGuid(), "RMTY-001", new[]
                 {
-                    new RateItem(Guid.NewGuid(), 50),
-                    new RateItem(Guid.NewGuid(), 15)
-                }, new ConfirmationDetails()
+                    new RateItemEntity(Guid.NewGuid(), 50),
+                    new RateItemEntity(Guid.NewGuid(), 15)
+                }, new ConfirmationDetailsEntity()
                 {
-                    CancellationFee = new CancellationFee
+                    CancellationFeeEntity = new CancellationFeeEntity
                     {
                         FeeInPercentage = 5
                     }
                 }));
-                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-002", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomTypeEntity(Guid.NewGuid(), "RMTY-002", new[]
                 {
-                    new RateItem(Guid.NewGuid(), 50),
-                    new RateItem(Guid.NewGuid(), 35)
-                }, new ConfirmationDetails()
+                    new RateItemEntity(Guid.NewGuid(), 50),
+                    new RateItemEntity(Guid.NewGuid(), 35)
+                }, new ConfirmationDetailsEntity()
                 {
-                    CancellationFee = new CancellationFee
+                    CancellationFeeEntity = new CancellationFeeEntity
                     {
                         FeeInPercentage = 3
                     }
                 }));
-                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-Q04", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomTypeEntity(Guid.NewGuid(), "RMTY-Q04", new[]
                 {
-                    new RateItem(Guid.NewGuid(), 100),
-                    new RateItem(Guid.NewGuid(), 35)
-                }, new ConfirmationDetails()
+                    new RateItemEntity(Guid.NewGuid(), 100),
+                    new RateItemEntity(Guid.NewGuid(), 35)
+                }, new ConfirmationDetailsEntity()
                 {
-                    CancellationFee = new CancellationFee
+                    CancellationFeeEntity = new CancellationFeeEntity
                     {
                         FeeInPercentage = 3
                     }
                 }));
-                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-K02", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomTypeEntity(Guid.NewGuid(), "RMTY-K02", new[]
                 {
-                    new RateItem(Guid.NewGuid(), 500),
-                    new RateItem(Guid.NewGuid(), 35),
-                    new RateItem(Guid.NewGuid(), 50)
-                }, new ConfirmationDetails()
+                    new RateItemEntity(Guid.NewGuid(), 500),
+                    new RateItemEntity(Guid.NewGuid(), 35),
+                    new RateItemEntity(Guid.NewGuid(), 50)
+                }, new ConfirmationDetailsEntity()
                 {
-                    CancellationFee = new CancellationFee
+                    CancellationFeeEntity = new CancellationFeeEntity
                     {
                         FeeInPercentage = 3
                     }
                 }));
-                await _dataStoreClientRoomType.InsertOneAsync(new RoomType(Guid.NewGuid(), "RMTY-F05", new[]
+                await _dataStoreClientRoomType.InsertOneAsync(new RoomTypeEntity(Guid.NewGuid(), "RMTY-F05", new[]
                 {
-                    new RateItem(Guid.NewGuid(), 750),
-                    new RateItem(Guid.NewGuid(), 35),
-                    new RateItem(Guid.NewGuid(), 100)
-                }, new ConfirmationDetails()
+                    new RateItemEntity(Guid.NewGuid(), 750),
+                    new RateItemEntity(Guid.NewGuid(), 35),
+                    new RateItemEntity(Guid.NewGuid(), 100)
+                }, new ConfirmationDetailsEntity()
                 {
-                    CancellationFee = new CancellationFee
+                    CancellationFeeEntity = new CancellationFeeEntity
                     {
                         FeeInPercentage = 3
                     }
@@ -86,26 +86,26 @@ namespace artiso.AdsdHotel.Red.Persistence
             }
         }
 
-        public async Task<List<RateItem>> GetRoomRatesByRoomType(string roomType)
+        public async Task<List<RateItemEntity>> GetRoomRatesByRoomType(string roomType)
         {
             if (string.IsNullOrEmpty(roomType)) throw new ArgumentNullException(nameof(roomType));
 
-            var rateItem = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
-            return rateItem?.Rates ?? new List<RateItem>();
+            var rateItem = await _dataStoreClientRoomType.GetAsync<RoomTypeEntity>(ExpressionCombinationOperator.And, type => type.Type.Equals(roomType));
+            return rateItem?.Rates ?? new List<RateItemEntity>();
         }
 
-        public async Task<RoomRate> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<RateItem> enumerable)
+        public async Task<RoomRateEntity> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<RateItemEntity> enumerable)
         {
-            var roomRate = new RoomRate(orderId, startDate, endDate, enumerable);
+            var roomRate = new RoomRateEntity(orderId, startDate, endDate, enumerable);
             await _dataStoreClientRoomRate.InsertOneAsync(roomRate)!;
             return roomRate;
         }
 
-        public async Task<RoomType?> GetRoomTypeById<TResult>(string rateId)
+        public async Task<RoomTypeEntity?> GetRoomTypeById<TResult>(string rateId)
         {
             if (string.IsNullOrEmpty(rateId)) throw new ArgumentNullException(nameof(rateId));
 
-            var roomType = await _dataStoreClientRoomType.GetAsync<RoomType>(ExpressionCombinationOperator.And, type => type.Id.ToString().Equals(rateId));
+            var roomType = await _dataStoreClientRoomType.GetAsync<RoomTypeEntity>(ExpressionCombinationOperator.And, type => type.Id.ToString().Equals(rateId));
             return roomType;
         }
     }

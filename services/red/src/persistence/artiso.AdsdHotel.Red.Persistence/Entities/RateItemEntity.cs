@@ -2,13 +2,13 @@
 
 namespace artiso.AdsdHotel.Red.Persistence.Entities
 {
-    public class RateItem
+    public class RateItemEntity
     {
         public Guid Id { get; internal set; }
 
         public float Price { get; internal set; }
 
-        public RateItem(Guid id, float price)
+        public RateItemEntity(Guid id, float price)
         {
             Id = id;
             Price = price;
