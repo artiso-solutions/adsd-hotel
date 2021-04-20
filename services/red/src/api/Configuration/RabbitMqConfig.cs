@@ -21,7 +21,7 @@ namespace artiso.AdsdHotel.Red.Api.Configuration
                 sb.Append($";username={User}");
 
             if (!string.IsNullOrWhiteSpace(Password))
-                sb.Append($";username={Password}");
+                sb.Append($";password={Password}");
 
             var cs = sb.ToString();
             return cs;
