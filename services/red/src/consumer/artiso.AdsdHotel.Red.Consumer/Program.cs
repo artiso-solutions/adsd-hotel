@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Ambassador;
-using artiso.AdsdHotel.Red.Contracts.Grpc;
 
 namespace artiso.AdsdHotel.Red.Consumer
 {

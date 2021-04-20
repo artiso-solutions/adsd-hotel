@@ -10,13 +10,11 @@ namespace artiso.AdsdHotel.Red.Api.Service
 {
     public sealed class RatesService : Rates.RatesBase
     {
-        private readonly IRoomRepository _roomRepository;
         private readonly RoomSelectedHandler _roomSelectedHandler;
         private readonly GetRoomRatesByRoomTypeHandler _getRoomRateByRoomTypeTypeHandler;
 
         public RatesService(IRoomRepository roomRepository)
         {
-            _roomRepository = roomRepository;
             _roomSelectedHandler = RoomSelectedHandler.Create(roomRepository);
             _getRoomRateByRoomTypeTypeHandler = GetRoomRatesByRoomTypeHandler.Create(roomRepository);
         }
@@ -40,7 +38,7 @@ namespace artiso.AdsdHotel.Red.Api.Service
                     new RoomRate
                     {
                         Id = "rate1",
-                        CancellationFee = new CancellationFee()
+                        CancellationFee = new CancellationFee
                         {
                             DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0, 0, 0)),
                             FeeInPercentage = 5

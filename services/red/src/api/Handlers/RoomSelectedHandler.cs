@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Api.Configuration;
@@ -7,7 +6,6 @@ using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
-using artiso.AdsdHotel.Red.Persistence.Entities;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Red.Api.Handlers
@@ -34,37 +32,32 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
         public async Task Handle(InputRoomRatesRequest request)
         {
             var rates = await GetRatesForRequest(request);
+            
+                await _roomRepository.InputRoomRates(request.OrderId,
+                    request.StartDate.ToDateTime(), request.EndDate.ToDateTime(), request.RoomRateId);
 
-            await _roomRepository.InputRoomRates(request.OrderId,
-                request.StartDate.ToDateTime(), request.EndDate.ToDateTime(),
-                request.RateItems.Select(rate => new RateItemEntity(new Guid(rate.Id), rate.Price)));
-
-            await NotifyOrderRateSelected(request.OrderId, rates);
+                await NotifyOrderRateSelected(request.OrderId, rates);
         }
 
         private async Task<Rate> GetRatesForRequest(InputRoomRatesRequest request)
         {
-            decimal price = 0;
-            decimal cancellationFee = 0;
-            foreach (var task in request.RateItems.Select(async rate =>
-                await _roomRepository.GetRoomTypeById<RoomTypeEntity>(rate.Id)))
-            {
-                var roomType = await task;
-                if (roomType is null) continue;
 
-                price += (decimal)roomType.Price;
-                cancellationFee += (decimal)(roomType.ConfirmationDetailsEntity.CancellationFeeEntity.FeeInPercentage / 100f *
-                                              roomType.Price);
-            }
+            var roomTypeEntity = await _roomRepository.GetRoomTypeById(request.RoomRateId);
+
+            float price = roomTypeEntity?.Rates.Select(rate => rate.Price).Sum() ?? 0;
+
+            float cancellationFee = roomTypeEntity?.Rates.Select(rate =>
+                    roomTypeEntity.ConfirmationDetailsEntity.CancellationFeeEntity.FeeInPercentage / 100f * rate.Price)
+                .Sum() ?? 0;
 
             var days = (request.EndDate.ToDateTime() - request.StartDate.ToDateTime()).Days;
             price *= days;
             cancellationFee *= days;
 
-            return new Rate(new Price()
+            return new Rate(new Price
             {
-                Amount = price,
-                CancellationFee = cancellationFee
+                Amount = (decimal) price,
+                CancellationFee = (decimal) cancellationFee
             });
         }
 

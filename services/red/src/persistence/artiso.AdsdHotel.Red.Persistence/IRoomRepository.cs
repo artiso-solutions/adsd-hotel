@@ -10,8 +10,8 @@ namespace artiso.AdsdHotel.Red.Persistence
         Task<List<RateItemEntity>> GetRoomRatesByRoomType(string roomType);
 
         Task<RoomRateEntity> InputRoomRates(string orderId, DateTime startDate, DateTime endDate,
-            IEnumerable<RateItemEntity> enumerable);
+            string roomRateId);
 
-        Task<RoomTypeEntity?> GetRoomTypeById<TResult>(string rateId);
+        Task<RoomTypeEntity?> GetRoomTypeById(string rateId);
     }
 }

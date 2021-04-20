@@ -30,7 +30,7 @@ namespace artiso.AdsdHotel.Red.Persistence
                 {
                     new RateItemEntity(Guid.NewGuid(), 50),
                     new RateItemEntity(Guid.NewGuid(), 15)
-                }, new ConfirmationDetailsEntity()
+                }, new ConfirmationDetailsEntity
                 {
                     CancellationFeeEntity = new CancellationFeeEntity
                     {
@@ -41,7 +41,7 @@ namespace artiso.AdsdHotel.Red.Persistence
                 {
                     new RateItemEntity(Guid.NewGuid(), 50),
                     new RateItemEntity(Guid.NewGuid(), 35)
-                }, new ConfirmationDetailsEntity()
+                }, new ConfirmationDetailsEntity
                 {
                     CancellationFeeEntity = new CancellationFeeEntity
                     {
@@ -52,7 +52,7 @@ namespace artiso.AdsdHotel.Red.Persistence
                 {
                     new RateItemEntity(Guid.NewGuid(), 100),
                     new RateItemEntity(Guid.NewGuid(), 35)
-                }, new ConfirmationDetailsEntity()
+                }, new ConfirmationDetailsEntity
                 {
                     CancellationFeeEntity = new CancellationFeeEntity
                     {
@@ -64,7 +64,7 @@ namespace artiso.AdsdHotel.Red.Persistence
                     new RateItemEntity(Guid.NewGuid(), 500),
                     new RateItemEntity(Guid.NewGuid(), 35),
                     new RateItemEntity(Guid.NewGuid(), 50)
-                }, new ConfirmationDetailsEntity()
+                }, new ConfirmationDetailsEntity
                 {
                     CancellationFeeEntity = new CancellationFeeEntity
                     {
@@ -76,7 +76,7 @@ namespace artiso.AdsdHotel.Red.Persistence
                     new RateItemEntity(Guid.NewGuid(), 750),
                     new RateItemEntity(Guid.NewGuid(), 35),
                     new RateItemEntity(Guid.NewGuid(), 100)
-                }, new ConfirmationDetailsEntity()
+                }, new ConfirmationDetailsEntity
                 {
                     CancellationFeeEntity = new CancellationFeeEntity
                     {
@@ -94,14 +94,14 @@ namespace artiso.AdsdHotel.Red.Persistence
             return rateItem?.Rates ?? new List<RateItemEntity>();
         }
 
-        public async Task<RoomRateEntity> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, IEnumerable<RateItemEntity> enumerable)
+        public async Task<RoomRateEntity> InputRoomRates(string orderId, DateTime startDate, DateTime endDate, string roomRateId)
         {
-            var roomRate = new RoomRateEntity(orderId, startDate, endDate, enumerable);
+            var roomRate = new RoomRateEntity(orderId, startDate, endDate, roomRateId);
             await _dataStoreClientRoomRate.InsertOneAsync(roomRate)!;
             return roomRate;
         }
 
-        public async Task<RoomTypeEntity?> GetRoomTypeById<TResult>(string rateId)
+        public async Task<RoomTypeEntity?> GetRoomTypeById(string rateId)
         {
             if (string.IsNullOrEmpty(rateId)) throw new ArgumentNullException(nameof(rateId));
 

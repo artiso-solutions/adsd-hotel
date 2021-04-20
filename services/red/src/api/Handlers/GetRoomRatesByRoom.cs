@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Api.Configuration;
-using artiso.AdsdHotel.Red.Contracts;
-using artiso.AdsdHotel.Red.Contracts.Grpc;
-using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Entities;
 using NServiceBus;
-using CancellationFee = artiso.AdsdHotel.Red.Contracts.Grpc.CancellationFee;
-using RoomRate = artiso.AdsdHotel.Red.Contracts.Grpc.RoomRate;
 
 namespace artiso.AdsdHotel.Red.Api.Handlers
 {

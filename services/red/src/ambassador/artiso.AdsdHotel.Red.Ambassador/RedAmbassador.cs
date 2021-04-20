@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
-using Google.Protobuf.Collections;
 using Grpc.Net.Client;
 using CancellationFee = artiso.AdsdHotel.Red.Contracts.CancellationFee;
 using RoomRate = artiso.AdsdHotel.Red.Contracts.RoomRate;
@@ -13,12 +12,12 @@ namespace artiso.AdsdHotel.Red.Ambassador
 {
     public class RedAmbassador
     {
-        private readonly Contracts.Grpc.Rates.RatesClient _ratesClient;
+        private readonly Rates.RatesClient _ratesClient;
 
         internal RedAmbassador(string uri)
         {
             var channel = GrpcChannel.ForAddress(uri);
-            _ratesClient = new Contracts.Grpc.Rates.RatesClient(channel);
+            _ratesClient = new Rates.RatesClient(channel);
         }
 
         public async Task<IReadOnlyList<RoomRate>> GetRoomRatesByRoomTypeAsync(
@@ -29,7 +28,7 @@ namespace artiso.AdsdHotel.Red.Ambassador
             if (string.IsNullOrWhiteSpace(roomType))
                 throw new ArgumentNullException(nameof(roomType));
 
-            var request = new Contracts.Grpc.GetRoomRatesByRoomTypeRequest { RoomType = roomType, StartDate = new(startDate), EndDate = new(endDate) };
+            var request = new GetRoomRatesByRoomTypeRequest { RoomType = roomType, StartDate = new(startDate), EndDate = new(endDate) };
             var response = await _ratesClient.GetRoomRatesByRoomTypeAsync(request);
 
             var roomRates = response.RoomRates.Select(rate => new RoomRate
