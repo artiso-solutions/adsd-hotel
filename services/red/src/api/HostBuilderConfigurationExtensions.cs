@@ -79,7 +79,7 @@ namespace artiso.AdsdHotel.Red.Api
 
             static void Configure(IServiceCollection services)
             {
-                services.TryAddSingleton<IRoomPriceRepository, RoomPriceRepository>();
+                services.TryAddSingleton<IRoomRepository, RoomRepository>();
             }
         }
     }

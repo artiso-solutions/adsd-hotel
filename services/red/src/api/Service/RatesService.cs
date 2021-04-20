@@ -10,22 +10,24 @@ namespace artiso.AdsdHotel.Red.Api.Service
 {
     public sealed class RatesService : Rates.RatesBase
     {
-        private readonly IRoomPriceRepository _roomPriceRepository;
+        private readonly IRoomRepository _roomRepository;
         private readonly RoomSelectedHandler _roomSelectedHandler;
+        private readonly GetRoomRatesByRoomTypeHandler _getRoomRateByRoomTypeTypeHandler;
 
-        public RatesService(IRoomPriceRepository roomPriceRepository)
+        public RatesService(IRoomRepository roomRepository)
         {
-            _roomPriceRepository = roomPriceRepository;
-            _roomSelectedHandler = RoomSelectedHandler.Create(roomPriceRepository);
+            _roomRepository = roomRepository;
+            _roomSelectedHandler = RoomSelectedHandler.Create(roomRepository);
+            _getRoomRateByRoomTypeTypeHandler = GetRoomRatesByRoomTypeHandler.Create(roomRepository);
         }
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(
             GetRoomRatesByRoomTypeRequest request,
             ServerCallContext context)
         {
-            var rateItems = await _roomPriceRepository.GetRoomRatesByRoomType(request.RoomType);
+            var rateItemsEntities = await _getRoomRateByRoomTypeTypeHandler.Handle(request.RoomType);
 
-            var grpcRateItems = rateItems.Select(x => new RoomItem
+            var rateItems = rateItemsEntities.Select(x => new RoomItem
             {
                 Id = x.Id.ToString(),
                 Price = x.Price,
@@ -40,11 +42,11 @@ namespace artiso.AdsdHotel.Red.Api.Service
                         Id = "rate1",
                         CancellationFee = new CancellationFee()
                         {
-                            DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0,0,0)),
+                            DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0, 0, 0)),
                             FeeInPercentage = 5
                         },
-                        RateItems = { grpcRateItems },
-                        TotalPrice = rateItems.Select(rate => rate.Price).Sum(),
+                        RateItems = {rateItems},
+                        TotalPrice = rateItemsEntities.Select(rate => rate.Price).Sum(),
                     }
                 }
             };

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Contracts;
+using artiso.AdsdHotel.Red.Contracts.Grpc;
+using Google.Protobuf.Collections;
 using Grpc.Net.Client;
+using CancellationFee = artiso.AdsdHotel.Red.Contracts.CancellationFee;
+using RoomRate = artiso.AdsdHotel.Red.Contracts.RoomRate;
 
 namespace artiso.AdsdHotel.Red.Ambassador
 {
@@ -43,9 +47,12 @@ namespace artiso.AdsdHotel.Red.Ambassador
             return roomRates;
         }
 
-        //public async Task<InputRoomRatesReply> InputRoomRatesAsync(InputRoomRatesRequest inputRoomRatesRequest)
-        //{
-        //    return await _ratesClient.InputRoomRatesAsync(inputRoomRatesRequest);
-        //}
+        public async Task<InputRoomRatesReply> InputRoomRatesAsync(string roomRateId, string orderId, DateTime startDate, DateTime endDate)
+        {
+            var request = new InputRoomRatesRequest
+                {StartDate = new Date(startDate), EndDate = new Date(endDate), OrderId = orderId, RoomRateId = roomRateId};
+
+            return await _ratesClient.InputRoomRatesAsync(request);
+        }
     }
 }

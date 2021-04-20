@@ -7,15 +7,15 @@ using artiso.AdsdHotel.Red.Persistence.Entities;
 
 namespace artiso.AdsdHotel.Red.Persistence
 {
-    public class RoomPriceRepository : IRoomPriceRepository
+    public class RoomRepository : IRoomRepository
     {
         private readonly IDataStoreClient _dataStoreClientRoomType;
         private readonly IDataStoreClient _dataStoreClientRoomRate;
 
-        public RoomPriceRepository(MongoDbClientFactory mongoDbClientFactory)
+        public RoomRepository(MongoDbClientFactory dbClientFactory)
         {
-            _dataStoreClientRoomType = mongoDbClientFactory.GetClient(typeof(RoomTypeEntity));
-            _dataStoreClientRoomRate = mongoDbClientFactory.GetClient(typeof(RoomRateEntity));
+            _dataStoreClientRoomType = dbClientFactory.GetClient(typeof(RoomTypeEntity));
+            _dataStoreClientRoomRate = dbClientFactory.GetClient(typeof(RoomRateEntity));
 
             Repopulate();
         }

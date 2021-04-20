@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Ambassador;
+using artiso.AdsdHotel.Red.Contracts.Grpc;
 
 namespace artiso.AdsdHotel.Red.Consumer
 {
@@ -28,20 +29,14 @@ namespace artiso.AdsdHotel.Red.Consumer
 
                     Console.WriteLine($"Total price - {roomRate.TotalPrice} Euro");
                     Console.WriteLine();
-                }
 
-                //var inputRoomRatesRequest = new InputRoomRatesRequest()
-                //{
-                //    OrderId = Guid.NewGuid().ToString(),
-                //    StartDate = new Date(DateTime.Now),
-                //    EndDate = new Date(DateTime.Now + new TimeSpan(7))
-                //};
-                //inputRoomRatesRequest.RateItems.AddRange(reply.RateItems);
-                //var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(inputRoomRatesRequest);
-                //if (inputRoomRatesResponse.Success)
-                //{
-                //    Console.WriteLine($"Order for {roomType} successfully written");
-                //}
+                    var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(roomRate.Id, Guid.NewGuid().ToString(),
+                        DateTime.Now, DateTime.Now + new TimeSpan(7));
+                    if (inputRoomRatesResponse.Success)
+                    {
+                        Console.WriteLine($"Order for {roomType} successfully written");
+                    }
+                }
             }
 
             Console.ReadKey();

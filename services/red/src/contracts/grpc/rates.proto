@@ -33,10 +33,10 @@ message RoomItem {
 }
 
 message InputRoomRatesRequest {
-  string order_id = 1;
-  Date start_date = 2;
-  Date end_date = 3; 
-  repeated RoomItem rate_items = 4;
+  string room_rate_id = 1;
+  string order_id = 2;
+  Date start_date = 3;
+  Date end_date = 4; 
 }
 
 message InputRoomRatesReply {
