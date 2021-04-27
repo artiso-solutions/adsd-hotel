@@ -68,11 +68,10 @@ namespace artiso.AdsdHotel.Red.Api
 
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                var mongoConfig = new MongoDbConfig();
-                ctx.Configuration.Bind(nameof(MongoDbConfig), mongoConfig);
-                services.AddSingleton(_ =>
+                services.AddSingleton(sp =>
                 {
-                    return new MongoDbClientFactory(mongoConfig);
+                    var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
+                    return new MongoDbClientFactory(config.Value);
                 });
 
                 var conventions = new ConventionPack
