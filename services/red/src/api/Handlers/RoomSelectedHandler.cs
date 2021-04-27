@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
-using artiso.AdsdHotel.Red.Api.Configuration;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
@@ -10,33 +10,27 @@ using NServiceBus;
 
 namespace artiso.AdsdHotel.Red.Api.Handlers
 {
-    internal class RoomSelectedHandler
+    public class RoomSelectedHandler
     {
-        private readonly EndpointHolder _holder;
+        private readonly IChannel _busChannel;
         private readonly IRoomRepository _roomRepository;
+        private readonly IMessageSession _messageSession;
 
-        public static RoomSelectedHandler Create(IRoomRepository roomRepository)
+        public RoomSelectedHandler(IChannel busChannel, IRoomRepository roomRepository, IMessageSession messageSession)
         {
-            var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
-            var config = NServiceBusEndpointConfigurationFactory.Create("Red.Api", busConfiguration.ToString(), useCallbacks: false);
-            var holder = new EndpointHolder(Endpoint.Start(config));
-            return new RoomSelectedHandler(holder, roomRepository);
-        }
-
-        private RoomSelectedHandler(EndpointHolder holder, IRoomRepository roomRepository)
-        {
-            _holder = holder;
+            _busChannel = busChannel;
             _roomRepository = roomRepository;
+            _messageSession = messageSession;
         }
 
         public async Task Handle(InputRoomRatesRequest request)
         {
             var rates = await GetRatesForRequest(request);
-            
-                await _roomRepository.InputRoomRates(request.OrderId,
-                    request.StartDate.ToDateTime(), request.EndDate.ToDateTime(), request.RoomRateId);
 
-                await NotifyOrderRateSelected(request.OrderId, rates);
+            await _roomRepository.InputRoomRates(request.OrderId,
+                request.StartDate.ToDateTime(), request.EndDate.ToDateTime(), request.RoomRateId);
+
+            await NotifyOrderRateSelected(request.OrderId, rates);
         }
 
         private async Task<Rate> GetRatesForRequest(InputRoomRatesRequest request)
@@ -44,9 +38,9 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
 
             var roomTypeEntity = await _roomRepository.GetRoomTypeById(request.RoomRateId);
 
-            float price = roomTypeEntity?.Rates.Select(rate => rate.Price).Sum() ?? 0;
+            var price = roomTypeEntity?.Rates.Select(rate => rate.Price).Sum() ?? 0;
 
-            float cancellationFee = roomTypeEntity?.Rates.Select(rate =>
+            var cancellationFee = roomTypeEntity?.Rates.Select(rate =>
                     roomTypeEntity.ConfirmationDetailsEntity.CancellationFeeEntity.FeeInPercentage / 100f * rate.Price)
                 .Sum() ?? 0;
 
@@ -56,15 +50,14 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
 
             return new Rate(new Price
             {
-                Amount = (decimal) price,
-                CancellationFee = (decimal) cancellationFee
+                Amount = (decimal)price,
+                CancellationFee = (decimal)cancellationFee
             });
         }
 
         private async Task NotifyOrderRateSelected(string orderId, Rate rates)
         {
-            await _holder.EndpointReady;
-            await _holder.Endpoint.Publish(new OrderRateSelected(orderId, rates));
+            await _busChannel.Publish(new OrderRateSelected(orderId, rates));
         }
     }
 }

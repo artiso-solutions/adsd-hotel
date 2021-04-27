@@ -3,6 +3,7 @@ using artiso.AdsdHotel.Red.Api.Configuration;
 using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Configuration;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,9 @@ namespace artiso.AdsdHotel.Red.Api
     {
         public static IHostBuilder ConfigureApp(this IHostBuilder builder)
         {
+            builder.UseConsoleLifetime();
+            ConfigureOptions(builder);
+
             ConfigureStorage(builder);
             ConfigureServiceBus(builder);
             ConfigureGrpc(builder);
@@ -24,23 +28,42 @@ namespace artiso.AdsdHotel.Red.Api
             return builder;
         }
 
+        private static void ConfigureOptions(this IHostBuilder builder)
+        {
+            builder.ConfigureServices(Configure);
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            {
+                services.Configure<RabbitMqConfig>(
+                    ctx.Configuration.GetSection(key: nameof(RabbitMqConfig))
+                );
+                services.Configure<MongoDbConfig>(
+                    ctx.Configuration.GetSection(key: nameof(MongoDbConfig))
+                );
+            }
+        }
+
 
         private static void ConfigureGrpc(this IHostBuilder builder)
         {
+            builder.ConfigureServices(Configure);
             builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<GrpcStartup>(); });
+
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            {
+            }
         }
 
         private static void ConfigureServiceBus(this IHostBuilder builder)
         {
-            var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
-
-            builder.UseConsoleLifetime();
-            builder.UseNServiceBus(_ =>
+            builder.UseNServiceBus(ctx =>
             {
+                var busConfiguration = new RabbitMqConfig();
+                ctx.Configuration.Bind(nameof(RabbitMqConfig), busConfiguration);
+                
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Red.Api",
                     rabbitMqConnectionString: busConfiguration.ToString(),
-                    true);
+                    false);
 
                 return endpointConfiguration;
             });
@@ -52,12 +75,13 @@ namespace artiso.AdsdHotel.Red.Api
 
             // Internal functions
 
-            static void Configure(IServiceCollection services)
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                services.TryAddSingleton(_ =>
+                var mongoConfig = new MongoDbConfig();
+                ctx.Configuration.Bind(nameof(MongoDbConfig), mongoConfig);
+                services.AddSingleton(_ =>
                 {
-                    var config = AppSettingsHelper.GetSettings<MongoDbConfig>();
-                    return new MongoDbClientFactory(config);
+                    return new MongoDbClientFactory(mongoConfig);
                 });
 
                 var conventions = new ConventionPack
@@ -77,7 +101,7 @@ namespace artiso.AdsdHotel.Red.Api
 
             // Internal functions
 
-            static void Configure(IServiceCollection services)
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
                 services.TryAddSingleton<IRoomRepository, RoomRepository>();
             }
