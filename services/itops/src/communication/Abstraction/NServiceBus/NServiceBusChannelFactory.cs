@@ -4,7 +4,7 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 {
     public class NServiceBusChannelFactory
     {
-        public static IChannel Create(
+        public static NServiceBusChannel Create(
             string channelName,
             string endpointDestination,
             string rabbitMqConnectionString,

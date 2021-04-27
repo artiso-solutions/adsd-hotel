@@ -6,21 +6,18 @@ using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
-using NServiceBus;
 
 namespace artiso.AdsdHotel.Red.Api.Handlers
 {
     public class RoomSelectedHandler
     {
-        private readonly IChannel _busChannel;
+        private readonly IChannel _channel;
         private readonly IRoomRepository _roomRepository;
-        private readonly IMessageSession _messageSession;
 
-        public RoomSelectedHandler(IChannel busChannel, IRoomRepository roomRepository, IMessageSession messageSession)
+        public RoomSelectedHandler(IChannel channel, IRoomRepository roomRepository)
         {
-            _busChannel = busChannel;
+            _channel = channel;
             _roomRepository = roomRepository;
-            _messageSession = messageSession;
         }
 
         public async Task Handle(InputRoomRatesRequest request)
@@ -57,7 +54,7 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
 
         private async Task NotifyOrderRateSelected(string orderId, Rate rates)
         {
-            await _busChannel.Publish(new OrderRateSelected(orderId, rates));
+            await _channel.Publish(new OrderRateSelected(orderId, rates));
         }
     }
 }

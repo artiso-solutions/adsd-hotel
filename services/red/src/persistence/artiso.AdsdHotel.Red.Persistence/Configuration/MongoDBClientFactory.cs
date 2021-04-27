@@ -12,7 +12,7 @@ namespace artiso.AdsdHotel.Red.Persistence.Configuration
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
-        public virtual IDataStoreClient GetClient(Type type)
+        public virtual MongoDataStoreClient GetClient(Type type)
         {
             if (_config.Database is null) throw new InvalidOperationException($"{nameof(_config)} must not be null!");
 
