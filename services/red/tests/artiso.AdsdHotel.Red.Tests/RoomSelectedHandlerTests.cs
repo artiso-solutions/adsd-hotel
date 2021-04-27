@@ -8,7 +8,6 @@ using artiso.AdsdHotel.Red.Persistence;
 using artiso.AdsdHotel.Red.Persistence.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using NServiceBus.Testing;
 
 namespace artiso.AdsdHotel.Red.Tests
 {
