@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="**/*.proto" GrpcServices="Server" />
+    <Protobuf Update="grpc\rates.proto" GrpcServices="Both" />
+  </ItemGroup>
+
+</Project>

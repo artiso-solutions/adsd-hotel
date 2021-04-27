@@ -21,7 +21,7 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         /// <param name="collection">The name of the collection.</param>
         public MongoDataStoreClient(Uri endpoint, string database, string collection)
         {
-            var connectionString = $"{endpoint.Scheme}://{endpoint.Host}:{endpoint.Port}";
+            var connectionString = endpoint.AbsoluteUri;
             _client = new MongoClient(connectionString);
             _db = _client.GetDatabase(database);
             _collection = collection;

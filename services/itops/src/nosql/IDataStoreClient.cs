@@ -32,7 +32,7 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="combinator">How to combine the filters. and/or </param>
-        /// <param name="filter">The filters to search for the entity.</param>
+        /// <param name="filters">The filters to search for the entity.</param>
         /// <returns>A task that can be awaited with the found entities if any.</returns>
         Task<List<T>> GetAllAsync<T>(ExpressionCombinationOperator combinator, params Expression<Func<T, bool>>[] filters);
 

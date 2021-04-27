@@ -31,10 +31,8 @@ namespace artiso.AdsdHotel.ITOps.Sql
             {
                 return await dbCommand.ExecuteNonQueryAsync();
             }
-            else
-            {
-                return command.ExecuteNonQuery();
-            }
+
+            return command.ExecuteNonQuery();
         }
 
         public static async Task<bool> ReadAsync(this IDataReader reader)
@@ -43,10 +41,8 @@ namespace artiso.AdsdHotel.ITOps.Sql
             {
                 return await dbDataReader.ReadAsync();
             }
-            else
-            {
-                return reader.Read();
-            }
+
+            return reader.Read();
         }
     }
 }

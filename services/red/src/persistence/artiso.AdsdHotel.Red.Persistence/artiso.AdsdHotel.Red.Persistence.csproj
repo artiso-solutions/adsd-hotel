@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
+  </ItemGroup>
+
+</Project>
