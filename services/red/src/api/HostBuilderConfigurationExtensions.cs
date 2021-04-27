@@ -91,7 +91,7 @@ namespace artiso.AdsdHotel.Red.Api
 
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                services.TryAddSingleton<IRoomRepository, RoomRepository>();
+                services.AddScoped<IRoomRepository, RoomRepository>();
                 services.AddScoped<GetRoomRatesByRoomTypeHandler>();
                 services.AddScoped<RoomSelectedHandler>();
             }
