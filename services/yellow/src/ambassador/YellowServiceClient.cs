@@ -23,7 +23,7 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
         {
             var request = new AddPaymentMethodToOrderRequest(orderId, new PaymentMethod(creditCard));
             var (response, exception) =
-                await _channel.Request<Response<OrderCancellationFeeAuthorizationAcquired>>(request, cancellationToken);
+                await _channel.Request<Response<PaymentMethodToOrderAdded>>(request, cancellationToken);
 
             if (exception is not null)
                 throw exception;

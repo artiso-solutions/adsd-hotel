@@ -1,4 +1,5 @@
 ﻿using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 
@@ -14,9 +15,12 @@ namespace artiso.AdsdHotel.Blue.Api
 
             builder.UseNServiceBus(ctx =>
             {
+                var config = ctx.Configuration;
+
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Blue.Api",
-                    rabbitMqConnectionString: "host=localhost");
+                    rabbitMqConnectionString: config.GetValue("rabbitmq:cs", defaultValue: "host=localhost"),
+                    true);
 
                 return endpointConfiguration;
             });

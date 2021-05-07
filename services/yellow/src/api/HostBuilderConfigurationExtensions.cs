@@ -70,7 +70,7 @@ namespace artiso.AdsdHotel.Yellow.Api
             {
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Yellow.Api",
-                    rabbitMqConnectionString: busConfiguration.ToString(),
+                    rabbitMqConnectionString: busConfiguration.Host,//.ToString(),
                     true);
 
                 return endpointConfiguration;

@@ -4,12 +4,12 @@ namespace artiso.AdsdHotel.Blue.Ambassador
 {
     public class BlueAmbassadorFactory
     {
-        public static BlueAmbassador Create()
+        public static BlueAmbassador Create(string? rabbitMqConnectionString = null)
         {
             var channel = NServiceBusChannelFactory.Create(
                 channelName: "Blue.Ambassador",
                 endpointDestination: "Blue.Api",
-                "host=localhost", 
+                rabbitMqConnectionString ?? "host=localhost", 
                 useCallbacks: true
                 );
 

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "artiso.AdsdHotel.Blue.Api": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "rabbitmq__cs": "host=localhost",
+        "mysql__host": "localhost",
+        "mysql__port": "3306",
+        "mysql__db__user": "root"
+        // "mysql__db__password": null
+      }
+    }
+  }
+}
