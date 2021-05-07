@@ -1,7 +1,7 @@
 ﻿using System;
 using artiso.AdsdHotel.ITOps.NoSql;
 
-namespace artiso.AdsdHotel.Red.Persistence.Configuration
+namespace artiso.AdsdHotel.ITOps.NoSql
 {
     public class MongoDbClientFactory
     {

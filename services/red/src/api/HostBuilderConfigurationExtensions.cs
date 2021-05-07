@@ -73,15 +73,6 @@ namespace artiso.AdsdHotel.Red.Api
                     var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
                     return new MongoDbClientFactory(config.Value);
                 });
-
-                var conventions = new ConventionPack
-                {
-                    new IgnoreExtraElementsConvention(true),
-                    new CamelCaseElementNameConvention(),
-                    new EnumRepresentationConvention(BsonType.String),
-                };
-
-                ConventionRegistry.Register("DefaultConventions", conventions, filter: _ => true);
             }
         }
 

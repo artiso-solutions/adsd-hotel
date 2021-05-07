@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace artiso.AdsdHotel.Red.Api.Configuration
+namespace artiso.AdsdHotel.ITOps.Communication
 {
-    internal class RabbitMqConfig
+    public class RabbitMqConfig
     {
         public string Host { get; set; }
 

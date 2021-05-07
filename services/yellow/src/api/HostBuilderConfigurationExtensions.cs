@@ -14,11 +14,24 @@ namespace artiso.AdsdHotel.Yellow.Api
     {
         public static IHostBuilder ConfigureApp(this IHostBuilder builder)
         {
+            builder.UseConsoleLifetime();
+            ConfigureOptions(builder);
             builder.ConfigureStorage();
             builder.ConfigureServiceBus();
             builder.ConfigureCustomServices();
             
             return builder;
+        }
+
+        private static void ConfigureOptions(this IHostBuilder builder)
+        {
+            builder.ConfigureServices(Configure);
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            {
+                services
+                    .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
+                    .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
+            }
         }
 
         private static void ConfigureCustomServices(this IHostBuilder builder)
@@ -40,22 +53,13 @@ namespace artiso.AdsdHotel.Yellow.Api
             
             // Internal functions
             
-            static void Configure(IServiceCollection services)
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
                 services.TryAddSingleton(sp =>
                 {
-                    var config = AppSettingsHelper.GetSettings<MongoDbConfig>();
+                    var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
                     return new MongoDBClientFactory(config);
                 });
-
-                var conventions = new ConventionPack
-                {
-                    new IgnoreExtraElementsConvention(true),
-                    new CamelCaseElementNameConvention(),
-                    new EnumRepresentationConvention(BsonType.String),
-                };
-
-                ConventionRegistry.Register("DefaultConventions", conventions, filter: type => true);
             }
         }
         
@@ -63,18 +67,17 @@ namespace artiso.AdsdHotel.Yellow.Api
         
         private static void ConfigureServiceBus(this IHostBuilder builder)
         {
-            var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
-            
-            builder.UseConsoleLifetime();
-            builder.UseNServiceBus(ctx =>
-            {
-                var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
-                    endpointName: "Yellow.Api",
-                    rabbitMqConnectionString: busConfiguration.Host,//.ToString(),
-                    true);
+            builder.ConfigureServices(Configure);
 
-                return endpointConfiguration;
-            });
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            {
+                services.AddScoped<IChannel, NServiceBusChannel>(sp =>
+                {
+                    var config = sp.GetRequiredService<IOptions<RabbitMqConfig>>();
+                    return NServiceBusChannelFactory.Create("Yellow.Api", "error", config.Value.ToString());
+
+                });
+            }
         }
     }
 }
