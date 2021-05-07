@@ -13,11 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Events", "src\events\artiso.AdsdHotel.Blue.Events.csproj", "{8931F5D0-49D8-411D-BD19-FEB16A820C32}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{589BF7D5-0261-4036-826B-F4BA64A0E13A}"
-	ProjectSection(SolutionItems) = preProject
-		tye.yaml = tye.yaml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Consumer", "src\consumer\artiso.AdsdHotel.Blue.Consumer.csproj", "{80386836-10AB-4B43-90B4-A0A337DC577A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.consumer", "03.consumer", "{F9773735-4C26-48F0-B419-BBD7505CE9B3}"

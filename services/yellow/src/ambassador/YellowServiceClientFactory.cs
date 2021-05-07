@@ -4,12 +4,12 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
 {
     public class YellowServiceClientFactory
     {
-        public static YellowServiceClient Create()
+        public static YellowServiceClient Create(string? rabbitMqConnectionString = null)
         {
             var channel = NServiceBusChannelFactory.Create(
                 channelName: "Yellow.Ambassador",
                 endpointDestination: "Yellow.Api",
-                "host=localhost;username=user;password=bitnami", 
+                rabbitMqConnectionString ?? "host=localhost", 
                 useCallbacks: true
             );
 

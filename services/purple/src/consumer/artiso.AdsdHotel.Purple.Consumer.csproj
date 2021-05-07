@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\blue\src\ambassador\artiso.AdsdHotel.Blue.Ambassador.csproj" />
+    <ProjectReference Include="..\..\..\red\src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj" />
+    <ProjectReference Include="..\..\..\yellow\src\ambassador\artiso.AdsdHotel.Yellow.Ambassador.csproj" />
+    <ProjectReference Include="..\ambassador\artiso.AdsdHotel.Purple.Ambassador.csproj" />
+  </ItemGroup>
+
+</Project>

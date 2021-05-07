@@ -14,7 +14,7 @@ namespace artiso.AdsdHotel.Blue.Ambassador
     {
         private readonly IChannel _channel;
 
-        public BlueAmbassador(IChannel channel)
+        internal BlueAmbassador(IChannel channel)
         {
             _channel = channel;
         }

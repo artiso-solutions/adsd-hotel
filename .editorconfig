@@ -1,26 +1,18 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-# XML files
-[*.xml]
-indent_size = 2
+# All
+[*.]
 indent_style = space
-end_of_line = crlf
-insert_final_newline = false
+insert_final_newline = true
 
-# YAML files
-[*.yaml]
+# Non-cs files
+[*.{xml,csproj,yaml,json}]
 indent_size = 2
-indent_style = space
-end_of_line = crlf
-insert_final_newline = false
 
-# JSON files
-[*.json]
-indent_size = 2
-indent_style = space
-end_of_line = crlf
-insert_final_newline = false
+# Config files
+[*.{xml,yaml,json}]
+end_of_line = lf
 
 # C# files
 [*.cs]
@@ -33,7 +25,6 @@ indent_style = space
 
 # New line preferences
 end_of_line = crlf
-insert_final_newline = false
 
 #### .NET Coding Conventions ####
 

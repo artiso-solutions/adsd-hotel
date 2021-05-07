@@ -39,7 +39,8 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
         var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
             endpointName: "Black.Api",
-            connectionString);
+            connectionString,
+            true);
 
         return endpointConfiguration;
     });
