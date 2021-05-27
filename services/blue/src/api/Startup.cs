@@ -17,7 +17,7 @@ namespace artiso.AdsdHotel.Blue.Api
         {
             var config = ctx.Configuration;
 
-            var dbConfig = new DatabaseConfiguration(
+            var dbConfig = new SqlConfig(
                 Host: config.GetValue("mysql:host", defaultValue: "localhost"),
                 Port: config.GetValue("mysql:port", defaultValue: 3306),
                 Database: "adsd-blue",

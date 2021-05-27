@@ -12,9 +12,9 @@ namespace artiso.AdsdHotel.Blue.Api
             RepoDb.MySqlBootstrap.Initialize();
         }
 
-        private readonly DatabaseConfiguration _dbConfig;
+        private readonly SqlConfig _dbConfig;
 
-        public MySqlDatabaseInitializer(DatabaseConfiguration dbConfig)
+        public MySqlDatabaseInitializer(SqlConfig dbConfig)
         {
             _dbConfig = dbConfig;
         }

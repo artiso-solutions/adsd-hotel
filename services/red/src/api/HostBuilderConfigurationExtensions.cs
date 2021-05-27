@@ -1,9 +1,9 @@
-﻿using artiso.AdsdHotel.ITOps.Communication.Abstraction;
+﻿using artiso.AdsdHotel.ITOps.Communication;
+using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
-using artiso.AdsdHotel.Red.Api.Configuration;
+using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Red.Api.Handlers;
 using artiso.AdsdHotel.Red.Persistence;
-using artiso.AdsdHotel.Red.Persistence.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

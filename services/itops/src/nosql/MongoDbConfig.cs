@@ -1,4 +1,7 @@
-﻿namespace artiso.AdsdHotel.ITOps.NoSql
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+
+namespace artiso.AdsdHotel.ITOps.NoSql
 {
     public class MongoDbConfig
     {

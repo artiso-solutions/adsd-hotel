@@ -6,9 +6,9 @@ namespace artiso.AdsdHotel.ITOps.Sql
 {
     public class MySqlConnectionFactory : IDbConnectionFactory
     {
-        private readonly DatabaseConfiguration _dbConfig;
+        private readonly SqlConfig _dbConfig;
 
-        public MySqlConnectionFactory(DatabaseConfiguration dbConfig)
+        public MySqlConnectionFactory(SqlConfig dbConfig)
         {
             _dbConfig = dbConfig;
         }
