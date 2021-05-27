@@ -6,18 +6,7 @@
       "dotnetRunMessages": "true",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
-      "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development",
-        "SERVICE__rabbit__rabbit__protocol": "amqp",
-        "SERVICE__rabbit__rabbit__host": "localhost",
-        "SERVICE__rabbit__rabbit__port": "5672",
-        "SERVICE__mongodb__mongodb__protocol": "mongodb",
-        "SERVICE__mongodb__mongodb__host": "localhost",
-        "SERVICE__mongodb__mongodb__port": "27016",
-        "BLACK_API_DBNAME": "blackDatabase",
-        "BLACK_API_COLLECTIONNAME": "GuestInformation"
-      }
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }
   }
 }

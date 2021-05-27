@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api
@@ -61,12 +60,7 @@ namespace artiso.AdsdHotel.Yellow.Api
 
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                services.TryAddSingleton(sp =>
-                {
-                    var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
-                    // ToDo maybe use IOptions in factory
-                    return new MongoDbClientFactory(config.Value);
-                });
+                services.AddSingleton<MongoDbClientFactory>();
             }
         }
 

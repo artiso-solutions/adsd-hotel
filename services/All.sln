@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "black", "black", "{3E24D433-711B-4069-9148-8984AAB59A34}"
+	ProjectSection(SolutionItems) = preProject
+		black\Readme.md = black\Readme.md
+		black\tye.yaml = black\tye.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{26E71933-3188-4572-9309-BBA49BDC1BE3}"
 EndProject
