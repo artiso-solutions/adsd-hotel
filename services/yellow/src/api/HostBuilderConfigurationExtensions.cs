@@ -1,9 +1,12 @@
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
-using artiso.AdsdHotel.Yellow.Api.Configuration;
+using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Yellow.Api.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using NServiceBus;
@@ -19,7 +22,7 @@ namespace artiso.AdsdHotel.Yellow.Api
             builder.ConfigureStorage();
             builder.ConfigureServiceBus();
             builder.ConfigureCustomServices();
-            
+
             return builder;
         }
 
@@ -28,8 +31,10 @@ namespace artiso.AdsdHotel.Yellow.Api
             builder.ConfigureServices(Configure);
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
+                var cfg = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig));
+                var rabbitCfg = cfg.Get<RabbitMqConfig>();
                 services
-                    .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
+                    .Configure<RabbitMqConfig>(cfg)
                     .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
             }
         }
@@ -58,7 +63,8 @@ namespace artiso.AdsdHotel.Yellow.Api
                 services.TryAddSingleton(sp =>
                 {
                     var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
-                    return new MongoDBClientFactory(config);
+                    // ToDo maybe use IOptions in factory
+                    return new MongoDbClientFactory(config.Value);
                 });
             }
         }
@@ -67,17 +73,16 @@ namespace artiso.AdsdHotel.Yellow.Api
         
         private static void ConfigureServiceBus(this IHostBuilder builder)
         {
-            builder.ConfigureServices(Configure);
-
-            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            builder.UseNServiceBus(ctx =>
             {
-                services.AddScoped<IChannel, NServiceBusChannel>(sp =>
-                {
-                    var config = sp.GetRequiredService<IOptions<RabbitMqConfig>>();
-                    return NServiceBusChannelFactory.Create("Yellow.Api", "error", config.Value.ToString());
+                var cfg = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+                var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
+                    endpointName: "Yellow.Api",
+                    rabbitMqConnectionString: cfg.Host,//.ToString(),
+                    true);
 
-                });
-            }
+                return endpointConfiguration;
+            });
         }
     }
 }
