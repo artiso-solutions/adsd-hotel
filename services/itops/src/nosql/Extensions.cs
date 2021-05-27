@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using CaseExtensions;
 
 namespace artiso.AdsdHotel.ITOps.NoSql

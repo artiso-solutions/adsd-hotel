@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Sql;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
@@ -17,28 +18,22 @@ namespace artiso.AdsdHotel.Blue.Api
         {
             var config = ctx.Configuration;
 
-            var dbConfig = new SqlConfig(
-                Host: config.GetValue("mysql:host", defaultValue: "localhost"),
-                Port: config.GetValue("mysql:port", defaultValue: 3306),
-                Database: "adsd-blue",
-                Username: config.GetValue("mysql:db:user", defaultValue: "root"),
-                Password: config.GetValue("mysql:db:password", defaultValue: default(string?)));
-
-            var cs = dbConfig.ToMySqlConnectionString();
+            services.Configure<RabbitMqConfig>(config.GetSection(key: nameof(RabbitMqConfig)));
+            services.Configure<SqlConfig>(config.GetSection(key: nameof(SqlConfig)));
 
             services.AddLogging(builder => builder.AddConsole());
-
-            services.AddSingleton(dbConfig);
 
             services.AddTransient<MySqlDatabaseInitializer>();
 
             services.AddTransient<IDbConnectionFactory, MySqlConnectionFactory>();
 
+            var sqlConfig = config.GetSection(key: nameof(SqlConfig)).Get<SqlConfig>();
+
             services
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                     .AddMySql4()
-                    .WithGlobalConnectionString(cs)
+                    .WithGlobalConnectionString(sqlConfig.ToMySqlConnectionString())
                     .ScanIn(typeof(Startup).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
         }

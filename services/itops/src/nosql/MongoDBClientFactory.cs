@@ -1,32 +1,43 @@
 ﻿using System;
-using artiso.AdsdHotel.ITOps.NoSql;
+using Microsoft.Extensions.Options;
 
 namespace artiso.AdsdHotel.ITOps.NoSql
 {
     public class MongoDbClientFactory
     {
-        private readonly MongoDbConfig _config;
+        private readonly MongoDbConfig? _mongoDbConfig;
+        private readonly IOptions<MongoDbConfig>? _mongoDbConfigOptions;
 
-        public MongoDbClientFactory(MongoDbConfig config)
+        public MongoDbClientFactory(MongoDbConfig dbConfig)
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _mongoDbConfig = dbConfig;
+        }
+
+        public MongoDbClientFactory(IOptions<MongoDbConfig> mongoDbConfigOptions)
+        {
+            _mongoDbConfigOptions = mongoDbConfigOptions;
         }
 
         public virtual MongoDataStoreClient GetClient(Type type)
         {
-            if (_config.Database is null) throw new InvalidOperationException($"{nameof(_config)} must not be null!");
+            var config = GetConfig();
+            
+            if (config.Database is null)
+                throw new InvalidOperationException($"{nameof(config)} must not be null!");
 
             var builder = new UriBuilder
             {
-                Scheme = _config.Scheme,
-                Host = _config.Host,
-                Port = _config.Port,
-                UserName = _config.User,
-                Password = _config.Password
+                Scheme = config.Scheme,
+                Host = config.Host,
+                Port = config.Port,
+                UserName = config.User,
+                Password = config.Password
             };
 
             var collectionName = type.NameForCollection();
-            return new MongoDataStoreClient(builder.Uri, _config.Database, collectionName);
+            return new MongoDataStoreClient(builder.Uri, config.Database, collectionName);
         }
+
+        private MongoDbConfig GetConfig() => _mongoDbConfig ?? _mongoDbConfigOptions!.Value;
     }
 }

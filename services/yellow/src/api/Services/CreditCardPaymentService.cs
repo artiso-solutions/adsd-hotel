@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
-using artiso.AdsdHotel.Yellow.Api.Configuration;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
@@ -12,14 +11,14 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         private readonly IDataStoreClient _transactionClient;
         private readonly IDataStoreClient _paymentAuthorizationTokenDataClient;
 
-        public CreditCardPaymentService(MongoDBClientFactory factory, bool failAllPayments)
+        public CreditCardPaymentService(MongoDbClientFactory factory, bool failAllPayments)
         {
             _transactionClient = factory.GetClient(typeof(Transaction));
             _paymentAuthorizationTokenDataClient = factory.GetClient(typeof(PaymentAuthorizationToken));
             _failAllPayments = failAllPayments;
         }
         
-        public CreditCardPaymentService(MongoDBClientFactory factory)
+        public CreditCardPaymentService(MongoDbClientFactory factory)
         {
             _transactionClient = factory.GetClient(typeof(Transaction));
             _paymentAuthorizationTokenDataClient = factory.GetClient(typeof(PaymentAuthorizationToken));

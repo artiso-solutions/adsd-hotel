@@ -11,7 +11,7 @@ namespace artiso.AdsdHotel.ITOps.Sql
                 Server = config.Host,
                 Port = (uint)config.Port,
                 Database = includeDatabase ? config.Database : default,
-                UserID = config.Username,
+                UserID = config.User,
                 Password = config.Password,
             };
 

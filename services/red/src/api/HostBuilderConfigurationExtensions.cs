@@ -5,13 +5,9 @@ using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Red.Api.Handlers;
 using artiso.AdsdHotel.Red.Persistence;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
 
 namespace artiso.AdsdHotel.Red.Api
 {
@@ -20,12 +16,10 @@ namespace artiso.AdsdHotel.Red.Api
         public static IHostBuilder ConfigureApp(this IHostBuilder builder)
         {
             builder.UseConsoleLifetime();
-            ConfigureOptions(builder);
-
-            ConfigureStorage(builder);
-            ConfigureServiceBus(builder);
-            ConfigureGrpc(builder);
-            ConfigureCustomServices(builder);
+            builder.ConfigureOptions();
+            builder.ConfigureServiceBus();
+            builder.ConfigureGrpc();
+            builder.ConfigureCustomServices();
 
             return builder;
         }
@@ -56,22 +50,9 @@ namespace artiso.AdsdHotel.Red.Api
                 services.AddScoped<IChannel, NServiceBusChannel>(sp =>
                 {
                     var config = sp.GetRequiredService<IOptions<RabbitMqConfig>>();
-                    return NServiceBusChannelFactory.Create("Red.Api", "error", config.Value.ToString());
-
-                });
-            }
-        }
-
-        private static void ConfigureStorage(this IHostBuilder builder)
-        {
-            builder.ConfigureServices(Configure);
-
-            static void Configure(HostBuilderContext ctx, IServiceCollection services)
-            {
-                services.AddSingleton(sp =>
-                {
-                    var config = sp.GetRequiredService<IOptions<MongoDbConfig>>();
-                    return new MongoDbClientFactory(config.Value);
+                    // This channel will only be used to publish messages.
+                    // Any attempt to Send a message will move it into the "red-error" queue.
+                    return NServiceBusChannelFactory.Create("Red.Api", "red-error", config.Value.ToString());
                 });
             }
         }

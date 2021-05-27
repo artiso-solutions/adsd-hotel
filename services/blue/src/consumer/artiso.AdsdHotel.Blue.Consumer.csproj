@@ -5,15 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ambassador\artiso.AdsdHotel.Blue.Ambassador.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables " Version="5.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\ambassador\artiso.AdsdHotel.Blue.Ambassador.csproj" />
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

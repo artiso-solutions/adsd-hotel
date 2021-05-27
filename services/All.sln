@@ -7,57 +7,61 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "black", "black", "{3E24D433
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{26E71933-3188-4572-9309-BBA49BDC1BE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Ambassador", "black\src\ambassador\artiso.AdsdHotel.Black.Ambassador.csproj", "{FED7D4E0-6FB9-419E-96EA-42C1EED77C9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Ambassador", "black\src\ambassador\artiso.AdsdHotel.Black.Ambassador.csproj", "{FED7D4E0-6FB9-419E-96EA-42C1EED77C9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Api", "black\src\api\artiso.AdsdHotel.Black.Api.csproj", "{F7A1A07D-B392-4774-A9BC-91E7CC04739B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Api", "black\src\api\artiso.AdsdHotel.Black.Api.csproj", "{F7A1A07D-B392-4774-A9BC-91E7CC04739B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Commands", "black\src\commands\artiso.AdsdHotel.Black.Commands.csproj", "{9602E4DC-3625-4ED7-9868-406672A46BE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Commands", "black\src\commands\artiso.AdsdHotel.Black.Commands.csproj", "{9602E4DC-3625-4ED7-9868-406672A46BE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Contracts", "black\src\contracts\artiso.AdsdHotel.Black.Contracts.csproj", "{53DC3CE2-69EE-4C94-9B8E-260C6CB5DA34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Contracts", "black\src\contracts\artiso.AdsdHotel.Black.Contracts.csproj", "{53DC3CE2-69EE-4C94-9B8E-260C6CB5DA34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Events", "black\src\events\artiso.AdsdHotel.Black.Events.csproj", "{713BF95B-7F5C-419F-A3E4-573A9F639849}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Events", "black\src\events\artiso.AdsdHotel.Black.Events.csproj", "{713BF95B-7F5C-419F-A3E4-573A9F639849}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Black.Tests", "black\tests\artiso.AdsdHotel.Black.Tests.csproj", "{1CDD564F-D172-4194-AF91-83B4FB7FA724}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Black.Tests", "black\tests\artiso.AdsdHotel.Black.Tests.csproj", "{1CDD564F-D172-4194-AF91-83B4FB7FA724}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blue", "blue", "{20C4AF76-2C6F-4C1F-9637-6108A47D493A}"
+	ProjectSection(SolutionItems) = preProject
+		blue\Readme.md = blue\Readme.md
+		blue\tye.yaml = blue\tye.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Ambassador", "blue\src\ambassador\artiso.AdsdHotel.Blue.Ambassador.csproj", "{D1595473-3233-4420-A67B-5E6836EF687B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Ambassador", "blue\src\ambassador\artiso.AdsdHotel.Blue.Ambassador.csproj", "{D1595473-3233-4420-A67B-5E6836EF687B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Api", "blue\src\api\artiso.AdsdHotel.Blue.Api.csproj", "{F1FD1AF3-B468-457B-A7F1-0F6567596B15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Api", "blue\src\api\artiso.AdsdHotel.Blue.Api.csproj", "{F1FD1AF3-B468-457B-A7F1-0F6567596B15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Commands", "blue\src\commands\artiso.AdsdHotel.Blue.Commands.csproj", "{3D48D2BD-3DB8-4398-9A08-07556135F70D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Commands", "blue\src\commands\artiso.AdsdHotel.Blue.Commands.csproj", "{3D48D2BD-3DB8-4398-9A08-07556135F70D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Consumer", "blue\src\consumer\artiso.AdsdHotel.Blue.Consumer.csproj", "{F2C1E999-9697-45B0-9FD3-956F058FF442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Consumer", "blue\src\consumer\artiso.AdsdHotel.Blue.Consumer.csproj", "{F2C1E999-9697-45B0-9FD3-956F058FF442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Contracts", "blue\src\contracts\artiso.AdsdHotel.Blue.Contracts.csproj", "{D530881E-3A68-4AF7-A068-652EEE081908}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Contracts", "blue\src\contracts\artiso.AdsdHotel.Blue.Contracts.csproj", "{D530881E-3A68-4AF7-A068-652EEE081908}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Blue.Events", "blue\src\events\artiso.AdsdHotel.Blue.Events.csproj", "{F3D51B8E-F82B-4FE1-815D-1F7B02FDE7A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Blue.Events", "blue\src\events\artiso.AdsdHotel.Blue.Events.csproj", "{F3D51B8E-F82B-4FE1-815D-1F7B02FDE7A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "itops", "itops", "{49A23908-ACEC-4774-9227-352B217238B3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB3F1790-1720-4CD6-8E48-2B3F17C0DF65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.ITOps.Communication", "itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj", "{B3A51CB3-15F4-487D-837D-B6A968548E0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Communication", "itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj", "{B3A51CB3-15F4-487D-837D-B6A968548E0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.ITOps.NoSql", "itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj", "{A35DD70F-384C-49C7-B015-1C5F4AEEF2C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.NoSql", "itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj", "{A35DD70F-384C-49C7-B015-1C5F4AEEF2C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.ITOps.Sql", "itops\src\sql\artiso.AdsdHotel.ITOps.Sql.csproj", "{72611D20-D765-4900-86AE-4C6FCC8C3E94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Sql", "itops\src\sql\artiso.AdsdHotel.ITOps.Sql.csproj", "{72611D20-D765-4900-86AE-4C6FCC8C3E94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "purple", "purple", "{A328AD56-0995-46BF-A386-7A35BA3BE207}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9ACEA91F-3B23-40B8-9EF2-3BA4926F0F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Purple.Ambassador", "purple\src\ambassador\artiso.AdsdHotel.Purple.Ambassador.csproj", "{17F5A3E3-FDD1-4DE7-8A59-6D044038A188}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Ambassador", "purple\src\ambassador\artiso.AdsdHotel.Purple.Ambassador.csproj", "{17F5A3E3-FDD1-4DE7-8A59-6D044038A188}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Purple.Api", "purple\src\api\artiso.AdsdHotel.Purple.Api.csproj", "{A06E4646-A589-4DAE-AAE1-B90EB6921C53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Api", "purple\src\api\artiso.AdsdHotel.Purple.Api.csproj", "{A06E4646-A589-4DAE-AAE1-B90EB6921C53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Purple.Commands", "purple\src\commands\artiso.AdsdHotel.Purple.Commands.csproj", "{BD626883-52C8-4469-998A-B72358566E66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Commands", "purple\src\commands\artiso.AdsdHotel.Purple.Commands.csproj", "{BD626883-52C8-4469-998A-B72358566E66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Purple.Consumer", "purple\src\consumer\artiso.AdsdHotel.Purple.Consumer.csproj", "{F4760CE4-ED84-4204-8BFE-E34B5A7F62A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Consumer", "purple\src\consumer\artiso.AdsdHotel.Purple.Consumer.csproj", "{F4760CE4-ED84-4204-8BFE-E34B5A7F62A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Purple.Events", "purple\src\events\artiso.AdsdHotel.Purple.Events.csproj", "{B97547EE-32F3-428B-AE52-64B9CC9A82D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Purple.Events", "purple\src\events\artiso.AdsdHotel.Purple.Events.csproj", "{B97547EE-32F3-428B-AE52-64B9CC9A82D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "red", "red", "{C0B4741E-EC29-4325-92A4-091EA7674B98}"
 EndProject
@@ -65,47 +69,53 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3847330A-090
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ambassador", "ambassador", "{8DA10F82-59B9-48CE-A15D-1F7B992AF134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Ambassador", "red\src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{7485C907-4ADA-4A78-99BB-9C5C51C93E1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Ambassador", "red\src\ambassador\artiso.AdsdHotel.Red.Ambassador\artiso.AdsdHotel.Red.Ambassador.csproj", "{7485C907-4ADA-4A78-99BB-9C5C51C93E1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Api", "red\src\api\artiso.AdsdHotel.Red.Api.csproj", "{DF91B311-DB73-40C7-BFFC-0CBAA86D12B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Api", "red\src\api\artiso.AdsdHotel.Red.Api.csproj", "{DF91B311-DB73-40C7-BFFC-0CBAA86D12B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "consumer", "consumer", "{A7B0D454-5470-4980-B96B-C8DD4A4A5C27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Consumer", "red\src\consumer\artiso.AdsdHotel.Red.Consumer\artiso.AdsdHotel.Red.Consumer.csproj", "{71DA7FDA-D5F3-46C7-AD22-1CD0C4755400}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Consumer", "red\src\consumer\artiso.AdsdHotel.Red.Consumer\artiso.AdsdHotel.Red.Consumer.csproj", "{71DA7FDA-D5F3-46C7-AD22-1CD0C4755400}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Contracts", "red\src\contracts\artiso.AdsdHotel.Red.Contracts.csproj", "{A891D63E-203B-47AE-94ED-D96FA6F15D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Contracts", "red\src\contracts\artiso.AdsdHotel.Red.Contracts.csproj", "{A891D63E-203B-47AE-94ED-D96FA6F15D8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Events", "red\src\events\artiso.AdsdHotel.Red.Events.csproj", "{3EC92C38-A010-4518-9527-49C6554F9D02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Events", "red\src\events\artiso.AdsdHotel.Red.Events.csproj", "{3EC92C38-A010-4518-9527-49C6554F9D02}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "persistence", "persistence", "{7DA4DB35-656F-452B-895E-1C0F4C781053}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Persistence", "red\src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj", "{52807C36-4F57-4AA6-A517-11DE89C3A583}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Persistence", "red\src\persistence\artiso.AdsdHotel.Red.Persistence\artiso.AdsdHotel.Red.Persistence.csproj", "{52807C36-4F57-4AA6-A517-11DE89C3A583}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C8384D8A-9144-42CA-B403-196F22A16BA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Red.Tests", "red\tests\artiso.AdsdHotel.Red.Tests\artiso.AdsdHotel.Red.Tests.csproj", "{18A71B55-AEAB-4E25-BDAE-A73ED62C645B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Red.Tests", "red\tests\artiso.AdsdHotel.Red.Tests\artiso.AdsdHotel.Red.Tests.csproj", "{18A71B55-AEAB-4E25-BDAE-A73ED62C645B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "yellow", "yellow", "{14355249-507D-4272-9055-3DBFB11BC719}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{33616354-98FC-4C86-8A55-D674B0C42C9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Ambassador", "yellow\src\ambassador\artiso.AdsdHotel.Yellow.Ambassador.csproj", "{F006A09C-527D-4549-BCD0-8F3C06D7E152}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Ambassador", "yellow\src\ambassador\artiso.AdsdHotel.Yellow.Ambassador.csproj", "{F006A09C-527D-4549-BCD0-8F3C06D7E152}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Api", "yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj", "{8A1052C0-0B8B-499D-BF35-1A9FC6093C0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Api", "yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj", "{8A1052C0-0B8B-499D-BF35-1A9FC6093C0C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "consumer", "consumer", "{2424887C-DE7E-425B-9FD7-9D1AEF37A386}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Consumer", "yellow\src\consumer\artiso.AdsdHotel.Yellow.Consumer\artiso.AdsdHotel.Yellow.Consumer.csproj", "{80AFD537-279E-408D-AAC2-A0E006FB1A26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Consumer", "yellow\src\consumer\artiso.AdsdHotel.Yellow.Consumer\artiso.AdsdHotel.Yellow.Consumer.csproj", "{80AFD537-279E-408D-AAC2-A0E006FB1A26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Contracts", "yellow\src\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj", "{94D65C03-FB47-453D-8869-142525291B54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Contracts", "yellow\src\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj", "{94D65C03-FB47-453D-8869-142525291B54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Events", "yellow\src\events\artiso.AdsdHotel.Yellow.Events.csproj", "{BBB6D466-77A2-465F-B5C6-6F19F09B2BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events", "yellow\src\events\artiso.AdsdHotel.Yellow.Events.csproj", "{BBB6D466-77A2-465F-B5C6-6F19F09B2BA3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{4DC50993-61CC-4040-BC0E-537EE98D91B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Events.External", "yellow\src\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj", "{3B81F142-26B6-45D1-8D06-754568612818}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Events.External", "yellow\src\external\events\artiso.AdsdHotel.Yellow.Events.External.csproj", "{3B81F142-26B6-45D1-8D06-754568612818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artiso.AdsdHotel.Yellow.Tests", "yellow\tests\artiso.AdsdHotel.Yellow.Tests.csproj", "{BB538287-9AF2-4F7D-A492-902A961BD798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.Yellow.Tests", "yellow\tests\artiso.AdsdHotel.Yellow.Tests.csproj", "{BB538287-9AF2-4F7D-A492-902A961BD798}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.dto", "01.dto", "{527294E7-7CED-4B13-B7D0-B63F8069CA22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.api", "02.api", "{FEAD4CB9-CADD-49DC-928A-68923D2FBB36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.client", "03.client", "{5F44A7B8-A20C-4E3B-9151-0C84A45055B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,9 +125,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FED7D4E0-6FB9-419E-96EA-42C1EED77C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -529,6 +536,9 @@ Global
 		{BB538287-9AF2-4F7D-A492-902A961BD798}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB538287-9AF2-4F7D-A492-902A961BD798}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{26E71933-3188-4572-9309-BBA49BDC1BE3} = {3E24D433-711B-4069-9148-8984AAB59A34}
 		{FED7D4E0-6FB9-419E-96EA-42C1EED77C9A} = {26E71933-3188-4572-9309-BBA49BDC1BE3}
@@ -538,12 +548,12 @@ Global
 		{713BF95B-7F5C-419F-A3E4-573A9F639849} = {26E71933-3188-4572-9309-BBA49BDC1BE3}
 		{1CDD564F-D172-4194-AF91-83B4FB7FA724} = {3E24D433-711B-4069-9148-8984AAB59A34}
 		{2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A} = {20C4AF76-2C6F-4C1F-9637-6108A47D493A}
-		{D1595473-3233-4420-A67B-5E6836EF687B} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
-		{F1FD1AF3-B468-457B-A7F1-0F6567596B15} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
-		{3D48D2BD-3DB8-4398-9A08-07556135F70D} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
-		{F2C1E999-9697-45B0-9FD3-956F058FF442} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
-		{D530881E-3A68-4AF7-A068-652EEE081908} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
-		{F3D51B8E-F82B-4FE1-815D-1F7B02FDE7A0} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
+		{D1595473-3233-4420-A67B-5E6836EF687B} = {5F44A7B8-A20C-4E3B-9151-0C84A45055B3}
+		{F1FD1AF3-B468-457B-A7F1-0F6567596B15} = {FEAD4CB9-CADD-49DC-928A-68923D2FBB36}
+		{3D48D2BD-3DB8-4398-9A08-07556135F70D} = {527294E7-7CED-4B13-B7D0-B63F8069CA22}
+		{F2C1E999-9697-45B0-9FD3-956F058FF442} = {5F44A7B8-A20C-4E3B-9151-0C84A45055B3}
+		{D530881E-3A68-4AF7-A068-652EEE081908} = {527294E7-7CED-4B13-B7D0-B63F8069CA22}
+		{F3D51B8E-F82B-4FE1-815D-1F7B02FDE7A0} = {527294E7-7CED-4B13-B7D0-B63F8069CA22}
 		{EB3F1790-1720-4CD6-8E48-2B3F17C0DF65} = {49A23908-ACEC-4774-9227-352B217238B3}
 		{B3A51CB3-15F4-487D-837D-B6A968548E0C} = {EB3F1790-1720-4CD6-8E48-2B3F17C0DF65}
 		{A35DD70F-384C-49C7-B015-1C5F4AEEF2C0} = {EB3F1790-1720-4CD6-8E48-2B3F17C0DF65}
@@ -576,5 +586,11 @@ Global
 		{4DC50993-61CC-4040-BC0E-537EE98D91B5} = {33616354-98FC-4C86-8A55-D674B0C42C9B}
 		{3B81F142-26B6-45D1-8D06-754568612818} = {4DC50993-61CC-4040-BC0E-537EE98D91B5}
 		{BB538287-9AF2-4F7D-A492-902A961BD798} = {14355249-507D-4272-9055-3DBFB11BC719}
+		{527294E7-7CED-4B13-B7D0-B63F8069CA22} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
+		{FEAD4CB9-CADD-49DC-928A-68923D2FBB36} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
+		{5F44A7B8-A20C-4E3B-9151-0C84A45055B3} = {2C1F2E1E-0DD5-4EFB-841E-4BA6798FFE9A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {919826D0-FA94-4E3F-B439-D3CF05AAABBB}
 	EndGlobalSection
 EndGlobal
