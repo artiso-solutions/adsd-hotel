@@ -9,7 +9,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 
-await CreateHostBuilder(args).Build().RunAsync();
+var host = CreateHostBuilder(args).Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var readinessProbe = scope.ServiceProvider.GetRequiredService<RabbitMqReadinessProbe>();
+    _ = await readinessProbe.IsServiceAliveAsync();
+}
+
+await host.RunAsync();
 
 static IHostBuilder CreateHostBuilder(string[] args)
 {
@@ -17,15 +25,13 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
     builder.ConfigureServices((ctx, services) =>
     {
+        services.AddSingleton<RabbitMqReadinessProbe>();
+
         services
             .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
             .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
 
         var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
-
-        // This blocks further initialization until the rabbitmq instance is running
-        // TODO: move in ITOps
-        services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitMqConfig.Host, 5672));
 
         services.AddSingleton<MongoDbClientFactory>();
 

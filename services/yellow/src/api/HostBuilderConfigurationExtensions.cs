@@ -4,7 +4,6 @@ using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 
@@ -31,10 +30,8 @@ namespace artiso.AdsdHotel.Yellow.Api
 
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                var cfg = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig));
-                var rabbitCfg = cfg.Get<RabbitMqConfig>();
                 services
-                    .Configure<RabbitMqConfig>(cfg)
+                    .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
                     .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
             }
         }
@@ -47,8 +44,9 @@ namespace artiso.AdsdHotel.Yellow.Api
 
             static void Configure(IServiceCollection services)
             {
-                services.TryAddSingleton<IOrderService, OrderService>();
-                services.TryAddSingleton<ICreditCardPaymentService, CreditCardPaymentService>();
+                services.AddSingleton<RabbitMqReadinessProbe>();
+                services.AddSingleton<IOrderService, OrderService>();
+                services.AddSingleton<ICreditCardPaymentService, CreditCardPaymentService>();
             }
         }
 

@@ -16,6 +16,8 @@ namespace artiso.AdsdHotel.Blue.Api
             HostBuilderContext ctx,
             IServiceCollection services)
         {
+            services.AddSingleton<RabbitMqReadinessProbe>();
+
             var config = ctx.Configuration;
 
             services.Configure<RabbitMqConfig>(config.GetSection(key: nameof(RabbitMqConfig)));

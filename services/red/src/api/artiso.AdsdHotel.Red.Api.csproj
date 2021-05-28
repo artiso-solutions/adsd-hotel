@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <StartupObject>artiso.AdsdHotel.Red.Api.Program</StartupObject>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 

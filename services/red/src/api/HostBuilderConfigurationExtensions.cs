@@ -27,6 +27,7 @@ namespace artiso.AdsdHotel.Red.Api
         private static void ConfigureOptions(this IHostBuilder builder)
         {
             builder.ConfigureServices(Configure);
+
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
                 services
@@ -63,6 +64,7 @@ namespace artiso.AdsdHotel.Red.Api
 
             static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
+                services.AddSingleton<RabbitMqReadinessProbe>();
                 services.AddScoped<IRoomRepository, RoomRepository>();
                 services.AddScoped<GetRoomRatesByRoomTypeHandler>();
                 services.AddScoped<RoomSelectedHandler>();

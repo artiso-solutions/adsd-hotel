@@ -1,15 +1,16 @@
+using artiso.AdsdHotel.ITOps.Communication;
+using artiso.AdsdHotel.Yellow.Api;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace artiso.AdsdHotel.Yellow.Api
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureApp()
+    .Build();
+
+using (var scope = host.Services.CreateScope())
 {
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            Host.CreateDefaultBuilder(args)
-                .ConfigureApp()
-                .Build()
-                .Run();
-        }
-    }
+    var readinessProbe = scope.ServiceProvider.GetRequiredService<RabbitMqReadinessProbe>();
+    _ = await readinessProbe.IsServiceAliveAsync();
 }
+
+await host.RunAsync();
