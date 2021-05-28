@@ -6,9 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-		<PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.*" />
-		<PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.*" />
-		<PackageReference Include="NServiceBus.MicrosoftLogging.Hosting" Version="1.*" />
+    <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.*" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.*" />
+    <PackageReference Include="NServiceBus.MicrosoftLogging.Hosting" Version="1.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +19,14 @@
     <ProjectReference Include="..\..\..\itops\src\communication\artiso.AdsdHotel.ITOps.Communication.csproj" />
     <ProjectReference Include="..\..\..\yellow\src\contracts\artiso.AdsdHotel.Yellow.Contracts.csproj" />
     <ProjectReference Include="..\..\..\yellow\src\events\artiso.AdsdHotel.Yellow.Events.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
