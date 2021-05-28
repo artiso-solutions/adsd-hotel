@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Ambassador;
+using artiso.AdsdHotel.ITOps.Communication;
 using Microsoft.Extensions.Configuration;
 
 namespace artiso.AdsdHotel.Blue.Consumer
@@ -13,8 +14,8 @@ namespace artiso.AdsdHotel.Blue.Consumer
 
             var config = GetConfiguration(args);
 
-            var rabbitMqConnectionString = config.GetValue("rabbitmq:cs", defaultValue: "host=localhost");
-            var ambassador = BlueAmbassadorFactory.Create(rabbitMqConnectionString);
+            var rabbitMqConfig = config.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+            var ambassador = BlueAmbassadorFactory.Create(rabbitMqConfig.AsConnectionString());
 
             var start = DateTime.Today.AddDays(7);
             var end = start.AddDays(7);

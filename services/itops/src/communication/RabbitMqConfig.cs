@@ -1,10 +1,10 @@
 ﻿using System.Text;
 
-#nullable disable
-
-namespace artiso.AdsdHotel.Red.Api.Configuration
+namespace artiso.AdsdHotel.ITOps.Communication
 {
-    internal class RabbitMqConfig
+    #nullable disable
+
+    public class RabbitMqConfig
     {
         public string Host { get; set; }
 
@@ -12,7 +12,7 @@ namespace artiso.AdsdHotel.Red.Api.Configuration
 
         public string Password { get; set; }
 
-        public override string ToString()
+        public string AsConnectionString()
         {
             var sb = new StringBuilder();
             sb.Append($"host={Host}");
@@ -26,5 +26,7 @@ namespace artiso.AdsdHotel.Red.Api.Configuration
             var cs = sb.ToString();
             return cs;
         }
+
+        public override string ToString() => AsConnectionString();
     }
 }

@@ -1,5 +1,6 @@
-using System;
 using artiso.AdsdHotel.Black.Api;
+using artiso.AdsdHotel.Black.Contracts;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.ITOps.NoSql;
 using Microsoft.AspNetCore.Hosting;
@@ -8,38 +9,46 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 
-await CreateHostBuilder(args).Build().RunAsync();
+var host = CreateHostBuilder(args).Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var readinessProbe = scope.ServiceProvider.GetRequiredService<RabbitMqReadinessProbe>();
+    _ = await readinessProbe.IsServiceAliveAsync();
+}
+
+await host.RunAsync();
 
 static IHostBuilder CreateHostBuilder(string[] args)
 {
     var builder = Host.CreateDefaultBuilder(args);
+
     builder.ConfigureServices((ctx, services) =>
     {
-        var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-        if (rabbitUri is not null)
-        {
-            // this blocks further initialization until the rabbitmq instance is running
-            services.AddSingleton<IHostedService>(new ProceedIfRabbitMqIsAlive(rabbitUri.Host, rabbitUri.Port));
-        }
+        services.AddSingleton<RabbitMqReadinessProbe>();
 
-        var mongoUri = ctx.Configuration.GetServiceUri("mongodb", "mongodb");
-        if (mongoUri is not null)
+        services
+            .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
+            .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
+
+        var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+
+        services.AddSingleton<MongoDbClientFactory>();
+
+        services.AddScoped<IDataStoreClient, MongoDataStoreClient>(sp =>
         {
-            //string mongoConnectionString = $"{mongoUri.Scheme}://{mongoUri.Host}:{mongoUri.Port}";
-            var dbName = ctx.Configuration.GetValue<string>("BLACK_API_DBNAME");
-            var collectionName = ctx.Configuration.GetValue<string>("BLACK_API_COLLECTIONNAME");
-            services.AddScoped<IDataStoreClient, MongoDataStoreClient>(sp => new MongoDataStoreClient(mongoUri, dbName, collectionName));
-        }
+            var mongoDbClientFactory = sp.GetRequiredService<MongoDbClientFactory>();
+            return mongoDbClientFactory.GetClient(typeof(GuestInformation));
+        });
     });
 
     builder.UseNServiceBus(ctx =>
     {
-        var rabbitUri = ctx.Configuration.GetServiceUri("rabbit", "rabbit");
-        var connectionString = CreateRabbitMqConnectionString(rabbitUri);
+        var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
 
         var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
             endpointName: "Black.Api",
-            connectionString,
+            rabbitMqConnectionString: rabbitMqConfig.AsConnectionString(),
             true);
 
         return endpointConfiguration;
@@ -51,10 +60,4 @@ static IHostBuilder CreateHostBuilder(string[] args)
     });
 
     return builder;
-}
-
-static string CreateRabbitMqConnectionString(Uri? uri)
-{
-    var host = uri?.Host ?? "localhost";
-    return $"host={host}";
 }

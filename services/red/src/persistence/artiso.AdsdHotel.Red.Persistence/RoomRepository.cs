@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
-using artiso.AdsdHotel.Red.Persistence.Configuration;
 using artiso.AdsdHotel.Red.Persistence.Entities;
 
 namespace artiso.AdsdHotel.Red.Persistence

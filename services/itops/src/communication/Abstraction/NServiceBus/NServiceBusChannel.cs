@@ -10,7 +10,8 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
         private readonly string _destination;
 
         public NServiceBusChannel(
-            EndpointHolder holder, string destination)
+            EndpointHolder holder,
+            string destination)
         {
             _holder = holder;
             _destination = destination;

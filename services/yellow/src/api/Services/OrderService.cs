@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.NoSql;
-using artiso.AdsdHotel.Yellow.Api.Configuration;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
@@ -10,7 +9,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
     {
         private readonly IDataStoreClient _dataStoreClient;
 
-        public OrderService(MongoDBClientFactory mongoDbClientFactory)
+        public OrderService(MongoDbClientFactory mongoDbClientFactory)
         {
             _dataStoreClient = mongoDbClientFactory.GetClient(typeof(Order));
         }
@@ -27,8 +26,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// <inheritdoc/>
         public async Task AddPaymentMethod(Order order, StoredPaymentMethod orderPaymentMethod)
         {
-            List<StoredPaymentMethod> paymentMethods = order.PaymentMethods ?? new List<StoredPaymentMethod>();
-            
+            var paymentMethods = order.PaymentMethods ?? new List<StoredPaymentMethod>();
+
             paymentMethods.Add(orderPaymentMethod);
 
             order.PaymentMethods = paymentMethods;
@@ -45,8 +44,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         /// <inheritdoc/>
         public async Task AddTransaction(Order order, OrderTransaction transaction)
         {
-            List<OrderTransaction> transactions = order.Transactions ?? new List<OrderTransaction>();
-            
+            var transactions = order.Transactions ?? new List<OrderTransaction>();
+
             transactions.Add(transaction);
 
             order.Transactions = transactions;

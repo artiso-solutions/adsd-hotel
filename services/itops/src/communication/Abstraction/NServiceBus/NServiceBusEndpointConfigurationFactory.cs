@@ -25,7 +25,6 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 
         private static void Configure(EndpointConfiguration config)
         {
-            config.EnableCallbacks();
             config.EnableInstallers();
             
             config.UseSerialization<NewtonsoftSerializer>();

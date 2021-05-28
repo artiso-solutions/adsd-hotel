@@ -1,11 +1,10 @@
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
-using artiso.AdsdHotel.Yellow.Api.Configuration;
+using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Yellow.Api.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api
@@ -14,63 +13,64 @@ namespace artiso.AdsdHotel.Yellow.Api
     {
         public static IHostBuilder ConfigureApp(this IHostBuilder builder)
         {
+            builder.UseConsoleLifetime();
+            builder.ConfigureOptions();
             builder.ConfigureStorage();
             builder.ConfigureServiceBus();
             builder.ConfigureCustomServices();
-            
+
             return builder;
+        }
+
+        private static void ConfigureOptions(this IHostBuilder builder)
+        {
+            builder.ConfigureServices(Configure);
+
+            // Internal functions
+
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
+            {
+                services
+                    .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
+                    .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
+            }
         }
 
         private static void ConfigureCustomServices(this IHostBuilder builder)
         {
             builder.ConfigureServices(Configure);
-            
+
             // Internal functions
-            
+
             static void Configure(IServiceCollection services)
             {
-                services.TryAddSingleton<IOrderService, OrderService>();
-                services.TryAddSingleton<ICreditCardPaymentService, CreditCardPaymentService>();
+                services.AddSingleton<RabbitMqReadinessProbe>();
+                services.AddSingleton<IOrderService, OrderService>();
+                services.AddSingleton<ICreditCardPaymentService, CreditCardPaymentService>();
             }
         }
 
         private static void ConfigureStorage(this IHostBuilder builder)
         {
             builder.ConfigureServices(Configure);
-            
+
             // Internal functions
-            
-            static void Configure(IServiceCollection services)
+
+            static void Configure(HostBuilderContext ctx, IServiceCollection services)
             {
-                services.TryAddSingleton(sp =>
-                {
-                    var config = AppSettingsHelper.GetSettings<MongoDbConfig>();
-                    return new MongoDBClientFactory(config);
-                });
-
-                var conventions = new ConventionPack
-                {
-                    new IgnoreExtraElementsConvention(true),
-                    new CamelCaseElementNameConvention(),
-                    new EnumRepresentationConvention(BsonType.String),
-                };
-
-                ConventionRegistry.Register("DefaultConventions", conventions, filter: type => true);
+                services.AddSingleton<MongoDbClientFactory>();
             }
         }
-        
-        
-        
+
         private static void ConfigureServiceBus(this IHostBuilder builder)
         {
-            var busConfiguration = AppSettingsHelper.GetSettings<RabbitMqConfig>();
-            
-            builder.UseConsoleLifetime();
             builder.UseNServiceBus(ctx =>
             {
+                var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Yellow.Api",
-                    rabbitMqConnectionString: busConfiguration.Host,//.ToString(),
+                    rabbitMqConnectionString: rabbitMqConfig.AsConnectionString(),
                     true);
 
                 return endpointConfiguration;

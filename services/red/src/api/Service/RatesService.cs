@@ -13,10 +13,10 @@ namespace artiso.AdsdHotel.Red.Api.Service
         private readonly RoomSelectedHandler _roomSelectedHandler;
         private readonly GetRoomRatesByRoomTypeHandler _getRoomRateByRoomTypeTypeHandler;
 
-        public RatesService(IRoomRepository roomRepository)
+        public RatesService(RoomSelectedHandler roomSelectedHandler, GetRoomRatesByRoomTypeHandler getRoomRatesByRoomTypeHandler)
         {
-            _roomSelectedHandler = RoomSelectedHandler.Create(roomRepository);
-            _getRoomRateByRoomTypeTypeHandler = GetRoomRatesByRoomTypeHandler.Create(roomRepository);
+            _roomSelectedHandler = roomSelectedHandler;
+            _getRoomRateByRoomTypeTypeHandler = getRoomRatesByRoomTypeHandler;
         }
 
         public override async Task<GetRoomRatesByRoomTypeReply> GetRoomRatesByRoomType(

@@ -22,10 +22,10 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
         protected async override Task<PaymentMethodToOrderAdded> Handle(AddPaymentMethodToOrderRequest message)
         {
-            Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
+            var order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
 
             var paymentToken = await _paymentService.GetPaymentToken(message.PaymentMethod.CreditCard!);
-            var orderPaymentMethod = new StoredPaymentMethod(message.PaymentMethod.CreditCard.GetOrderCreditCard(paymentToken));
+            var orderPaymentMethod = new StoredPaymentMethod(message.PaymentMethod.CreditCard!.GetOrderCreditCard(paymentToken));
             
             await _orderService.AddPaymentMethod(order, orderPaymentMethod);
 
