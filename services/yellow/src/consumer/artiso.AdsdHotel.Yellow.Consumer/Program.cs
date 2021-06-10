@@ -8,7 +8,7 @@ using Price = artiso.AdsdHotel.Yellow.Events.External.Price;
 
 namespace artiso.AdsdHotel.Yellow.Consumer
 {
-    class Program
+    public class Program
     {
         private static async Task Main()
         {
