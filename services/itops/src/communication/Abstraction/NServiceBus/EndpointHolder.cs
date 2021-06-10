@@ -27,8 +27,15 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 
             endpointPromise.ContinueWith(t =>
             {
-                _endpoint = t.Result;
-                tcs.SetResult(true);
+                if (t.IsCompletedSuccessfully)
+                {
+                    _endpoint = t.Result;
+                    tcs.SetResult(true);
+                }
+                else
+                {
+                    tcs.SetException(t.Exception ?? new Exception("Unable to create the endpoint"));
+                }
             });
 
             EndpointReady = tcs.Task;

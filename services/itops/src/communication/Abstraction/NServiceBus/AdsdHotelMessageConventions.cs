@@ -3,7 +3,7 @@ using NServiceBus;
 
 namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
 {
-    internal class AdsdHotelMessageConventions : IMessageConvention
+    public class AdsdHotelMessageConventions : IMessageConvention
     {
         public string Name => "Message conventions for adsd hotel";
 
