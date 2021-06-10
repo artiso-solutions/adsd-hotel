@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication;
+using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using NServiceBus;
 
@@ -11,6 +12,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
     {
         public async Task Handle(TRequestMessage message, IMessageHandlerContext context)
         {
+            var conventions = new AdsdHotelMessageConventions();
+
             try
             {
                 var validateResult = ValidateRequest(message);
@@ -18,23 +21,30 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
                 if (!validateResult.IsValid())
                     throw new ValidationException(validateResult);
 
-                var eventMessage = await Handle(message);
-                
-                await context.Publish(eventMessage);
+                var response = await Handle(message);
+                response.ToString();
 
-                Response<TResponseEvent> response = new(eventMessage);
-                
-                await context.Reply(response);
+                if (conventions.IsEventType(response.GetType()))
+                {
+                    await context.Publish(response);
+                }
+                else
+                {
+                    await context.Reply(new Response<TResponseEvent>(response));
+                }
             }
             catch (Exception e)
             {
-                var eventMessage = Fail(message);
-                
-                await context.Publish(eventMessage);
-                
-                var failedResponseMessage = new Response<TResponseEvent>(e);
-                
-                await context.Reply(failedResponseMessage);
+                var failResponse = Fail(message);
+
+                if (conventions.IsEventType(failResponse.GetType()))
+                {
+                    await context.Publish(failResponse);
+                }
+                else
+                {
+                    await context.Reply(new Response<TResponseEvent>(e));
+                }
             }
         }
 
