@@ -39,7 +39,7 @@ services:
     - db
   bindings:
     - name: mongodb
-      port: 27016
+      port: 27017
       protocol: mongodb
       containerPort: 27017
 
