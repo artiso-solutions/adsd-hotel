@@ -75,7 +75,7 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             await transaction.CommitAsync();
 
-            await context.Publish(new SelectedRooomTypeReserved(message.OrderId));
+            await context.Publish(new SelectedRoomTypeReserved(message.OrderId));
             await context.Reply(new Response<bool>(true));
         }
 
