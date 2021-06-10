@@ -12,9 +12,9 @@ using artiso.AdsdHotel.Yellow.Events.External;
 
 namespace artiso.AdsdHotel.Purple.Consumer
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main()
         {
             Console.WriteLine("Hello Hotel!");
             var orderId = Guid.NewGuid().ToString();
@@ -28,13 +28,13 @@ namespace artiso.AdsdHotel.Purple.Consumer
 
             var desiredRoomType = availableRoomTypes.PickRandom();
 
-            var roomTypeWasSelected = await blueAmbassador.SelectRoomTypeBetweenAsync(
+            _ = await blueAmbassador.SelectRoomTypeBetweenAsync(
                 orderId,
                 desiredRoomType.Id,
                 start,
                 end);
 
-            //red
+            // red
             await EmulateSelectionOfRate(orderId);
 
             // yellow
@@ -47,14 +47,10 @@ namespace artiso.AdsdHotel.Purple.Consumer
                 "0000",
                 DateTime.MaxValue);
 
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
-
             await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
 
             var purpleAmbassador = PurpleAmbassadorFactory.Create();
             await purpleAmbassador.CompleteReservationAsync(orderId);
-
         }
 
         private static async Task<string> EmulateSelectionOfRate(string orderId)
@@ -64,12 +60,11 @@ namespace artiso.AdsdHotel.Purple.Consumer
                endpointDestination: "Yellow.Api",
                "host=localhost",
                useCallbacks: true
-           );
+            );
+
             await channel.Publish(new OrderRateSelected(orderId, new Yellow.Events.External.Price(10, 100)));
             return orderId;
         }
-
-       
     }
 
     public static class Extensions
