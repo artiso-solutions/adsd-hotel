@@ -7,6 +7,7 @@ using NServiceBus;
 namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 {
     public abstract class AbstractHandler<TRequestMessage, TResponseEvent> : IHandleMessages<TRequestMessage>
+         where TResponseEvent : class
     {
         public async Task Handle(TRequestMessage message, IMessageHandlerContext context)
         {

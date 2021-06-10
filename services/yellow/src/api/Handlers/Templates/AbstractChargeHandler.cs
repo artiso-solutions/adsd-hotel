@@ -9,7 +9,7 @@ using artiso.AdsdHotel.Yellow.Contracts.Models;
 namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 {
     public abstract class AbstractChargeHandler<TRequestMessage, TResponseMessage>
-        : AbstractPaymentHandler<TRequestMessage, TResponseMessage>
+        : AbstractPaymentHandler<TRequestMessage, TResponseMessage> where TResponseMessage : class
     {
         protected abstract Task<ChargeResult> Charge(decimal amount, string paymentToken);
         

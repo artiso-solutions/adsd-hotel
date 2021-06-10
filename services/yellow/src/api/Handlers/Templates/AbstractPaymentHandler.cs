@@ -7,7 +7,7 @@ using artiso.AdsdHotel.Yellow.Contracts.Models;
 namespace artiso.AdsdHotel.Yellow.Api.Handlers.Templates
 {
     public abstract class AbstractPaymentHandler<TRequestMessage, TResponseMessage> :
-        AbstractHandler<TRequestMessage, TResponseMessage>
+        AbstractHandler<TRequestMessage, TResponseMessage> where TResponseMessage : class
     {
         protected async Task AddPaymentMethodToOrder(Order order, CreditCard? creditCard, string? authorizePaymentToken)
         {
