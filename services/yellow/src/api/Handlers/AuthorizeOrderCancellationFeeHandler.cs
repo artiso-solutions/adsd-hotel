@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
-using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
+using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class AuthorizeOrderCancellationFeeHandler : AbstractPaymentHandler<AuthorizeOrderCancellationFeeRequest, OrderCancellationFeeAuthorizationAcquired>
+    public class AuthorizeOrderCancellationFeeHandler : IHandleMessages<AuthorizeOrderCancellationFeeRequest>
     {
         private readonly IOrderService _orderService;
         private readonly ICreditCardPaymentService _paymentService;
@@ -22,40 +22,42 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             _paymentService = paymentService;
         }
         
-        protected override async Task<OrderCancellationFeeAuthorizationAcquired> Handle(AuthorizeOrderCancellationFeeRequest message)
+        public async Task Handle(AuthorizeOrderCancellationFeeRequest message, IMessageHandlerContext context)
         {
-            Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
+            try
+            {
+                var validateResult = ValidateRequest(message);
+                if (!validateResult.IsValid())
+                    throw new ValidationException(validateResult);
+                
+                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId))!;
             
-            var paymentMethods = order.PaymentMethods;
-            var paymentMethod = paymentMethods?.LastOrDefault();
-            var payToken = paymentMethod?.CreditCard.PaymentAuthorizationTokenId;
+                var paymentMethods = order.PaymentMethods;
+                var paymentMethod = paymentMethods?.LastOrDefault();
+                var payToken = paymentMethod?.CreditCard.PaymentAuthorizationTokenId;
             
-            if (payToken is null)
-                throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
+                if (payToken is null)
+                    throw new InvalidOperationException($"The active payment method of Order {order.Id} is not suitable for payment: MissingToken");
             
-            var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, payToken!);
-            if (authorizeResult.IsSuccess != true)
-                throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
+                var authorizeResult = await _paymentService.Authorize(order.Price.CancellationFee, payToken!);
+                if (authorizeResult.IsSuccess != true)
+                    throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
-            return new OrderCancellationFeeAuthorizationAcquired(message.OrderId);
+                await context.Publish(new OrderCancellationFeeAuthorizationAcquired(message.OrderId));
+                await context.Reply(new Response<bool>(true));
+            }
+            catch (Exception)
+            {
+                await context.Reply(new Response<bool>(false));
+            }
         }
         
-        protected override object Fail(AuthorizeOrderCancellationFeeRequest requestMessage)
-        {
-            return new AuthorizeOrderCancellationFeeFailed(requestMessage.OrderId);
-        }
-
-        protected override ValidationModelResult<AuthorizeOrderCancellationFeeRequest> ValidateRequest(AuthorizeOrderCancellationFeeRequest message)
+        private ValidationModelResult<AuthorizeOrderCancellationFeeRequest> ValidateRequest(AuthorizeOrderCancellationFeeRequest message)
         {
             return message.Validate()
                 .HasData(r => r.OrderId, 
                     $"{nameof(AuthorizeOrderCancellationFeeRequest.OrderId)} should contain data");
             
-        }
-
-        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
-        {
-            return _orderService.AddPaymentMethod(order, paymentMethod);
         }
     }
 }

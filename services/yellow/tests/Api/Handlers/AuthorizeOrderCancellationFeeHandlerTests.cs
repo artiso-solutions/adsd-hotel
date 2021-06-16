@@ -31,11 +31,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            Assert.AreEqual(1, context.RepliedMessages.Length);
-            var responseMessage = context.RepliedMessages[0].Message;
-            Assert.IsInstanceOf<Response<OrderCancellationFeeAuthorizationAcquired>>(responseMessage);
-            var rm = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
-            Assert.True(rm?.IsSuccessful, $"{rm?.Exception?.Message} \n {rm?.Exception?.StackTrace}");
+            // Happens when all is ok
+            Assert.AreEqual(1, context.PublishedMessages.Length); // 1 published messages
+            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var publishMessage = context.PublishedMessages[0].Message;
+            var responseMessage = context.RepliedMessages[0].Message; 
+            Assert.IsInstanceOf<OrderCancellationFeeAuthorizationAcquired>(publishMessage);  // 1 type of message response
+            Assert.IsInstanceOf<Response<bool>>(responseMessage); // of type Response<bool>
+            Assert.IsTrue(((Response<bool>) responseMessage).Value); // whose value is true
         }
         
         #region ValidRequestTestSource
@@ -85,18 +88,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            Assert.AreEqual(1, context.PublishedMessages.Length);
-            var responseMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(responseMessage);
-
-            // var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
-            //
-            // Assert.NotNull(r!.Exception);
-            // Assert.False(r.IsSuccessful);
-            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            // Assert.IsInstanceOf<ValidationException>(r.Exception);
-
-            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            // Happens when there's a failure
+            Assert.AreEqual(0, context.PublishedMessages.Length); // No published messages
+            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
+            Assert.IsInstanceOf<Response<bool>>(responseMessage);
+            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
         }
 
         #region InvalidRequestTestCaseSources
@@ -146,17 +143,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            Assert.AreEqual(1, context.PublishedMessages.Length);
-            var responseMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(responseMessage);
-
-            // var r = responseMessage as Response<OrderCancellationFeeAuthorizationAcquired>;
-            //
-            // Assert.NotNull(r!.Exception);
-            // Assert.False(r.IsSuccessful);
-            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            
-            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            // Happens when there's a failure
+            Assert.AreEqual(0, context.PublishedMessages.Length); // No published messages
+            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
+            Assert.IsInstanceOf<Response<bool>>(responseMessage);
+            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
         }
 
         #region InvalidOperationTestCaseSources
