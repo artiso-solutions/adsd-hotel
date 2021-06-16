@@ -40,8 +40,9 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 await context.Publish(new PaymentMethodToOrderAdded(message.OrderId));
                 await context.Reply(new Response<bool>(true));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                await context.Publish(new AddPaymentMethodToOrderFailed(message.OrderId, e.Message));
                 await context.Reply(new Response<bool>(false));
             }
         }

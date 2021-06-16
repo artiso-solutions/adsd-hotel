@@ -89,10 +89,12 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .ConfigureAwait(false);
 
             // Happens when there's a failure
-            Assert.AreEqual(0, context.PublishedMessages.Length); // No published messages
+            Assert.AreEqual(1, context.PublishedMessages.Length); // No published messages
             Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
             var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
             Assert.IsInstanceOf<Response<bool>>(responseMessage);
+            var publishMessage = context.PublishedMessages[0].Message;
+            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(publishMessage);
             Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
         }
 
@@ -144,8 +146,10 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .ConfigureAwait(false);
 
             // Happens when there's a failure
-            Assert.AreEqual(0, context.PublishedMessages.Length); // No published messages
+            Assert.AreEqual(1, context.PublishedMessages.Length); // No published messages
             Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var publishMessage = context.PublishedMessages[0].Message;
+            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(publishMessage);
             var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
             Assert.IsInstanceOf<Response<bool>>(responseMessage);
             Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false

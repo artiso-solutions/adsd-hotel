@@ -47,8 +47,9 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 await context.Publish(new OrderFullAmountCharged(message.OrderId));
                 await context.Reply(new Response<bool>(true));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                await context.Publish(new ChargeForOrderFullAmountFailed(message.OrderId, e.Message));
                 await context.Reply(new Response<bool>(false));
             }
         }
