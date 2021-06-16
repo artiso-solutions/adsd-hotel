@@ -38,7 +38,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
             var publishMessage = context.PublishedMessages[0].Message;
             var responseMessage = context.RepliedMessages[0].Message; 
-            Assert.IsInstanceOf<OrderCancellationFeeCharged>(publishMessage);  // 1 type of message response
+            Assert.IsInstanceOf<OrderCancellationFeeCharged>(publishMessage, $"Expected {nameof(OrderCancellationFeeCharged)}, but failed message received");  // 1 type of message response
             Assert.IsInstanceOf<Response<bool>>(responseMessage); // of type Response<bool>
             Assert.IsTrue(((Response<bool>) responseMessage).Value); // whose value is true
             
@@ -53,9 +53,9 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 //     .Verify(c => c.Charge(It.Is<decimal>(arg => arg == order.Price.CancellationFee),
                 //         It.IsAny<CreditCard>()), Times.Once);
 
-                orderService
-                    .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()),
-                        Times.Once);
+                // orderService
+                //     .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()),
+                //         Times.Once);
             }
             else
             {
@@ -89,21 +89,24 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Setup(s => s.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()))
                 .Verifiable();
 
-            // paymentService
-            //     .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<string>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now)
-            //     })
-            //     .Verifiable();
-            // paymentService
-            //     .Setup(s => s.Charge(It.Is<decimal>(d => d == 10), It.IsAny<CreditCard>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now),
-            //         AuthorizePaymentToken = "__AUTH_TOKEN__"
-            //     })
-            //     .Verifiable();
+            paymentService.Setup(s =>
+                s.AddPaymentMethodToOrder(It.IsAny<Order>(), It.IsAny<CreditCard>(), It.IsAny<string>())).Callback(async () => await Task.CompletedTask);
+
+            paymentService
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(),It.Is<decimal>(d => d == 10), It.IsAny<PaymentMethod>()))
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now)
+                })
+                .Verifiable();
+            paymentService
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(),It.Is<decimal>(d => d == 10)))
+                .ReturnsAsync(new ChargeResult()
+                {
+                    Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", 10, DateTime.Now),
+                    AuthorizePaymentToken = "__AUTH_TOKEN__"
+                })
+                .Verifiable();
 
             yield return TestUtility.GetCaseData("BasicScenario.PayWithAlreadyStoredMethod",
                 new object[]
