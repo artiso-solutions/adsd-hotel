@@ -74,7 +74,7 @@ services:
     - api
   project: red\src\api\artiso.AdsdHotel.Red.Api.csproj # msbuild project path (relative to this file)
   bindings:
-    - name: mysql
+    - name: grpc
       port: 5001
       containerPort: 5001
 
