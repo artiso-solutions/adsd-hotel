@@ -3,7 +3,13 @@ using Microsoft.Extensions.Options;
 
 namespace artiso.AdsdHotel.ITOps.NoSql
 {
-    public class MongoDbClientFactory
+    public interface IMongoDbClientFactory
+    {
+        MongoDataStoreClient GetClient(Type type);
+        MongoDbConfig GetConfig();
+    }
+
+    public class MongoDbClientFactory : IMongoDbClientFactory
     {
         private readonly MongoDbConfig? _mongoDbConfig;
         private readonly IOptions<MongoDbConfig>? _mongoDbConfigOptions;
@@ -38,6 +44,6 @@ namespace artiso.AdsdHotel.ITOps.NoSql
             return new MongoDataStoreClient(builder.Uri, config.Database, collectionName);
         }
 
-        private MongoDbConfig GetConfig() => _mongoDbConfig ?? _mongoDbConfigOptions!.Value;
+        public MongoDbConfig GetConfig() => _mongoDbConfig ?? _mongoDbConfigOptions!.Value;
     }
 }

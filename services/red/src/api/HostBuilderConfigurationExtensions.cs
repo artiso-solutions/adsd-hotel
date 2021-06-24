@@ -5,6 +5,7 @@ using artiso.AdsdHotel.ITOps.NoSql;
 using artiso.AdsdHotel.Red.Api.Handlers;
 using artiso.AdsdHotel.Red.Persistence;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -32,14 +33,25 @@ namespace artiso.AdsdHotel.Red.Api
             {
                 services
                     .Configure<RabbitMqConfig>(ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)))
-                    .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)));
+                    .Configure<MongoDbConfig>(ctx.Configuration.GetSection(key: nameof(MongoDbConfig)))
+                    .AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
             }
         }
 
 
         private static void ConfigureGrpc(this IHostBuilder builder)
         {
-            builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<GrpcStartup>(); });
+            builder.ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<GrpcStartup>().ConfigureKestrel(options =>
+                {
+
+                    options.ListenAnyIP(5001 , listenOptions =>
+                    {
+                        listenOptions.Protocols = HttpProtocols.Http2;
+                    });
+                });
+            });
         }
 
         private static void ConfigureServiceBus(this IHostBuilder builder)

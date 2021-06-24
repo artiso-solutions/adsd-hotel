@@ -29,9 +29,10 @@ namespace artiso.AdsdHotel.Red.Consumer
                     Console.WriteLine($"Total price - {roomRate.TotalPrice} Euro");
                     Console.WriteLine();
 
-                    var inputRoomRatesResponse = await ambassador.InputRoomRatesAsync(roomRate.Id, Guid.NewGuid().ToString(),
+                    var success = await ambassador.InputRoomRatesAsync(roomRate.Id, Guid.NewGuid().ToString(),
                         DateTime.Now, DateTime.Now + new TimeSpan(7));
-                    if (inputRoomRatesResponse.Success)
+                    
+                    if (success)
                     {
                         Console.WriteLine($"Order for {roomType} successfully written");
                     }

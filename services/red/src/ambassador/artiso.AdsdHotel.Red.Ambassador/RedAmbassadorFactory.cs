@@ -4,7 +4,7 @@
     {
         public static RedAmbassador Create()
         {
-            return new("https://localhost:5001");
+            return new("http://localhost:5001");
         }
     }
 }

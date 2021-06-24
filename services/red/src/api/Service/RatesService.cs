@@ -37,7 +37,7 @@ namespace artiso.AdsdHotel.Red.Api.Service
                 {
                     new RoomRate
                     {
-                        Id = "rate1",
+                        Id = request.RoomType,
                         CancellationFee = new CancellationFee
                         {
                             DeadLine = new Date(DateTime.Now + new TimeSpan(14, 0, 0, 0)),
