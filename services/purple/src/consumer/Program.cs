@@ -34,7 +34,10 @@ namespace artiso.AdsdHotel.Purple.Consumer
 
             // red
             var redAmbassador = RedAmbassadorFactory.Create();
-            var inputRoomRatesAsync = await redAmbassador.InputRoomRatesAsync(desiredRoomType.Id, orderId, DateTime.Now,
+            _ = await redAmbassador.InputRoomRatesAsync(
+                desiredRoomType.Id,
+                orderId,
+                DateTime.Now,
                 DateTime.Now + TimeSpan.FromDays(14));
 
             // yellow
