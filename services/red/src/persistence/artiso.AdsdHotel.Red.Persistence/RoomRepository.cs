@@ -11,7 +11,7 @@ namespace artiso.AdsdHotel.Red.Persistence
         private readonly IDataStoreClient _dataStoreClientRoomType;
         private readonly IDataStoreClient _dataStoreClientRoomRate;
 
-        public RoomRepository(MongoDbClientFactory dbClientFactory)
+        public RoomRepository(IMongoDbClientFactory dbClientFactory)
         {
             _dataStoreClientRoomType = dbClientFactory.GetClient(typeof(RoomTypeEntity));
             _dataStoreClientRoomRate = dbClientFactory.GetClient(typeof(RoomRateEntity));
@@ -104,7 +104,8 @@ namespace artiso.AdsdHotel.Red.Persistence
         {
             if (string.IsNullOrEmpty(rateId)) throw new ArgumentNullException(nameof(rateId));
 
-            var roomType = await _dataStoreClientRoomType.GetAsync<RoomTypeEntity>(ExpressionCombinationOperator.And, type => type.Id.ToString().Equals(rateId));
+            var roomType = await _dataStoreClientRoomType.GetAsync<RoomTypeEntity>(ExpressionCombinationOperator.And,
+                r => r!.Type.Equals(rateId));
             return roomType;
         }
     }

@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Red.Persistence;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace artiso.AdsdHotel.Red.Api.Handlers
 {
@@ -14,9 +18,11 @@ namespace artiso.AdsdHotel.Red.Api.Handlers
         private readonly IChannel _channel;
         private readonly IRoomRepository _roomRepository;
 
-        public RoomSelectedHandler(IChannel channel, IRoomRepository roomRepository)
+        public RoomSelectedHandler(IRoomRepository roomRepository, IServiceProvider sp)
         {
-            _channel = channel;
+            var rabbitMqConfig= sp.GetRequiredService<IOptions<RabbitMqConfig>>();
+            _channel = NServiceBusChannelFactory.Create("Yellow.Api", "Yellow.Api",
+                rabbitMqConfig.Value.AsConnectionString(), false);
             _roomRepository = roomRepository;
         }
 

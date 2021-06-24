@@ -43,46 +43,46 @@ services:
       protocol: mongodb
       containerPort: 27017
 
-- name: blueservice
-  project: blue\src\api\artiso.AdsdHotel.Blue.Api.csproj
-  tags:
-    - blue
-    - api
-    - app
-- name: mysql
-  image: mysql
-  tags:
-    - inf
-    - db
-  bindings:
-    - name: mysql
-      port: 3306
-      containerPort: 3306
-  env:
-    - name: MYSQL_ALLOW_EMPTY_PASSWORD
-      value: true
+#- name: blueservice
+#  project: blue\src\api\artiso.AdsdHotel.Blue.Api.csproj
+#  tags:
+#    - blue
+#    - api
+#    - app
+#- name: mysql
+#  image: mysql
+#  tags:
+#    - inf
+#    - db
+#  bindings:
+#    - name: mysql
+#      port: 3306
+#      containerPort: 3306
+#  env:
+#    - name: MYSQL_ALLOW_EMPTY_PASSWORD
+#      value: true
 
-- name: yelloservice
-  tags:
-    - yellow
-    - api
-  project: yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj # msbuild project path (relative to this file)
+#- name: yelloservice
+#  tags:
+#    - yellow
+#    - api
+#  project: yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj # msbuild project path (relative to this file)
 
-- name: redservice
-  tags:
-    - red
-    - api
-  project: red\src\api\artiso.AdsdHotel.Red.Api.csproj # msbuild project path (relative to this file)
-  bindings:
-    - name: mysql
-      port: 5001
-      containerPort: 5001
+#- name: redservice
+#  tags:
+#    - red
+#    - api
+#  project: red\src\api\artiso.AdsdHotel.Red.Api.csproj # msbuild project path (relative to this file)
+#  bindings:
+#    - name: mysql
+#      port: 5001
+#      containerPort: 5001
 
-- name: purpleservice
-  tags:
-    - purple
-    - api
-  project: purple\src\api\artiso.AdsdHotel.Purple.Api.csproj # msbuild project path (relative to this file)
+#- name: purpleservice
+#  tags:
+#    - purple
+#    - api
+#  project: purple\src\api\artiso.AdsdHotel.Purple.Api.csproj # msbuild project path (relative to this file)
 
   # executable: app.exe # path to an executable (relative to this file)
   # args: --arg1=3 # arguments to pass to the process
