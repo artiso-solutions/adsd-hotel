@@ -18,7 +18,7 @@ namespace artiso.AdsdHotel.Yellow.Consumer
 
             await Task.Delay(1000);
             
-            var ambassador = YellowServiceClientFactory.Create();
+            var ambassador = YellowServiceClientFactory.Create("host=localhost;username=guest;password=guest");
 
             var creditCard = new CreditCard(
                 IssuingNetwork.AmericanExpress,
@@ -45,6 +45,8 @@ namespace artiso.AdsdHotel.Yellow.Consumer
             Console.WriteLine("CancellationFeeCharged");
             
             await ambassador.ChargeFullAmount(orderId);
+            
+            Console.WriteLine("End operation");
         }
 
         private static async Task<string> EmulateSelectionOfRate()
@@ -52,7 +54,7 @@ namespace artiso.AdsdHotel.Yellow.Consumer
             var channel = NServiceBusChannelFactory.Create(
                 channelName: "Mock.Red.Ambassador",
                 endpointDestination: "Yellow.Api",
-                "host=localhost;username=user;password=bitnami", 
+                "host=localhost;username=guest;password=guest", 
                 useCallbacks: true
             );
 
