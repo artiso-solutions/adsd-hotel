@@ -11,10 +11,10 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
 {
     public class PaymentOrderAdapter : IPaymentOrderAdapter
     {
-        private readonly CreditCardPaymentService _paymentService;
-        private readonly OrderService _orderService;
+        private readonly ICreditCardPaymentService _paymentService;
+        private readonly IOrderService _orderService;
 
-        public PaymentOrderAdapter(CreditCardPaymentService paymentService, OrderService orderService)
+        public PaymentOrderAdapter(ICreditCardPaymentService paymentService, IOrderService orderService)
         {
             _paymentService = paymentService;
             _orderService = orderService;
