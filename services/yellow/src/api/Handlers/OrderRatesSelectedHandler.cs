@@ -18,12 +18,12 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
 
         public async Task Handle(OrderRateSelected message, IMessageHandlerContext context)
         {
-            await _orderService.Create(message.OrderId, new Price(message.Price.CancellationFee, message.Price.Amount));
-
             var validateResult = ValidateRequest(message);
 
             if (!validateResult.IsValid())
                 throw new ValidationException(validateResult);
+            
+            await _orderService.Create(message.OrderId, new Price(message.Price.CancellationFee, message.Price.Amount));
         }
 
         private static ValidationModelResult<OrderRateSelected> ValidateRequest(OrderRateSelected message)
