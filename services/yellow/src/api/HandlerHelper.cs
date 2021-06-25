@@ -1,4 +1,5 @@
-﻿using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+﻿using System.Diagnostics.CodeAnalysis;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace artiso.AdsdHotel.Yellow.Api
 {
@@ -11,6 +12,7 @@ namespace artiso.AdsdHotel.Yellow.Api
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException"></exception>
+        [return: NotNull]
         public static T Ensure<T>(T item)
         {
             var result = item;

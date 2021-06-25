@@ -23,7 +23,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Services
         public async Task<ChargeResult> ChargeOrder(Order order, decimal amount)
         {
             var paymentMethods = HandlerHelper.Ensure(order.PaymentMethods);
-            var paymentMethod = paymentMethods!.LastOrDefault();
+            var paymentMethod = paymentMethods.LastOrDefault();
             var payToken = paymentMethod!.CreditCard.PaymentAuthorizationTokenId;
 
             if (payToken is null)

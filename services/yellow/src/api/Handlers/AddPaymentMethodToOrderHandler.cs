@@ -30,7 +30,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 if (!validateResult.IsValid())
                     throw new ValidationException(validateResult);
             
-                Order order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId))!;
+                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
             
                 var paymentToken = await _paymentService.GetPaymentToken(message.PaymentMethod.CreditCard!);
                 var orderPaymentMethod = new StoredPaymentMethod(message.PaymentMethod.CreditCard!.GetOrderCreditCard(paymentToken));
