@@ -23,7 +23,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             if (!validateResult.IsValid())
                 throw new ValidationException(validateResult);
             
-            await _orderService.Create(message.OrderId, new Price(message.Price.CancellationFee, message.Price.Amount));
+            await _orderService.Create(message.OrderId, new Price(message.Rate.Price.CancellationFee, message.Rate.Price.Amount));
         }
 
         private static ValidationModelResult<OrderRateSelected> ValidateRequest(OrderRateSelected message)
