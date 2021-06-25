@@ -95,7 +95,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             Assert.IsInstanceOf<Response<bool>>(responseMessage);
             var publishMessage = context.PublishedMessages[0].Message;
             Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(publishMessage);
-            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
+            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
         }
 
         #region InvalidRequestTestCaseSources
@@ -151,8 +151,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var publishMessage = context.PublishedMessages[0].Message;
             Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(publishMessage);
             var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
-            Assert.IsInstanceOf<Response<bool>>(responseMessage);
-            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
+            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
         }
 
         #region InvalidOperationTestCaseSources

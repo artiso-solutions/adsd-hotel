@@ -43,7 +43,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             catch (Exception e)
             {
                 await context.Publish(new AddPaymentMethodToOrderFailed(message.OrderId, e.Message));
-                await context.Reply(new Response<bool>(false));
+                await context.Reply(new Response<bool>(e));
             }
         }
 

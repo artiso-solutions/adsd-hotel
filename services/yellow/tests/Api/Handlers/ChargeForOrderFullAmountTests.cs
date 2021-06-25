@@ -144,8 +144,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             Assert.AreEqual(1, context.PublishedMessages.Length); // 1 Reply message
             var publishMessage = context.PublishedMessages[0].Message;
             Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(publishMessage);
-            Assert.IsInstanceOf<Response<bool>>(responseMessage);
-            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
+            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
             
             // Assert.NotNull(r!.Exception);
             // Assert.False(r.IsSuccessful);
@@ -238,8 +237,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
             var publishMessage = context.PublishedMessages[0].Message;
             Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(publishMessage);
-            Assert.IsInstanceOf<Response<bool>>(responseMessage);
-            Assert.IsFalse(((Response<bool>) responseMessage).Value); // whose value is false
+            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
+            // whose value is false
             
             // Assert.NotNull(r!.Exception, "Exception not thrown");
             // Assert.False(r.IsSuccessful);
