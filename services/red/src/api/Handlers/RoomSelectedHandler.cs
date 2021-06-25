@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction;
-using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Red.Contracts;
 using artiso.AdsdHotel.Red.Contracts.Grpc;
 using artiso.AdsdHotel.Red.Events;

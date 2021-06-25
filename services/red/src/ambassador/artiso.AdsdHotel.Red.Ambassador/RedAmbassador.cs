@@ -46,12 +46,13 @@ namespace artiso.AdsdHotel.Red.Ambassador
             return roomRates;
         }
 
-        public async Task<InputRoomRatesReply> InputRoomRatesAsync(string roomRateId, string orderId, DateTime startDate, DateTime endDate)
+        public async Task<bool> InputRoomRatesAsync(string roomRateId, string orderId, DateTime startDate, DateTime endDate)
         {
             var request = new InputRoomRatesRequest
                 {StartDate = new Date(startDate), EndDate = new Date(endDate), OrderId = orderId, RoomRateId = roomRateId};
 
-            return await _ratesClient.InputRoomRatesAsync(request);
+            var reply = await _ratesClient.InputRoomRatesAsync(request);
+            return reply.Success;
         }
     }
 }

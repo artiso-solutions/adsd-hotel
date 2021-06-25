@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\red\src\events\artiso.AdsdHotel.Red.Events.csproj" />
       <ProjectReference Include="..\..\ambassador\artiso.AdsdHotel.Yellow.Ambassador.csproj" />
     </ItemGroup>
 

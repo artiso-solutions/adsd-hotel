@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Ambassador;
-using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
 using artiso.AdsdHotel.Purple.Ambassador;
+using artiso.AdsdHotel.Red.Ambassador;
 using artiso.AdsdHotel.Yellow.Ambassador;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
-using artiso.AdsdHotel.Yellow.Events.External;
 
 namespace artiso.AdsdHotel.Purple.Consumer
 {
@@ -35,10 +33,15 @@ namespace artiso.AdsdHotel.Purple.Consumer
                 end);
 
             // red
-            await EmulateSelectionOfRate(orderId);
+            var redAmbassador = RedAmbassadorFactory.Create();
+            _ = await redAmbassador.InputRoomRatesAsync(
+                desiredRoomType.Id,
+                orderId,
+                DateTime.Now,
+                DateTime.Now + TimeSpan.FromDays(14));
 
             // yellow
-            var yelowAmbassador = YellowServiceClientFactory.Create();
+            var yellowAmbassador = YellowServiceClientFactory.Create();
 
             var creditCard = new CreditCard(
                 IssuingNetwork.AmericanExpress,
@@ -47,23 +50,10 @@ namespace artiso.AdsdHotel.Purple.Consumer
                 "0000",
                 DateTime.MaxValue);
 
-            await yelowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
+            await yellowAmbassador.AddPaymentMethodToOrderRequest(orderId, creditCard);
 
             var purpleAmbassador = PurpleAmbassadorFactory.Create();
             await purpleAmbassador.CompleteReservationAsync(orderId);
-        }
-
-        private static async Task<string> EmulateSelectionOfRate(string orderId)
-        {
-            var channel = NServiceBusChannelFactory.Create(
-               channelName: "Mock.Red.Ambassador",
-               endpointDestination: "Yellow.Api",
-               "host=localhost",
-               useCallbacks: true
-            );
-
-            await channel.Publish(new OrderRateSelected(orderId, new Yellow.Events.External.Price(10, 100)));
-            return orderId;
         }
     }
 

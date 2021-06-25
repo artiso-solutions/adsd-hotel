@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
+using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
-using artiso.AdsdHotel.Yellow.Events.External;
 using NServiceBus;
 using Price = artiso.AdsdHotel.Yellow.Contracts.Models.Price;
 
@@ -31,8 +31,8 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             return message.Validate()
                 .HasData(r => r.OrderId,
                     $"{nameof(OrderRateSelected.OrderId)} should contain data")
-                .NotNull(r => r.Price,
-                    $"{nameof(OrderRateSelected.Price)} should not be null");
+                .NotNull(r => r.Rate.Price,
+                    $"{nameof(OrderRateSelected.Rate.Price)} should not be null");
 
         }
     }
