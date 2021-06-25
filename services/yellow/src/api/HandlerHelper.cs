@@ -1,17 +1,17 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using artiso.AdsdHotel.Yellow.Api.Validation;
 
 namespace artiso.AdsdHotel.Yellow.Api
 {
     public static class HandlerHelper
     {
         /// <summary>
-        /// it throws a <see cref="System.ComponentModel.DataAnnotations.ValidationException"/> if the given is null 
+        /// it throws a <see cref="artiso.AdsdHotel.Yellow.Api.Validation.ValidationException"/> if the given is null 
         /// </summary>
         /// <param name="item"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException"></exception>
+        /// <exception cref="artiso.AdsdHotel.Yellow.Api.Validation.ValidationException"></exception>
         [return: NotNull]
         public static T Ensure<T>(T item)
         {

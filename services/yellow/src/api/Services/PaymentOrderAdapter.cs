@@ -5,7 +5,6 @@ using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace artiso.AdsdHotel.Yellow.Api.Services
 {
