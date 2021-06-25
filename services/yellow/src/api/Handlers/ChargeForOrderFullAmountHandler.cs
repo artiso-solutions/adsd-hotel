@@ -44,7 +44,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 var lastPaymentMethod = order.PaymentMethods!.Last();
                 await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
             
-                await context.Publish(new OrderFullAmountCharged(message.OrderId));
                 await context.Reply(new Response<bool>(true));
             }
             catch (Exception e)

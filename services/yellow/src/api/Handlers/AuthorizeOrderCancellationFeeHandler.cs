@@ -43,7 +43,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 if (authorizeResult.IsSuccess != true)
                     throw authorizeResult.Exception ?? new InvalidOperationException($"{nameof(authorizeResult)}");
             
-                await context.Publish(new OrderCancellationFeeAuthorizationAcquired(message.OrderId));
                 await context.Reply(new Response<bool>(true));
             }
             catch (Exception e)

@@ -34,11 +34,9 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .ConfigureAwait(false);
             
             // Happens when all is ok
-            Assert.AreEqual(1, context.PublishedMessages.Length); // 1 published messages
+            Assert.AreEqual(0, context.PublishedMessages.Length); // 1 published messages
             Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
-            var publishMessage = context.PublishedMessages[0].Message;
             var responseMessage = context.RepliedMessages[0].Message; 
-            Assert.IsInstanceOf<OrderFullAmountCharged>(publishMessage);  // 1 type of message response
             Assert.IsInstanceOf<Response<bool>>(responseMessage); // of type Response<bool>
             Assert.IsTrue(((Response<bool>) responseMessage).Value); // whose value is true
             
