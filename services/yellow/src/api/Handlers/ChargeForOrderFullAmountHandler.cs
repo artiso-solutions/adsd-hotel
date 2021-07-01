@@ -1,52 +1,59 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
-using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
+using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class ChargeForOrderFullAmountHandler : AbstractChargeHandler<ChargeForOrderFullAmountRequest, OrderFullAmountCharged>
+    public class ChargeForOrderFullAmountHandler : IHandleMessages<ChargeForOrderFullAmountRequest>
     {
         private readonly IOrderService _orderService;
-        private readonly ICreditCardPaymentService _creditCardPaymentService;
-
-        public ChargeForOrderFullAmountHandler(IOrderService orderService, ICreditCardPaymentService creditCardPaymentService)
+        private readonly IPaymentOrderAdapter _paymentOrderAdapter;
+        
+        public ChargeForOrderFullAmountHandler(IOrderService orderService, IPaymentOrderAdapter paymentOrderAdapter)
         {
             _orderService = orderService;
-            _creditCardPaymentService = creditCardPaymentService;
+            _paymentOrderAdapter = paymentOrderAdapter;
         }
         
-        protected async override Task<OrderFullAmountCharged> Handle(ChargeForOrderFullAmountRequest message)
+        public async Task Handle(ChargeForOrderFullAmountRequest message, IMessageHandlerContext context)
         {
-            var order = await Ensure(message, r => _orderService.FindOneById(r.OrderId));
+            try
+            {
+                var validateResult = ValidateRequest(message);
+                if (!validateResult.IsValid())
+                    throw new ValidationException(validateResult);
+            
+                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
 
-            var amountToPay = order.Price.Amount;
+                var amountToPay = order.Price.Amount;
             
-            var chargeResult = (message.AlternativePaymentMethod is not null)
-                ? await ChargeOrder(order, amountToPay, message.AlternativePaymentMethod)
-                : await ChargeOrder(order, amountToPay);
-            
-            if (message.AlternativePaymentMethod is not null)
-                await AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+                var chargeResult = (message.AlternativePaymentMethod is not null)
+                    ? await _paymentOrderAdapter.ChargeOrder(order, amountToPay, message.AlternativePaymentMethod)
+                    : await _paymentOrderAdapter.ChargeOrder(order, amountToPay);
 
-            // TODO : Should go in a separate handler (and should retrieve it from the used payment token)
-            var lastPaymentMethod = order.PaymentMethods!.Last();
-            await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
+                if (message.AlternativePaymentMethod is not null)
+                    await _paymentOrderAdapter.AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+
+                var lastPaymentMethod = order.PaymentMethods!.Last();
+                await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
             
-            return new OrderFullAmountCharged(message.OrderId);
+                await context.Reply(new Response<bool>(true));
+            }
+            catch (ValidationException e)
+            {
+                await context.Publish(new ChargeForOrderFullAmountFailed(message.OrderId, e.Message));
+                await context.Reply(new Response<bool>(e));
+            }
         }
-        
-        protected override object Fail(ChargeForOrderFullAmountRequest requestMessage)
-        {
-            return new ChargeForOrderFullAmountFailed(requestMessage.OrderId);
-        }
 
-        protected override ValidationModelResult<ChargeForOrderFullAmountRequest> ValidateRequest(
+        private ValidationModelResult<ChargeForOrderFullAmountRequest> ValidateRequest(
             ChargeForOrderFullAmountRequest message)
         {
             var v = message.Validate()
@@ -58,21 +65,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                     $"{nameof(ChargeForOrderFullAmountRequest.AlternativePaymentMethod)} must have a valid creditcard");
 
             return v;
-        }
-
-        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
-        {
-            return _orderService.AddPaymentMethod(order, paymentMethod);
-        }
-
-        protected override Task<ChargeResult> Charge(decimal amount, string paymentToken)
-        {
-            return _creditCardPaymentService.Charge(amount, paymentToken);
-        }
-
-        protected override Task<ChargeResult> Charge(decimal amount, CreditCard creditCard)
-        {
-            return _creditCardPaymentService.Charge(amount, creditCard);
         }
     }
 }

@@ -47,6 +47,7 @@ namespace artiso.AdsdHotel.Yellow.Api
                 services.AddSingleton<RabbitMqReadinessProbe>();
                 services.AddSingleton<IOrderService, OrderService>();
                 services.AddSingleton<ICreditCardPaymentService, CreditCardPaymentService>();
+                services.AddSingleton<IPaymentOrderAdapter, PaymentOrderAdapter>();
             }
         }
 

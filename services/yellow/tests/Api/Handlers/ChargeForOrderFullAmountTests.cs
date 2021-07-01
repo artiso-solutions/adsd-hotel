@@ -25,19 +25,20 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         public async Task ValidRequestTest(ChargeForOrderFullAmountRequest request,
             Order order,
             Mock<IOrderService> orderService,
-            Mock<ICreditCardPaymentService> paymentService)
+            Mock<IPaymentOrderAdapter> paymentOrderAdapter)
         {
-            var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentService.Object);
+            var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentOrderAdapter.Object);
             var context = new TestableMessageHandlerContext();
 
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
             
-            Assert.AreEqual(1, context.RepliedMessages.Length);
-            var responseMessage = context.RepliedMessages[0].Message;
-            Assert.IsInstanceOf<Response<OrderFullAmountCharged>>(responseMessage);
-            var rm = responseMessage as Response<OrderFullAmountCharged>;
-            Assert.True(rm?.IsSuccessful, $"{rm?.Exception?.Message} \n {rm?.Exception?.StackTrace}");
+            // Happens when all is ok
+            Assert.AreEqual(0, context.PublishedMessages.Length); // 1 published messages
+            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var responseMessage = context.RepliedMessages[0].Message; 
+            Assert.IsInstanceOf<Response<bool>>(responseMessage); // of type Response<bool>
+            Assert.IsTrue(((Response<bool>) responseMessage).Value); // whose value is true
             
             var activePaymentMethod = order.PaymentMethods!.LastOrDefault();
             Assert.NotNull(activePaymentMethod, "activePaymentMethod != null");
@@ -45,13 +46,13 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             if (request.AlternativePaymentMethod is not null)
             {
                 // Checks that the right Method gets called
-                paymentService
-                    .Verify(c => c.Charge(It.Is<decimal>(arg => arg == order.Price.Amount),
-                        It.IsAny<CreditCard>()), Times.Once);
+                // paymentOrderAdapter
+                //     .Verify(c => c.Charge(It.Is<decimal>(arg => arg == order.Price.Amount),
+                //         It.IsAny<CreditCard>()), Times.Once);
 
-                orderService
-                    .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()),
-                        Times.Once);
+                // orderService
+                //     .Verify(c => c.AddPaymentMethod(It.IsAny<Order>(), It.IsAny<StoredPaymentMethod>()),
+                //         Times.Once);
             }
             else
             {
@@ -60,9 +61,9 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 Assert.NotNull(payToken, "payToken != null");
 
                 // Checks that the right Method gets called
-                paymentService
-                    .Verify(c => c.Charge(It.Is<decimal>(arg => arg == order.Price.Amount),
-                        It.Is<string>(arg => arg == payToken)), Times.Once);
+                // paymentOrderAdapter
+                //     .Verify(c => c.Charge(It.Is<decimal>(arg => arg == order.Price.Amount),
+                //         It.Is<string>(arg => arg == payToken)), Times.Once);
             }
         }
         
@@ -71,7 +72,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         private static IEnumerable<TestCaseData> ValidRequestTestSource()
         {
             var orderService = new Mock<IOrderService>();
-            var paymentService = new Mock<ICreditCardPaymentService>();
+            var paymentService = new Mock<IPaymentOrderAdapter>();
 
             decimal orderCancellationFee = 10;
             decimal orderFullAmount = 100;
@@ -91,14 +92,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .Verifiable();
 
             paymentService
-                .Setup(s => s.Charge(It.Is<decimal>(d => d == orderFullAmount), It.IsAny<string>()))
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(),It.Is<decimal>(d => d == orderFullAmount), It.IsAny<PaymentMethod>()))
                 .ReturnsAsync(new ChargeResult
                 {
                     Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", orderFullAmount, DateTime.Now)
                 })
                 .Verifiable();
             paymentService
-                .Setup(s => s.Charge(It.Is<decimal>(d => d == orderFullAmount), It.IsAny<CreditCard>()))
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(),It.Is<decimal>(d => d == orderFullAmount)))
                 .ReturnsAsync(new ChargeResult()
                 {
                     Transaction = new Transaction("SOME_ID", "__AUTH_TOKEN__", orderFullAmount, DateTime.Now),
@@ -127,16 +128,21 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         [TestCaseSource(nameof(InvalidRequestTestCaseSources))]
         public async Task InvalidRequestTest(ChargeForOrderFullAmountRequest request,
             Mock<IOrderService> orderService,
-            Mock<ICreditCardPaymentService> paymentService)
+            Mock<IPaymentOrderAdapter> paymentOrderAdapter)
         {
-            var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentService.Object);
+            var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentOrderAdapter.Object);
             var context = new TestableMessageHandlerContext();
 
             await handler.Handle(request, context)
                 .ConfigureAwait(false);
 
-            var r = context.PublishedMessages[0].Message as ChargeForOrderFullAmountFailed;
-            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(r);
+            // Happens when there's a failure
+            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
+            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
+            Assert.AreEqual(1, context.PublishedMessages.Length); // 1 Reply message
+            var publishMessage = context.PublishedMessages[0].Message;
+            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(publishMessage);
+            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
             
             // Assert.NotNull(r!.Exception);
             // Assert.False(r.IsSuccessful);
@@ -152,7 +158,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         private static IEnumerable<TestCaseData> InvalidRequestTestCaseSources()
         {
             var orderService = new Mock<IOrderService>();
-            var paymentService = new Mock<ICreditCardPaymentService>();
+            var paymentService = new Mock<IPaymentOrderAdapter>();
 
             var order = new Order("orderId", new Price(10, 100))
             {
@@ -170,15 +176,15 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 .ReturnsAsync(order);
 
             // PaymentService Charge setup
-            paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
-                .ReturnsAsync(new ChargeResult()
-                {
-                    AuthorizePaymentToken = "__AUTH_TOKEN__"
-                });
-            paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
-                .ReturnsAsync(new ChargeResult());
+            // paymentService
+            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
+            //     .ReturnsAsync(new ChargeResult()
+            //     {
+            //         AuthorizePaymentToken = "__AUTH_TOKEN__"
+            //     });
+            // paymentService
+            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
+            //     .ReturnsAsync(new ChargeResult());
             
             yield return TestUtility.GetCaseData("OrderIdMissing",
                 new object[] {new ChargeForOrderFullAmountRequest(string.Empty), orderService, paymentService});
@@ -216,23 +222,16 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         [TestCaseSource(nameof(InvalidOperationTestCaseSources))]
         public async Task InvalidOperationTest(ChargeForOrderFullAmountRequest request,
             Mock<IOrderService> orderService,
-            Mock<ICreditCardPaymentService> paymentService)
+            Mock<IPaymentOrderAdapter> paymentService)
         {
             var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentService.Object);
             var context = new TestableMessageHandlerContext();
 
-            await handler.Handle(request, context)
-                .ConfigureAwait(false);
-
-            var r = context.PublishedMessages[0].Message as ChargeForOrderFullAmountFailed;
-            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(r);
-            
-            // Assert.NotNull(r!.Exception, "Exception not thrown");
-            // Assert.False(r.IsSuccessful);
-            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            // Assert.IsInstanceOf<InvalidOperationException>(r.Exception);
-            
-            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                await handler.Handle(request, context)
+                    .ConfigureAwait(false);
+            });
         }
         
         
@@ -242,7 +241,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         {
             var orderService = new Mock<IOrderService>();
             var invalidPaymentOrderService = new Mock<IOrderService>();
-            var paymentService = new Mock<ICreditCardPaymentService>();
+            var paymentService = new Mock<IPaymentOrderAdapter>();
 
             var order = new Order("orderId", new Price(10, 100))
             {
@@ -267,22 +266,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             invalidPaymentOrderService
                 .Setup(s => s.FindOneById(It.IsAny<string>()))
                 .ReturnsAsync(invalidOrder);
-            
+
             paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
-                .ReturnsAsync(new ChargeResult()
-                {
-                    Exception = new InvalidOperationException("Payment failed")
-                })
-                .Verifiable();
-            
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>(), It.IsAny<PaymentMethod>()))
+                .Throws<InvalidOperationException>();
+
             paymentService
-                .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
-                .ReturnsAsync(new ChargeResult()
-                {
-                    Exception = new InvalidOperationException("Payment failed")
-                })
-                .Verifiable();
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>()))
+                .Throws<InvalidOperationException>();
             
             yield return TestUtility.GetCaseData("PaymentFails",
                 new object[]

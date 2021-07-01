@@ -1,53 +1,62 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
+using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class ChargeForOrderCancellationFeeHandler : AbstractChargeHandler<ChargeForOrderCancellationFeeRequest, OrderCancellationFeeCharged>
+    public class ChargeForOrderCancellationFeeHandler : IHandleMessages<ChargeForOrderCancellationFeeRequest>
     {
         private readonly IOrderService _orderService;
-        private readonly ICreditCardPaymentService _paymentService;
+        private readonly IPaymentOrderAdapter _paymentOrderAdapter;
 
         public ChargeForOrderCancellationFeeHandler(IOrderService orderService,
-            ICreditCardPaymentService paymentService)
+            IPaymentOrderAdapter paymentOrderAdapter)
         {
             _orderService = orderService;
-            _paymentService = paymentService;
+            _paymentOrderAdapter = paymentOrderAdapter;
         }
-
-        protected override async Task<OrderCancellationFeeCharged> Handle(ChargeForOrderCancellationFeeRequest message)
+        
+        public async Task Handle(ChargeForOrderCancellationFeeRequest message, IMessageHandlerContext context)
         {
-            Order order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
-
-            var amountToPay = order.Price.CancellationFee;
-
-            var chargeResult = (message.AlternativePaymentMethod is not null)
-                ? await ChargeOrder(order, amountToPay, message.AlternativePaymentMethod)
-                : await ChargeOrder(order, amountToPay);
+            try
+            {
+                var validateResult = ValidateRequest(message);
+                if (!validateResult.IsValid())
+                    throw new ValidationException(validateResult);
             
-            if (message.AlternativePaymentMethod is not null)
-                await AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
+                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
+            
+                var amountToPay = order.Price.CancellationFee;
 
-            // TODO : Should go in a separate handler (and should retrieve it from the used payment token)
-            var lastPaymentMethod = order.PaymentMethods!.Last();
-            await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
+                var chargeResult = (message.AlternativePaymentMethod is not null)
+                    ? await _paymentOrderAdapter.ChargeOrder(order, amountToPay, message.AlternativePaymentMethod)
+                    : await _paymentOrderAdapter.ChargeOrder(order, amountToPay);
+            
+                if (message.AlternativePaymentMethod is not null)
+                    await _paymentOrderAdapter.AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
 
-            return new OrderCancellationFeeCharged(message.OrderId);
+                var lastPaymentMethod = order.PaymentMethods!.Last();
+                var orderTransaction = chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod);
+                await _orderService.AddTransaction(order, orderTransaction);
+
+                await context.Reply(new Response<bool>(true));
+            }
+            catch (ValidationException e)
+            {
+                await context.Publish(new ChargeOrderCancellationFeeFailed(message.OrderId, e.Message));
+                await context.Reply(new Response<bool>(e));
+            }
         }
-        
-        protected override object Fail(ChargeForOrderCancellationFeeRequest requestMessage)
-        {
-            return new ChargeOrderCancellationFeeFailed(requestMessage.OrderId);
-        }
-        
-        protected override ValidationModelResult<ChargeForOrderCancellationFeeRequest> ValidateRequest(
+
+        private ValidationModelResult<ChargeForOrderCancellationFeeRequest> ValidateRequest(
             ChargeForOrderCancellationFeeRequest message)
         {
             var v = message.Validate()
@@ -59,21 +68,6 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                     $"{nameof(ChargeForOrderFullAmountRequest.AlternativePaymentMethod)} must have a valid creditcard");
 
             return v;
-        }
-        
-        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
-        {
-            return _orderService.AddPaymentMethod(order, paymentMethod);
-        }
-
-        protected override Task<ChargeResult> Charge(decimal amount, string paymentToken)
-        {
-            return _paymentService.Charge(amount, paymentToken);
-        }
-
-        protected override Task<ChargeResult> Charge(decimal amount, CreditCard creditCard)
-        {
-            return _paymentService.Charge(amount, creditCard);
         }
     }
 }

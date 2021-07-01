@@ -46,6 +46,8 @@ namespace artiso.AdsdHotel.Yellow.Consumer
             Console.WriteLine("CancellationFeeCharged");
 
             await ambassador.ChargeFullAmount(orderId);
+            
+            Console.WriteLine("End operation");
         }
 
         private static async Task<string> EmulateSelectionOfRate()

@@ -1,11 +1,9 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Communication.Abstraction;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
-using artiso.AdsdHotel.Yellow.Events;
 
 namespace artiso.AdsdHotel.Yellow.Ambassador
 {
@@ -22,28 +20,22 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
             CancellationToken cancellationToken = default)
         {
             var request = new AddPaymentMethodToOrderRequest(orderId, new PaymentMethod(creditCard));
-            var (response, exception) =
-                await _channel.Request<Response<PaymentMethodToOrderAdded>>(request, cancellationToken);
+            var (_, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
 
             if (exception is not null)
                 throw exception;
-
-            if (response is null)
-                throw new Exception("Service not available");
         }
         
         public async Task AuthorizeOrderCancellationFee(string orderId,
             CancellationToken cancellationToken = default)
         {
             var request = new AuthorizeOrderCancellationFeeRequest(orderId);
-            var (response, exception) =
-                await _channel.Request<Response<OrderCancellationFeeAuthorizationAcquired>>(request, cancellationToken);
+            var (_, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
 
             if (exception is not null)
                 throw exception;
-
-            if (response is null)
-                throw new Exception("Service not available");
         }
 
         public async Task ChargeCancellationFee(string orderId,
@@ -51,8 +43,11 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
         {
             var request = new ChargeForOrderCancellationFeeRequest(orderId);
             
-            var (response, exception) =
-                await _channel.Request<Response<OrderCancellationFeeCharged>>(request, cancellationToken);
+            var (_, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
+            
+            if (exception is not null)
+                throw exception;
         }
         
         public async Task ChargeFullAmount(string orderId,
@@ -60,8 +55,11 @@ namespace artiso.AdsdHotel.Yellow.Ambassador
         {
             var request = new ChargeForOrderFullAmountRequest(orderId);
             
-            var (response, exception) =
-                await _channel.Request<Response<OrderFullAmountCharged>>(request, cancellationToken);
+            var (_, exception) =
+                await _channel.Request<Response<bool>>(request, cancellationToken);
+            
+            if (exception is not null)
+                throw exception;
         }
     }
 }

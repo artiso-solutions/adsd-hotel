@@ -1,15 +1,17 @@
+using System;
 using System.Threading.Tasks;
-using artiso.AdsdHotel.Yellow.Api.Handlers.Templates;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Yellow.Api.Services;
 using artiso.AdsdHotel.Yellow.Api.Validation;
 using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
+using NServiceBus;
 
 namespace artiso.AdsdHotel.Yellow.Api.Handlers
 {
-    public class AddPaymentMethodToOrderHandler : AbstractPaymentHandler<AddPaymentMethodToOrderRequest, PaymentMethodToOrderAdded>
+    public class AddPaymentMethodToOrderHandler : IHandleMessages<AddPaymentMethodToOrderRequest>
     {
         private readonly IOrderService _orderService;
         private readonly ICreditCardPaymentService _paymentService;
@@ -20,30 +22,32 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             _paymentService = paymentService;
         }
 
-        protected async override Task<PaymentMethodToOrderAdded> Handle(AddPaymentMethodToOrderRequest message)
+        public async Task Handle(AddPaymentMethodToOrderRequest message, IMessageHandlerContext context)
         {
-            var order = await Ensure(message, m => _orderService.FindOneById(m.OrderId));
-
-            var paymentToken = await _paymentService.GetPaymentToken(message.PaymentMethod.CreditCard!);
-            var orderPaymentMethod = new StoredPaymentMethod(message.PaymentMethod.CreditCard!.GetOrderCreditCard(paymentToken));
+            try
+            {
+                var validateResult = ValidateRequest(message);
+                if (!validateResult.IsValid())
+                    throw new ValidationException(validateResult);
             
-            await _orderService.AddPaymentMethod(order, orderPaymentMethod);
-
-            return new PaymentMethodToOrderAdded(message.OrderId);
+                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
+            
+                var paymentToken = await _paymentService.GetPaymentToken(message.PaymentMethod.CreditCard!);
+                var orderPaymentMethod = new StoredPaymentMethod(message.PaymentMethod.CreditCard!.GetOrderCreditCard(paymentToken));
+            
+                await _orderService.AddPaymentMethod(order, orderPaymentMethod);
+            
+                await context.Publish(new PaymentMethodToOrderAdded(message.OrderId));
+                await context.Reply(new Response<bool>(true));
+            }
+            catch (ValidationException e)
+            {
+                await context.Publish(new AddPaymentMethodToOrderFailed(message.OrderId, e.Message));
+                await context.Reply(new Response<bool>(e));
+            }
         }
-        
-        protected override object Fail(AddPaymentMethodToOrderRequest requestMessage)
-        {
-            return new AddPaymentMethodToOrderFailed(requestMessage.OrderId);
-        }
 
-        protected override Task AddPaymentMethod(Order order, StoredPaymentMethod paymentMethod)
-        {
-            return _orderService.AddPaymentMethod(order, paymentMethod);
-        }
-
-        protected override ValidationModelResult<AddPaymentMethodToOrderRequest> ValidateRequest(
-            AddPaymentMethodToOrderRequest message)
+        private ValidationModelResult<AddPaymentMethodToOrderRequest> ValidateRequest(AddPaymentMethodToOrderRequest message)
         {
             return message.Validate()
                 .HasData(r => r.OrderId, 
