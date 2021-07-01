@@ -10,6 +10,7 @@ using artiso.AdsdHotel.Yellow.Contracts;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Contracts.Models;
 using artiso.AdsdHotel.Yellow.Events;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NServiceBus.Testing;
 using NUnit.Framework;
@@ -218,15 +219,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var handler = new ChargeForOrderCancellationFeeHandler(orderService.Object, paymentOrderAdapter.Object);
             var context = new TestableMessageHandlerContext();
 
-            await handler.Handle(request, context)
-                .ConfigureAwait(false);
-
-            // Happens when there's a failure
-            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
-            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
-            var publishMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<ChargeOrderCancellationFeeFailed>(publishMessage);
-            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                await handler.Handle(request, context)
+                    .ConfigureAwait(false);
+            });
         }
 
         #region InvalidOperationTestCaseSources
@@ -235,7 +232,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
         {
             var orderService = new Mock<IOrderService>();
             var invalidPaymentOrderService = new Mock<IOrderService>();
-            var paymentService = new Mock<IPaymentOrderAdapter>();
+            var paymentAdapter = new Mock<IPaymentOrderAdapter>();
 
             var order = new Order("orderId", new Price(10, 100))
             {
@@ -256,32 +253,26 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             orderService
                 .Setup(s => s.FindOneById(It.IsAny<string>()))
                 .ReturnsAsync(order);
+            orderService
+                .Setup(s => s.AddTransaction(It.IsAny<Order>(), It.IsAny<OrderTransaction>()));
             
             invalidPaymentOrderService
                 .Setup(s => s.FindOneById(It.IsAny<string>()))
                 .ReturnsAsync(invalidOrder);
-            
-            // paymentService
-            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Exception = new Exception("Payment failed")
-            //     })
-            //     .Verifiable();
-            // paymentService
-            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Exception = new Exception("Payment failed")
-            //     })
-            //     .Verifiable();
+
+            paymentAdapter
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>(), It.IsAny<PaymentMethod>()))
+                .Throws<InvalidOperationException>();
+            paymentAdapter
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>()))
+                .Throws<InvalidOperationException>();
             
             yield return TestUtility.GetCaseData("PaymentFails",
                 new object[]
                 {
                     new ChargeForOrderCancellationFeeRequest("_WHATEVER_ID"), 
                     orderService,
-                    paymentService
+                    paymentAdapter
                 });
             
             yield return TestUtility.GetCaseData("NoSuitablePaymentToken",
@@ -289,7 +280,7 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
                 {
                     new ChargeForOrderCancellationFeeRequest("_WHATEVER_ID"), 
                     invalidPaymentOrderService,
-                    paymentService
+                    paymentAdapter
                 });
         }
 

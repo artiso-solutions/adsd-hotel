@@ -45,7 +45,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             
                 await context.Reply(new Response<bool>(true));
             }
-            catch (Exception e)
+            catch (ValidationException e)
             {
                 await context.Publish(new AuthorizeOrderCancellationFeeFailed(message.OrderId, e.Message));
                 await context.Reply(new Response<bool>(e));

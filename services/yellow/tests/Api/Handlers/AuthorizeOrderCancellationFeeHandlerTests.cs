@@ -140,16 +140,8 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var handler = new AuthorizeOrderCancellationFeeHandler(orderService.Object, paymentService.Object);
             var context = new TestableMessageHandlerContext();
 
-            await handler.Handle(request, context)
-                .ConfigureAwait(false);
-
-            // Happens when there's a failure
-            Assert.AreEqual(1, context.PublishedMessages.Length); // No published messages
-            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
-            var publishMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<AuthorizeOrderCancellationFeeFailed>(publishMessage);
-            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
-            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await handler.Handle(request, context)
+                .ConfigureAwait(false));
         }
 
         #region InvalidOperationTestCaseSources

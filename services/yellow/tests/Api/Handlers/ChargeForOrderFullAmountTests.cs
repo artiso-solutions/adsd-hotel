@@ -227,23 +227,11 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             var handler = new ChargeForOrderFullAmountHandler(orderService.Object, paymentService.Object);
             var context = new TestableMessageHandlerContext();
 
-            await handler.Handle(request, context)
-                .ConfigureAwait(false);
-
-            // Happens when there's a failure
-            Assert.AreEqual(1, context.RepliedMessages.Length); // 1 Reply message
-            var responseMessage = context.RepliedMessages[0].Message; // of type Response<bool>
-            var publishMessage = context.PublishedMessages[0].Message;
-            Assert.IsInstanceOf<ChargeForOrderFullAmountFailed>(publishMessage);
-            Assert.IsInstanceOf<Exception>(((Response<bool>) responseMessage).Exception); // whose type is a exception
-            // whose value is false
-            
-            // Assert.NotNull(r!.Exception, "Exception not thrown");
-            // Assert.False(r.IsSuccessful);
-            // Assert.IsNotEmpty(r.Exception!.Message, "Expected exception message");
-            // Assert.IsInstanceOf<InvalidOperationException>(r.Exception);
-            
-            // await TestContext.Out.WriteLineAsync($"Exception {r.Exception!.GetType().Name}, message {r.Exception!.Message}");
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                await handler.Handle(request, context)
+                    .ConfigureAwait(false);
+            });
         }
         
         
@@ -278,22 +266,14 @@ namespace artiso.AdsdHotel.Yellow.Tests.Api.Handlers
             invalidPaymentOrderService
                 .Setup(s => s.FindOneById(It.IsAny<string>()))
                 .ReturnsAsync(invalidOrder);
-            
-            // paymentService
-            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<CreditCard>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Exception = new InvalidOperationException("Payment failed")
-            //     })
-            //     .Verifiable();
-            //
-            // paymentService
-            //     .Setup(s => s.Charge(It.IsAny<decimal>(), It.IsAny<string>()))
-            //     .ReturnsAsync(new ChargeResult()
-            //     {
-            //         Exception = new InvalidOperationException("Payment failed")
-            //     })
-            //     .Verifiable();
+
+            paymentService
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>(), It.IsAny<PaymentMethod>()))
+                .Throws<InvalidOperationException>();
+
+            paymentService
+                .Setup(s => s.ChargeOrder(It.IsAny<Order>(), It.IsAny<decimal>()))
+                .Throws<InvalidOperationException>();
             
             yield return TestUtility.GetCaseData("PaymentFails",
                 new object[]

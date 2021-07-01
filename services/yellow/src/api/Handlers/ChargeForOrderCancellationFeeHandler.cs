@@ -44,11 +44,12 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                     await _paymentOrderAdapter.AddPaymentMethodToOrder(order, message.AlternativePaymentMethod.CreditCard, chargeResult.AuthorizePaymentToken);
 
                 var lastPaymentMethod = order.PaymentMethods!.Last();
-                await _orderService.AddTransaction(order, chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod));
+                var orderTransaction = chargeResult.Transaction.GetOrderTransaction(lastPaymentMethod);
+                await _orderService.AddTransaction(order, orderTransaction);
 
                 await context.Reply(new Response<bool>(true));
             }
-            catch (Exception e)
+            catch (ValidationException e)
             {
                 await context.Publish(new ChargeOrderCancellationFeeFailed(message.OrderId, e.Message));
                 await context.Reply(new Response<bool>(e));
