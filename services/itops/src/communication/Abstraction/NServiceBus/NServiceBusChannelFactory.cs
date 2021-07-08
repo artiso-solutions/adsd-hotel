@@ -10,7 +10,10 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
             string rabbitMqConnectionString,
             bool useCallbacks = false)
         {
-            var config = NServiceBusEndpointConfigurationFactory.Create(channelName, rabbitMqConnectionString, useCallbacks);
+            var config = NServiceBusEndpointConfigurationFactory.Create(
+                channelName,
+                rabbitMqConnectionString,
+                useCallbacks: useCallbacks);
 
             var holder = new EndpointHolder(Endpoint.Start(config));
             var channel = new NServiceBusChannel(holder, endpointDestination);

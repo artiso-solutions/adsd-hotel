@@ -45,7 +45,6 @@ namespace artiso.AdsdHotel.Red.Api
             {
                 webBuilder.UseStartup<GrpcStartup>().ConfigureKestrel(options =>
                 {
-
                     options.ListenAnyIP(5001 , listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;

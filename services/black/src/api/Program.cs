@@ -49,7 +49,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
         var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
             endpointName: "Black.Api",
             rabbitMqConnectionString: rabbitMqConfig.AsConnectionString(),
-            true);
+            useCallbacks: true);
 
         return endpointConfiguration;
     });

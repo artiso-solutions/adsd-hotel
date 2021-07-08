@@ -68,11 +68,12 @@ namespace artiso.AdsdHotel.Yellow.Api
             builder.UseNServiceBus(ctx =>
             {
                 var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+                var mongoDbConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
 
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Yellow.Api",
                     rabbitMqConnectionString: rabbitMqConfig.AsConnectionString(),
-                    true);
+                    useCallbacks: true);
 
                 return endpointConfiguration;
             });

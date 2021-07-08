@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace artiso.AdsdHotel.ITOps.NoSql
@@ -28,5 +29,21 @@ namespace artiso.AdsdHotel.ITOps.NoSql
         public string? Database { get; set; }
 
         public string? Scheme { get; set; }
+
+        public string AsConnectionString()
+        {
+            var builder = new UriBuilder
+            {
+                Scheme = Scheme,
+                Host = Host,
+                Port = Port,
+                UserName = User,
+                Password = Password
+            };
+
+            return builder.Uri.ToString();
+        }
+
+        public override string ToString() => AsConnectionString();
     }
 }

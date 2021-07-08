@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\itops\src\nosql\artiso.AdsdHotel.ITOps.NoSql.csproj" />
     <ProjectReference Include="..\commands\artiso.AdsdHotel.Purple.Commands.csproj" />
     <ProjectReference Include="..\events\artiso.AdsdHotel.Purple.Events.csproj" />
     <ProjectReference Include="..\..\..\blue\src\commands\artiso.AdsdHotel.Blue.Commands.csproj" />

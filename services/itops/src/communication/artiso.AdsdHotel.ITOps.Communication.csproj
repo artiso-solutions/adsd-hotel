@@ -6,6 +6,7 @@
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="$(Nuget-NServiceBus-NewtonSoft-Version)" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="$(Nuget-NServiceBus-RabbitMQ-Version)" />
     <PackageReference Include="NServiceBus.Callbacks" Version="$(Nuget-NServiceBus-Callbacks-Version)" />
+    <PackageReference Include="NServiceBus.Storage.MongoDB" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
