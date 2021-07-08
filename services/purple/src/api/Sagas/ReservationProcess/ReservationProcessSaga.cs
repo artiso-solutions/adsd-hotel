@@ -49,6 +49,7 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
             await context.Send(destination: BlueService, new ConfirmSelectedRoomType(Data.OrderId!));
         }
 
+        // Handle failure of Blue service
         public Task Handle(SelectedRoomTypeConfirmationFailed message, IMessageHandlerContext context)
         {
             // await context.Send(destination: YellowService, new CancelCancellationFeeAuthorization(Data.OrderId!));
