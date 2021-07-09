@@ -24,7 +24,7 @@ namespace artiso.AdsdHotel.Purple.Api
             builder.UseNServiceBus(ctx =>
             {
                 var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
-                var mongoDbConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+                var mongoDbConfig = ctx.Configuration.GetSection(key: nameof(MongoDbConfig)).Get<MongoDbConfig>();
 
                 var endpointConfiguration = NServiceBusEndpointConfigurationFactory.Create(
                     endpointName: "Purple.Api",

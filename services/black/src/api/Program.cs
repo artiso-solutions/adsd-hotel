@@ -23,6 +23,8 @@ static IHostBuilder CreateHostBuilder(string[] args)
 {
     var builder = Host.CreateDefaultBuilder(args);
 
+    builder.UseConsoleLifetime();
+
     builder.ConfigureServices((ctx, services) =>
     {
         services.AddSingleton<RabbitMqReadinessProbe>();

@@ -50,6 +50,10 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
             var persistence = config.UsePersistence<MongoPersistence>(); // or InMemoryPersistence
             persistence.MongoClient(new MongoClient(mongoDbConnectionString));
 
+            // need to disable transaction atm because we don't have a replica set,
+            // which is needed for distributed transaction within mongo
+            persistence.UseTransactions(false);
+
             var databaseName = AsDbName(endpointName);
             persistence.DatabaseName(databaseName);
 
