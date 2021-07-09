@@ -38,7 +38,6 @@ namespace artiso.AdsdHotel.Red.Api
             }
         }
 
-
         private static void ConfigureGrpc(this IHostBuilder builder)
         {
             builder.ConfigureWebHostDefaults(webBuilder =>

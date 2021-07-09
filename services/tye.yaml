@@ -51,7 +51,7 @@ services:
     - api
     - app
 
-- name: yelloservice
+- name: yellowservice
   project: yellow\src\api\artiso.AdsdHotel.Yellow.Api.csproj
   tags:
     - yellow
