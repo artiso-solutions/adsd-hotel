@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Red.Events;
 using artiso.AdsdHotel.Yellow.Api.Services;
@@ -21,7 +22,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             var validateResult = ValidateRequest(message);
 
             if (!validateResult.IsValid())
-                throw new ValidationException(validateResult);
+                throw new ValidationException(validateResult.GetErrors());
             
             await _orderService.Create(message.OrderId, new Price(message.Rate.Price.CancellationFee, message.Rate.Price.Amount));
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using artiso.AdsdHotel.Blue.Commands;
 
 namespace artiso.AdsdHotel.Blue.Validation
@@ -72,14 +73,6 @@ namespace artiso.AdsdHotel.Blue.Validation
 
             if (string.IsNullOrWhiteSpace(message.OrderId))
                 throw new ValidationException($"Missing '{nameof(message.OrderId)}'.");
-        }
-    }
-
-    public class ValidationException : Exception
-    {
-        public ValidationException(string message)
-            : base(message)
-        {
         }
     }
 }

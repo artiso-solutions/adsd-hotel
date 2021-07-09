@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Yellow.Api.Services;
@@ -28,7 +29,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
             {
                 var validateResult = ValidateRequest(message);
                 if (!validateResult.IsValid())
-                    throw new ValidationException(validateResult);
+                    throw new ValidationException(validateResult.GetErrors());
 
                 var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
 

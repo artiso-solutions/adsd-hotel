@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Validation;
 using artiso.AdsdHotel.ITOps.Communication;

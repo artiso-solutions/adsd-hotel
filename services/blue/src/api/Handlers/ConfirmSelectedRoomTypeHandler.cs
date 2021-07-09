@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
