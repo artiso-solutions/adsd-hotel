@@ -16,8 +16,7 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
         IHandleMessages<OrderCancellationFeeAuthorizationAcquired>,
         IHandleMessages<SelectedRoomTypeConfirmationFailed>,
         IHandleMessages<SelectedRoomTypeReserved>,
-        IHandleMessages<OrderCancellationFeeCharged>,
-        IHandleMessages<Response<bool>>
+        IHandleMessages<OrderCancellationFeeCharged>
     {
         public const string BlueService = "Blue.Api";
         public const string YellowService = "Yellow.Api";
@@ -57,7 +56,6 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
             _logger.LogInformation($"Handled '{nameof (OrderCancellationFeeAuthorizationAcquired)}'.");
             Data.CancellationFeeAcquired = true;
 
-            // this is problematic, because the handler is replying and we have no handler here which consumes the reply
             await context.Send(destination: BlueService, new ConfirmSelectedRoomType(Data.OrderId!));
         }
 
@@ -85,13 +83,6 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
             await context.Publish(new ReservationCompleted(Data.OrderId!));
 
             MarkAsComplete();
-        }
-
-        public Task Handle(Response<bool> message, IMessageHandlerContext context)
-        {
-            // ToDo this is not nice. Maybe we can remove this when we do a publish instead of a send.
-            // If not, then we should remove the replies from the handlers.
-            return Task.CompletedTask;
         }
     }
 }
