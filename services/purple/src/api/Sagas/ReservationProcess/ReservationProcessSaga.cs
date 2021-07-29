@@ -58,7 +58,6 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
             Data.CancellationFeeAcquired = true;
 
             // this is problematic, because the handler is replying and we have no handler here which consumes the reply
-            // maybe use publish here!
             await context.Send(destination: BlueService, new ConfirmSelectedRoomType(Data.OrderId!));
         }
 

@@ -30,22 +30,14 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public async Task Handle(SelectRoomType message, IMessageHandlerContext context)
         {
-            try
-            {
-                Ensure.Valid(message);
-            }
-            catch (ValidationException validationEx)
-            {
-                await context.Reply(new Response<bool>(validationEx));
-                return;
-            }
+            Ensure.Valid(message);
 
             await using var connection = await _connectionFactory.CreateAsync();
 
             var exists = await ExistsAsync(connection, message.RoomTypeId);
 
             if (!exists)
-                throw new Exception();
+                throw new InvalidOperationException ($"Room type with {nameof(message.RoomTypeId)} {message.RoomTypeId} does not exist.");
 
             var isAvailable = await IsAvailableAsync(
                 connection,
@@ -84,8 +76,6 @@ namespace artiso.AdsdHotel.Blue.Api
                 message.Start,
                 message.End,
                 DateTime.UtcNow));
-
-            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<bool> ExistsAsync(IDbConnection connection, string roomTypeId)

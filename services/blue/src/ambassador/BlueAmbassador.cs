@@ -39,41 +39,26 @@ namespace artiso.AdsdHotel.Blue.Ambassador
             return response.RoomTypes;
         }
 
-        public async Task<bool> SelectRoomTypeBetweenAsync(
+        public async Task SelectRoomTypeBetweenAsync(
             string orderId,
             string roomTypeId,
             DateTime start,
-            DateTime end,
-            CancellationToken cancellationToken = default)
+            DateTime end)
         {
             Ensure.Valid(orderId, nameof(orderId));
             Ensure.Valid(roomTypeId, nameof(roomTypeId));
             Ensure.Valid(start, end);
 
             var request = new SelectRoomType(orderId, roomTypeId, start, end);
-            var (response, exception) =
-                await _channel.Request<Response<bool>>(request, cancellationToken);
-
-            if (exception is not null)
-                throw exception;
-
-            return response;
+            await _channel.Send(request);
         }
 
-        public async Task<bool> ConfirmSelectedRoomTypeAsync(
-            string orderId,
-            CancellationToken cancellationToken = default)
+        public async Task ConfirmSelectedRoomTypeAsync(string orderId)
         {
             Ensure.Valid(orderId, nameof(orderId));
 
             var request = new ConfirmSelectedRoomType(orderId);
-            var (response, exception) =
-                await _channel.Request<Response<bool>>(request, cancellationToken);
-
-            if (exception is not null)
-                throw exception;
-
-            return response;
+            await _channel.Send(request);
         }
 
         public async Task<string> GetReservationRoomNumberAsync(

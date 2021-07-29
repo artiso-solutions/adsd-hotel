@@ -39,7 +39,6 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             {
                 var err = validationEx.Message;
                 await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
-                await context.Reply(new Response<bool>(validationEx));
                 _logger.LogWarning(err);
                 return;
             }
@@ -52,22 +51,20 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 
             if (pendingReservation is null)
             {
-                var err = $"Could not find a pending reservation for {nameof(message.OrderId)} {message.OrderId}";
-                await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
-                await context.Reply(new Response<bool>(new Exception(err)));
-                _logger.LogWarning(err);
-                return;
+                throw new InvalidOperationException($"Could not find a pending reservation for {nameof(message.OrderId)} {message.OrderId}");
+                // ToDo maybe send Failed event after a few retries
+                //await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
+                //return;
             }
 
             var isValid = await IsPendingReservationValidAsync(connection, pendingReservation);
 
             if (!isValid)
             {
-                var err = "Pending reservation is not valid";
-                await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
-                await context.Reply(new Response<bool>(new Exception(err)));
-                _logger.LogWarning(err);
-                return;
+                throw new InvalidOperationException("Pending reservation is not valid");
+                // ToDo
+                //await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
+                //return;
             }
 
             await CreateReservationAsync(connection, pendingReservation);
@@ -77,7 +74,6 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
             await transaction.CommitAsync();
 
             await context.Publish(new SelectedRoomTypeReserved(message.OrderId));
-            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<bool> IsPendingReservationValidAsync(

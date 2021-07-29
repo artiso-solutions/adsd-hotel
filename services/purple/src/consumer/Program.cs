@@ -28,7 +28,7 @@ namespace artiso.AdsdHotel.Purple.Consumer
             var desiredRoomType = availableRoomTypes.PickRandom();
 
             Console.WriteLine("Call blue service: select room type");
-            _ = await blueAmbassador.SelectRoomTypeBetweenAsync(
+            await blueAmbassador.SelectRoomTypeBetweenAsync(
                 orderId,
                 desiredRoomType.Id,
                 start,

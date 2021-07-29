@@ -25,19 +25,13 @@ namespace artiso.AdsdHotel.Blue.Consumer
             var orderId = Guid.NewGuid().ToString();
             var desiredRoomType = availableRoomTypes.PickRandom();
 
-            var roomTypeWasSelected = await ambassador.SelectRoomTypeBetweenAsync(
+            await ambassador.SelectRoomTypeBetweenAsync(
                 orderId,
                 desiredRoomType.Id,
                 start,
                 end);
 
-            if (!roomTypeWasSelected)
-                throw new Exception($"Unable to select room type '{desiredRoomType.Id}'");
-
-            var roomTypeWasConfirmed = await ambassador.ConfirmSelectedRoomTypeAsync(orderId);
-
-            if (!roomTypeWasConfirmed)
-                throw new Exception($"Unable to confirm room type '{desiredRoomType.Id}'");
+            await ambassador.ConfirmSelectedRoomTypeAsync(orderId);
 
             var roomNumber = await ambassador.GetReservationRoomNumberAsync(orderId);
 
