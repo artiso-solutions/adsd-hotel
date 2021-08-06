@@ -8,12 +8,8 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal static class HostBuilderConfigurationExtensions
     {
-        public static IHostBuilder ConfigureApp(this IHostBuilder builder)
+        public static IHostBuilder ConfigureNServiceBus(this IHostBuilder builder)
         {
-            builder.UseConsoleLifetime();
-
-            builder.ConfigureServices(Startup.ConfigureServices);
-
             builder.UseNServiceBus(ctx =>
             {
                 var rabbitMqConfig = ctx.Configuration.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();

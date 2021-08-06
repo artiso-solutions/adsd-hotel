@@ -1,14 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Events;
-using artiso.AdsdHotel.Blue.Validation;
-using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Sql;
-using Microsoft.Extensions.Logging;
 using NServiceBus;
 using RepoDb;
 using static artiso.AdsdHotel.Blue.Api.CommonQueries;
@@ -18,31 +14,15 @@ namespace artiso.AdsdHotel.Blue.Api.Handlers
 {
     internal class ConfirmSelectedRoomTypeHandler : IHandleMessages<ConfirmSelectedRoomType>
     {
-        private readonly ILogger<ConfirmSelectedRoomTypeHandler> _logger;
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public ConfirmSelectedRoomTypeHandler(
-            ILogger<ConfirmSelectedRoomTypeHandler> logger,
-            IDbConnectionFactory connectionFactory)
+        public ConfirmSelectedRoomTypeHandler(IDbConnectionFactory connectionFactory)
         {
-            _logger = logger;
             _connectionFactory = connectionFactory;
         }
 
         public async Task Handle(ConfirmSelectedRoomType message, IMessageHandlerContext context)
         {
-            try
-            {
-                Ensure.Valid(message);
-            }
-            catch (ValidationException validationEx)
-            {
-                var err = validationEx.Message;
-                await context.Publish(new SelectedRoomTypeConfirmationFailed(message.OrderId, err));
-                _logger.LogWarning(err);
-                return;
-            }
-
             await using var connection = await _connectionFactory.CreateAsync();
 
             using var transaction = await connection.BeginTransactionAsync();
