@@ -18,7 +18,7 @@ namespace artiso.AdsdHotel.Purple.Consumer
             var orderId = Guid.NewGuid().ToString();
 
             // blue
-            var blueAmbassador = BlueAmbassadorFactory.Create();
+            var blueAmbassador = BlueAmbassadorFactory.Create("http://localhost:5001");
             var start = DateTime.Today.AddDays(7);
             var end = start.AddDays(7);
 
