@@ -23,12 +23,6 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
             await _holder.Endpoint.Send(_destination, command).ConfigureAwait(false);
         }
 
-        public async Task SendLocal(object command)
-        {
-            await _holder.EndpointReady.ConfigureAwait(false);
-            await _holder.Endpoint.SendLocal(command).ConfigureAwait(false);
-        }
-
         public async Task<TResponse> Request<TResponse>(object request, CancellationToken cancellationToken)
         {
             await _holder.EndpointReady.ConfigureAwait(false);
