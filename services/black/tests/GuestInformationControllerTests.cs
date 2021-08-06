@@ -19,8 +19,9 @@ namespace artiso.AdsdHotel.Black.Tests
         {
             Mock<ILogger<GuestInformationController>> loggerMock = new();
             Mock<IDataStoreClient> dataStoreMock = new();
-            GuestInformationController controller = new(dataStoreMock.Object, loggerMock.Object);
+            GuestInformationController controller = new(dataStoreMock.Object, loggerMock.Object, null);
 
+            // ToDo use asp test framework and not controllers directly
             var result = await controller.Get(null).ConfigureAwait(false);
 
             Assert.IsType<BadRequestResult>(result.Result);

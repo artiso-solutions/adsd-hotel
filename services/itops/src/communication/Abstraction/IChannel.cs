@@ -7,6 +7,7 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction
     public interface IChannel : IAsyncDisposable
     {
         Task Send(object command);
+        Task SendLocal(object command);
 
         Task<TResponse> Request<TResponse>(object request, CancellationToken cancellationToken = default);
 

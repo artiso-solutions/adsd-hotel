@@ -151,6 +151,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "artiso.AdsdHotel.ITOps.Validation", "itops\src\asp\artiso.AdsdHotel.ITOps.Validation.csproj", "{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -557,6 +559,18 @@ Global
 		{BB538287-9AF2-4F7D-A492-902A961BD798}.Release|x64.Build.0 = Release|Any CPU
 		{BB538287-9AF2-4F7D-A492-902A961BD798}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB538287-9AF2-4F7D-A492-902A961BD798}.Release|x86.Build.0 = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|x64.Build.0 = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -619,6 +633,7 @@ Global
 		{37D33E7C-CCED-48B7-9403-74BFAEB3AD73} = {33616354-98FC-4C86-8A55-D674B0C42C9B}
 		{9E9FA05C-0BE0-493F-9690-59A1141C62DB} = {33616354-98FC-4C86-8A55-D674B0C42C9B}
 		{C7B8D88E-26C4-43DD-A56E-290D048CA05C} = {14355249-507D-4272-9055-3DBFB11BC719}
+		{70F5B0C6-8141-4FFF-B6CD-44C3F95B7F8F} = {EB3F1790-1720-4CD6-8E48-2B3F17C0DF65}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {919826D0-FA94-4E3F-B439-D3CF05AAABBB}

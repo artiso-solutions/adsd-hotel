@@ -7,10 +7,5 @@ namespace artiso.AdsdHotel.Black.Commands
 
     public record GuestInformationRequest(Guid OrderId);
 
-    public record GuestInformationResponse
-    {
-        public GuestInformation? GuestInformation { get; init; }
-
-        public string? Error { get; init; }
-    }
+    public record GuestInformationResponse(GuestInformation GuestInformation);
 }
