@@ -14,7 +14,7 @@ namespace artiso.AdsdHotel.Blue.Consumer
             var config = GetConfiguration(args);
 
             var baseAddress = config.GetSection(key: "ApiConfig").GetValue<string>("BaseAddress");
-            var ambassador = BlueAmbassadorFactory.Create(baseAddress);
+            var ambassador = new BlueAmbassadorFactory().Create(baseAddress);
 
             var start = DateTime.Today.AddDays(7);
             var end = start.AddDays(7);
