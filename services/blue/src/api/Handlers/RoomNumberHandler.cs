@@ -1,12 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Events;
-using artiso.AdsdHotel.Blue.Validation;
-using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Sql;
 using NServiceBus;
 using RepoDb;
@@ -15,72 +12,50 @@ using static artiso.AdsdHotel.Blue.Api.DatabaseTableNames;
 
 namespace artiso.AdsdHotel.Blue.Api.Handlers
 {
-    internal class RoomNumberHandler : IHandleMessages<GetRoomNumberRequest>
+    internal class RoomNumberHandler : IHandleMessages<SetRoomNumber>
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public RoomNumberHandler(IDbConnectionFactory connectionFactory)
-        {
+        public RoomNumberHandler(IDbConnectionFactory connectionFactory) =>
             _connectionFactory = connectionFactory;
-        }
 
-        public async Task Handle(GetRoomNumberRequest message, IMessageHandlerContext context)
+        public async Task Handle(SetRoomNumber command, IMessageHandlerContext context)
         {
-            try
-            {
-                Ensure.Valid(message);
-            }
-            catch (ValidationException validationEx)
-            {
-                await context.Reply(new Response<GetRoomNumberResponse>(validationEx));
-                return;
-            }
+            var orderId = command.OrderId;
 
             await using var connection = await _connectionFactory.CreateAsync();
 
-            using var transaction = await connection.BeginTransactionAsync();
-
-            var reservation = await FindReservationAsync(connection, message.OrderId);
+            var reservation = await FindReservationAsync(connection, orderId);
 
             if (reservation is null)
-            {
-                await context.Reply(new Response<GetRoomNumberResponse>(new Exception(
-                    $"Could not find a reservation with {nameof(message.OrderId)} {message.OrderId}")));
-
-                return;
-            }
+                throw new InvalidOperationException($"Could not find a reservation with {nameof(orderId)} {orderId}");
 
             if (reservation.RoomId is not null)
             {
                 var room = await FindRoomAsync(connection, reservation.RoomId);
 
                 if (room is not null)
-                {
                     // A room was already set on this reservation.
-                    await transaction.CommitAsync();
-                    await context.Reply(new Response<GetRoomNumberResponse>(new GetRoomNumberResponse(room.Number)));
                     return;
-                }
             }
 
             // Select a room for this reservation.
+
+            using var transaction = await connection.BeginTransactionAsync();
 
             var availableRoom = await FindAnAvailableRoomFor(connection, reservation);
 
             if (availableRoom is null)
             {
-                await context.Reply(new Response<GetRoomNumberResponse>(new Exception(
-                    $"Could not find a free room for the reservation with {nameof(message.OrderId)} {message.OrderId}")));
-
-                return;
+                throw new InvalidOperationException(
+                    $"Could not find a free room for the reservation with {nameof(orderId)} {orderId}");
             }
 
             await AssociateRoomToReservationAsync(connection, availableRoom, reservation);
 
             await transaction.CommitAsync();
 
-            await context.Publish(new RoomNumberAssigned(message.OrderId, availableRoom.Number));
-            await context.Reply(new Response<GetRoomNumberResponse>(new GetRoomNumberResponse(availableRoom.Number)));
+            await context.Publish(new RoomNumberAssigned(orderId, availableRoom.Number));
         }
 
         private async Task<Room?> FindAnAvailableRoomFor(IDbConnection connection, Reservation reservation)

@@ -31,7 +31,7 @@ namespace artiso.AdsdHotel.Yellow.Api.Handlers
                 if (!validateResult.IsValid())
                     throw new ValidationException(validateResult.GetErrors());
 
-                var order = HandlerHelper.Ensure(await _orderService.FindOneById(message.OrderId));
+                var order = await _orderService.FindOneById(message.OrderId);
 
                 var amountToPay = order.Price.CancellationFee;
 

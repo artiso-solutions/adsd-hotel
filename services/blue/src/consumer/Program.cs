@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Ambassador;
-using artiso.AdsdHotel.ITOps.Communication;
 using Microsoft.Extensions.Configuration;
 
 namespace artiso.AdsdHotel.Blue.Consumer
@@ -14,8 +13,8 @@ namespace artiso.AdsdHotel.Blue.Consumer
 
             var config = GetConfiguration(args);
 
-            var rabbitMqConfig = config.GetSection(key: nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
-            var ambassador = BlueAmbassadorFactory.Create(rabbitMqConfig.AsConnectionString());
+            var baseAddress = config.GetSection(key: "ApiConfig").GetValue<string>("BaseAddress");
+            var ambassador = new BlueAmbassadorFactory().Create(baseAddress);
 
             var start = DateTime.Today.AddDays(7);
             var end = start.AddDays(7);
@@ -25,24 +24,11 @@ namespace artiso.AdsdHotel.Blue.Consumer
             var orderId = Guid.NewGuid().ToString();
             var desiredRoomType = availableRoomTypes.PickRandom();
 
-            var roomTypeWasSelected = await ambassador.SelectRoomTypeBetweenAsync(
+            await ambassador.SelectRoomTypeBetweenAsync(
                 orderId,
                 desiredRoomType.Id,
                 start,
                 end);
-
-            if (!roomTypeWasSelected)
-                throw new Exception($"Unable to select room type '{desiredRoomType.Id}'");
-
-            var roomTypeWasConfirmed = await ambassador.ConfirmSelectedRoomTypeAsync(orderId);
-
-            if (!roomTypeWasConfirmed)
-                throw new Exception($"Unable to confirm room type '{desiredRoomType.Id}'");
-
-            var roomNumber = await ambassador.GetReservationRoomNumberAsync(orderId);
-
-            if (roomNumber is null)
-                throw new Exception($"Unable to get room number for order '{orderId}'");
 
             var orderSummary = await ambassador.GetOrderSummaryAsync(orderId);
 

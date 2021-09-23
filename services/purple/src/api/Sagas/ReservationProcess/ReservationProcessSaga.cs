@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Events;
+using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.Purple.Commands;
 using artiso.AdsdHotel.Purple.Events;
 using artiso.AdsdHotel.Yellow.Contracts.Commands;
 using artiso.AdsdHotel.Yellow.Events;
+using Microsoft.Extensions.Logging;
 using NServiceBus;
 
 namespace artiso.AdsdHotel.Purple.Api.Sagas
@@ -18,6 +20,12 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
     {
         public const string BlueService = "Blue.Api";
         public const string YellowService = "Yellow.Api";
+        private readonly ILogger<ReservationProcessSaga> _logger;
+
+        public ReservationProcessSaga(ILogger<ReservationProcessSaga> _logger)
+        {
+            this._logger = _logger;
+        }
 
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<ReservationProcessSagaData> mapper)
         {
@@ -39,11 +47,13 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
 
         public async Task Handle(CompleteReservation message, IMessageHandlerContext context)
         {
+            _logger.LogInformation($"Handled '{nameof (CompleteReservation)}'.");
             await context.Send(destination: YellowService, new AuthorizeOrderCancellationFeeRequest(Data.OrderId!));
         }
 
         public async Task Handle(OrderCancellationFeeAuthorizationAcquired message, IMessageHandlerContext context)
         {
+            _logger.LogInformation($"Handled '{nameof (OrderCancellationFeeAuthorizationAcquired)}'.");
             Data.CancellationFeeAcquired = true;
 
             await context.Send(destination: BlueService, new ConfirmSelectedRoomType(Data.OrderId!));
@@ -52,12 +62,14 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
         // Handle failure of Blue service
         public Task Handle(SelectedRoomTypeConfirmationFailed message, IMessageHandlerContext context)
         {
+            _logger.LogInformation($"Handled '{nameof (SelectedRoomTypeConfirmationFailed)}'.");
             // await context.Send(destination: YellowService, new CancelCancellationFeeAuthorization(Data.OrderId!));
             return Task.CompletedTask;
         }
 
         public async Task Handle(SelectedRoomTypeReserved message, IMessageHandlerContext context)
         {
+            _logger.LogInformation($"Handled '{nameof (SelectedRoomTypeReserved)}'.");
             Data.RoomTypeConfirmed = true;
 
             await context.Send(destination: YellowService, new ChargeForOrderCancellationFeeRequest(Data.OrderId!));
@@ -65,6 +77,7 @@ namespace artiso.AdsdHotel.Purple.Api.Sagas
 
         public async Task Handle(OrderCancellationFeeCharged message, IMessageHandlerContext context)
         {
+            _logger.LogInformation($"Handled '{nameof (OrderCancellationFeeCharged)}'.");
             Data.CancellationFeeCharged = true;
 
             await context.Publish(new ReservationCompleted(Data.OrderId!));

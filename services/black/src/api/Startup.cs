@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Linq;
+using artiso.AdsdHotel.ITOps.Validation;
+using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,19 +20,25 @@ namespace artiso.AdsdHotel.Black.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // this is converting all MultiValidationException thrown in the pipeline into a problem detail with status code 500
+            services.AddProblemDetails(options =>
+            {
+                options.Map<MultiValidationException>(e => 
+                    new ValidationProblemDetails(
+                        e.Errors.ToDictionary( x => x.Key, x => x.Value.ToArray())));
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiTest", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlackServiceAPI", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseProblemDetails();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -38,9 +48,7 @@ namespace artiso.AdsdHotel.Black.Api
 
             app.UseHttpsRedirection();
 
-
             app.UseRouting();
-
 
             //app.UseAuthentication();
             app.UseAuthorization();

@@ -26,7 +26,7 @@ namespace artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus
         public async Task<TResponse> Request<TResponse>(object request, CancellationToken cancellationToken)
         {
             await _holder.EndpointReady.ConfigureAwait(false);
-            
+
             var response = await _holder.Endpoint.Request<TResponse>(
                 request, GetOptions(), cancellationToken).ConfigureAwait(false);
 

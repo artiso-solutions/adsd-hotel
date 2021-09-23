@@ -1,19 +1,24 @@
-﻿using artiso.AdsdHotel.ITOps.Communication.Abstraction.NServiceBus;
+﻿using System.Net.Http;
 
 namespace artiso.AdsdHotel.Blue.Ambassador
 {
     public class BlueAmbassadorFactory
     {
-        public static BlueAmbassador Create(string? rabbitMqConnectionString = null)
-        {
-            var channel = NServiceBusChannelFactory.Create(
-                channelName: "Blue.Ambassador",
-                endpointDestination: "Blue.Api",
-                rabbitMqConnectionString ?? "host=localhost", 
-                useCallbacks: true
-                );
+        private readonly IHttpClientFactory? _httpClientFactory;
 
-            var ambassador = new BlueAmbassador(channel);
+        public BlueAmbassadorFactory()
+        {
+        }
+
+        public BlueAmbassadorFactory(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
+        public BlueAmbassador Create(string apiBaseAddress)
+        {
+            var httpClient = _httpClientFactory?.CreateClient() ?? new HttpClient();
+            var ambassador = new BlueAmbassador(apiBaseAddress, httpClient);
             return ambassador;
         }
     }

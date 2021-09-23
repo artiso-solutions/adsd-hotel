@@ -1,12 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 using artiso.AdsdHotel.Blue.Commands;
 using artiso.AdsdHotel.Blue.Contracts;
 using artiso.AdsdHotel.Blue.Events;
-using artiso.AdsdHotel.Blue.Validation;
-using artiso.AdsdHotel.ITOps.Communication;
 using artiso.AdsdHotel.ITOps.Sql;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
@@ -17,7 +14,7 @@ namespace artiso.AdsdHotel.Blue.Api
 {
     internal class RoomTypeSelectionHandler : IHandleMessages<SelectRoomType>
     {
-        private readonly ILogger<RoomTypeSelectionHandler> _logger;
+        private readonly ILogger _logger;
         private readonly IDbConnectionFactory _connectionFactory;
 
         public RoomTypeSelectionHandler(
@@ -30,22 +27,12 @@ namespace artiso.AdsdHotel.Blue.Api
 
         public async Task Handle(SelectRoomType message, IMessageHandlerContext context)
         {
-            try
-            {
-                Ensure.Valid(message);
-            }
-            catch (ValidationException validationEx)
-            {
-                await context.Reply(new Response<bool>(validationEx));
-                return;
-            }
-
             await using var connection = await _connectionFactory.CreateAsync();
 
             var exists = await ExistsAsync(connection, message.RoomTypeId);
 
             if (!exists)
-                throw new Exception();
+                throw new InvalidOperationException($"Room type with {nameof(message.RoomTypeId)} {message.RoomTypeId} does not exist.");
 
             var isAvailable = await IsAvailableAsync(
                 connection,
@@ -84,8 +71,6 @@ namespace artiso.AdsdHotel.Blue.Api
                 message.Start,
                 message.End,
                 DateTime.UtcNow));
-
-            await context.Reply(new Response<bool>(true));
         }
 
         private async Task<bool> ExistsAsync(IDbConnection connection, string roomTypeId)

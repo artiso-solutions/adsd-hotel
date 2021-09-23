@@ -28,12 +28,16 @@ services:
       port: 15672  
       containerPort: 15672
       protocol: http
+  tags:
+    - inf
 - name: mongodb
   image: mongo
   bindings:
     - name: mongodb
       port: 27017
       protocol: mongodb
+  tags:
+    - inf
 
   # environment variables appear here
 
